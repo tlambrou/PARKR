@@ -12,6 +12,7 @@
 		9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7AD1DDE829800A86F7D /* Main.storyboard */; };
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
+		96A685631DE5188500EE0865 /* Parking Regulations.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* Parking Regulations.geojson */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		9618A7B01DDE829800A86F7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9618A7B31DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9618A7B51DDE829800A86F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96A685621DE5188500EE0865 /* Parking Regulations.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Parking Regulations.geojson"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				9618A7A91DDE829800A86F7D /* AppDelegate.swift */,
 				9618A7AB1DDE829800A86F7D /* ViewController.swift */,
+				96A685621DE5188500EE0865 /* Parking Regulations.geojson */,
 				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
 				9618A7B01DDE829800A86F7D /* Assets.xcassets */,
 				9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */,
@@ -127,6 +130,7 @@
 				9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */,
 				9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */,
 				9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */,
+				96A685631DE5188500EE0865 /* Parking Regulations.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +304,7 @@
 				9618A7BA1DDE829800A86F7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

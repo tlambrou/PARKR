@@ -13,9 +13,11 @@
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
 		96A685631DE5188500EE0865 /* Parking Regulations.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* Parking Regulations.geojson */; };
+		CAB280297B62756ABA0FEC2C /* Pods_PARKR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 912691BB98FE905640C19DBF /* Pods_PARKR.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		912691BB98FE905640C19DBF /* Pods_PARKR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PARKR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9618A7A61DDE829800A86F7D /* PARKR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PARKR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9618A7A91DDE829800A86F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9618A7AB1DDE829800A86F7D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +26,8 @@
 		9618A7B31DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9618A7B51DDE829800A86F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* Parking Regulations.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Parking Regulations.geojson"; sourceTree = "<group>"; };
+		B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PARKR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PARKR/Pods-PARKR.debug.xcconfig"; sourceTree = "<group>"; };
+		C24629A69058071A6E22CD8E /* Pods-PARKR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PARKR.release.xcconfig"; path = "Pods/Target Support Files/Pods-PARKR/Pods-PARKR.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CAB280297B62756ABA0FEC2C /* Pods_PARKR.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E5150E68D0A3D3325127705 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				912691BB98FE905640C19DBF /* Pods_PARKR.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4C5811E6C4270A5CC8876779 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */,
+				C24629A69058071A6E22CD8E /* Pods-PARKR.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		9618A79D1DDE829800A86F7D = {
 			isa = PBXGroup;
 			children = (
 				9618A7A81DDE829800A86F7D /* PARKR */,
 				9618A7A71DDE829800A86F7D /* Products */,
+				4C5811E6C4270A5CC8876779 /* Pods */,
+				0E5150E68D0A3D3325127705 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,9 +98,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9618A7B81DDE829800A86F7D /* Build configuration list for PBXNativeTarget "PARKR" */;
 			buildPhases = (
+				AD3FFC9E9227D01C6D867A60 /* [CP] Check Pods Manifest.lock */,
 				9618A7A21DDE829800A86F7D /* Sources */,
 				9618A7A31DDE829800A86F7D /* Frameworks */,
 				9618A7A41DDE829800A86F7D /* Resources */,
+				7B50B086AA14AA2DE438C5EF /* [CP] Embed Pods Frameworks */,
+				17CF19C5F1945578929EF0BE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -135,6 +162,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		17CF19C5F1945578929EF0BE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PARKR/Pods-PARKR-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B50B086AA14AA2DE438C5EF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PARKR/Pods-PARKR-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD3FFC9E9227D01C6D867A60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9618A7A21DDE829800A86F7D /* Sources */ = {
@@ -261,6 +336,7 @@
 		};
 		9618A7B91DDE829800A86F7D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = U7U4U44M6F;
@@ -274,6 +350,7 @@
 		};
 		9618A7BA1DDE829800A86F7D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C24629A69058071A6E22CD8E /* Pods-PARKR.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = U7U4U44M6F;

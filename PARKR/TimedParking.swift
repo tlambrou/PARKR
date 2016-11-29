@@ -19,9 +19,9 @@ class TimedParking {
   
   init(json: JSON) {
       self.days = json["days"].stringValue
-      self.hoursBegin = Int(json["hours_begin"].stringValue)!
-      self.hoursEnd = Int(json["hours_end"].stringValue)!
-      self.hours = Int(json["hour_limit"].stringValue)!
+      self.hoursBegin = Int(json["hours_begin"].stringValue) ?? 0
+    self.hoursEnd = Int(json["hours_end"].stringValue) ?? 0
+      self.hours = Int(json["hour_limit"].stringValue) ?? 0
       self.geom = json["geom"]["coordinates"].stringValue
     
     

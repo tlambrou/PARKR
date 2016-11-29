@@ -12,6 +12,7 @@
 		9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7AD1DDE829800A86F7D /* Main.storyboard */; };
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
+		9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967432991DED6961000F3ABB /* Coordinates.swift */; };
 		967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
 		96A685631DE5188500EE0865 /* Parking Regulations.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* Parking Regulations.geojson */; };
 		CAB280297B62756ABA0FEC2C /* Pods_PARKR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 912691BB98FE905640C19DBF /* Pods_PARKR.framework */; };
@@ -26,6 +27,7 @@
 		9618A7B01DDE829800A86F7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9618A7B31DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9618A7B51DDE829800A86F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		967432991DED6961000F3ABB /* Coordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		967BBD5B1DECC32100B8DC2B /* TimedParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimedParking.swift; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* Parking Regulations.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Parking Regulations.geojson"; sourceTree = "<group>"; };
 		B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PARKR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PARKR/Pods-PARKR.debug.xcconfig"; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				9618A7A91DDE829800A86F7D /* AppDelegate.swift */,
 				9618A7AB1DDE829800A86F7D /* ViewController.swift */,
 				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
+				967432991DED6961000F3ABB /* Coordinates.swift */,
 				96A685621DE5188500EE0865 /* Parking Regulations.geojson */,
 				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
 				9618A7B01DDE829800A86F7D /* Assets.xcassets */,
@@ -222,6 +225,7 @@
 				967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */,
 				9618A7AC1DDE829800A86F7D /* ViewController.swift in Sources */,
 				9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */,
+				9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

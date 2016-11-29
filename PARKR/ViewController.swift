@@ -49,22 +49,22 @@ class ViewController: UIViewController, MKMapViewDelegate {
     let headers = ["X-App-Token" : "ABbe1ilwKeO9XX4PVSSuSqqH6"]
     
     
+    
+    Alamofire.request("https://data.sfgov.org/resource/2ehv-6arf.json?%24select=days%2Chours_begin%2Chours_end%2Chour_limit%2Cgeom&%24where=within_circle(geom%2C%2037.791827%2C%20-122.408477%2C%20200)", headers: headers).validate().responseJSON() { response in
+      debugPrint(response)
       
-    Alamofire.request("https://data.sfgov.org/resource/2ehv-6arf.json?%24select=days%2Chours_begin%2Chours_end%2Chour_limit%2Cgeom&%24where=within_circle(geom%2C%2037.791827%2C%20-122.408477%2C%20500)", headers: headers).validate().responseJSON() { response in
-            debugPrint(response)
-    
-
-    
-    
-//    Alamofire.request("https://data.sfgov.org/resource/2ehv-6arf.json?$select=geom&$where=within_circle(geom, 37.791827, -122.408477, 500)", method: .get).validate().responseJSON() { response in
       switch response.result {
       case .success:
         if let value = response.result.value {
-//          let json = JSON(value)
+          let json = JSON(value)
           
-          let allData: TimedParking = value as! TimedParking
+          let allData = json.arrayValue
           
-          print(allData)
+          let allTimedParking: [TimedParking] = allData.map({ (entry: JSON) -> TimedParking in
+            return TimedParking(json: entry)
+          })
+          
+          print(allTimedParking)
           
           
           

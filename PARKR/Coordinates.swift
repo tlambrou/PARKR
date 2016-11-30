@@ -9,6 +9,10 @@
 import Foundation
 import SwiftyJSON
 
-class Coordinates {
-  
-}
+//class Coordinates {
+//  let latitude: Float
+//  let longitude: Float
+//  
+//  init(json: JSON) {
+//    self.latitude = json["coordinates"].stringValue
+//}

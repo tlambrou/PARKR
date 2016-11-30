@@ -15,15 +15,23 @@ class TimedParking {
   let hoursBegin: Int
   let hoursEnd: Int
   let hours: Int
-  let geom: String
+  var geom: [Coordinates]
   
   init(json: JSON) {
       self.days = json["days"].stringValue
       self.hoursBegin = Int(json["hours_begin"].stringValue) ?? 0
     self.hoursEnd = Int(json["hours_end"].stringValue) ?? 0
       self.hours = Int(json["hour_limit"].stringValue) ?? 0
-      self.geom = json["geom"]["coordinates"].stringValue
-    
+    self.geom = json["geom"]["coordinates"].arrayValue.map { json in
+      let coord = Coordinates(json: json)
+      return coord
+    }
+    print("COORDS")
+    for i in self.geom {
+      print(i.latitude)
+      print(i.longitude)
+      print("\n\n")
+    }
     
 //    self.name = json["im:name"]["label"].stringValue
 //    self.rightsOwner = json["rights"]["label"].stringValue

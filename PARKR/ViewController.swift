@@ -17,7 +17,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
   
   @IBOutlet weak var mapView: MKMapView!
   
-  var locationManager = CLLocationManager()
+   
+    
+var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
   
   override func viewDidAppear(_ animated: Bool) {

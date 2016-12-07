@@ -11,16 +11,23 @@ import MapKit
 import CoreLocation
 import Alamofire
 import SwiftyJSON
+import Darwin
 
+
+
+var AllTimedParkingData = [TimedParking]()
 
 class ViewController: UIViewController, MKMapViewDelegate {
   
   @IBOutlet weak var mapView: MKMapView!
   
-   
-    
-var locationManager = CLLocationManager()
+  @IBOutlet weak var TimedTimeLabel: UILabel!
+  
+  
+  var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
+  
+  
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(true)
@@ -36,50 +43,18 @@ var locationManager = CLLocationManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
     
-    locationManager.delegate = self
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    //Triggers the location permission dialog.
-    locationManager.requestWhenInUseAuthorization()
-    locationManager.requestLocation()
+    readJSON(from: "TimedParkingData.geojson")
     
-    mapView.delegate = self
-    mapView.showsUserLocation = true
-    mapView.userTrackingMode = .followWithHeading
-    
-    let headers = ["X-App-Token" : "ABbe1ilwKeO9XX4PVSSuSqqH6"]
+    print("\n\n\n\n Total Number of Data Points in Timed Parking Data: \(AllTimedParkingData.count)\n\n\n\n\n")
     
     
-    
-    Alamofire.request("https://data.sfgov.org/resource/2ehv-6arf.json?%24select=days%2Chours_begin%2Chours_end%2Chour_limit%2Cgeom&%24where=within_circle(geom%2C%2037.791827%2C%20-122.408477%2C%20200)", headers: headers).validate().responseJSON() { response in
-      debugPrint(response)
-      
-      switch response.result {
-      case .success:
-        if let value = response.result.value {
-          let json = JSON(value)
-          
-          let allData = json.arrayValue
-          
-          let allTimedParking: [TimedParking] = allData.map({ (entry: JSON) -> TimedParking in
-            return TimedParking(json: entry)
-          })
-          
-          print(allTimedParking)
-          
-          
-          
-          
-        }
-      case .failure(let error):
-        print(error)
-      }
-    }
+    let currentBlock = findNearestBlock(currentLocation: locationManager.location!)
     
     
-    
+       
   }
+  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -107,3 +82,85 @@ extension ViewController: CLLocationManagerDelegate {
   }
 }
 
+func readJSON(from file: String) {
+  
+  let fileComponents = file.components(separatedBy: ".")
+  
+  let path = Bundle.main.path(forResource: fileComponents[0], ofType: fileComponents[1])
+  
+  let text = try! String(contentsOfFile: path!) // read as string
+  
+  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+
+  let json2 = JSON(json!)
+  
+  let allData = json2["features"].arrayValue
+  
+  AllTimedParkingData = allData.map({ (entry: JSON) -> TimedParking in
+    return TimedParking(json: entry)
+  })
+  
+    
+    
+//  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+//  print(json)
+  
+}
+
+func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
+  
+  var closest: TimedParking?
+  var closestDistance: CLLocationDistance = CLLocationDistance(99999999)
+  
+  for location in AllTimedParkingData {
+    
+    let distance = sqrt((pow((location.midPoint?.latitude)!, 2) - pow(currentLocation.coordinate.latitude, 2)))
+    
+    if distance < closestDistance {
+      closestDistance = distance
+      closest = location
+    }
+    
+  }
+  
+  return closest!
+
+}
+
+func findNextTimedMove (nearestBlock: TimedParking) -> Date {
+  
+  var solutionTime = Date()
+  let date = Date()
+  let calendar = Calendar.current
+  
+  if calendar.isDateInWeekend(date) {
+    
+    
+    
+  }
+  
+  return solutionTime
+}
+
+
+func getAllUniqueValues (theData: [TimedParking]) -> [String] {
+  
+  var uniqueValues: [String] = [theData[0].days]
+  
+  for block in theData {
+    
+    var counter: Int = 0
+    
+    for value in uniqueValues {
+  
+      if block.days != value {
+        
+      }
+    }
+    
+    
+    
+  }
+  
+  return uniqueValues
+}

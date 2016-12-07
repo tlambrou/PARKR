@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7B06D2DC5DD5FFD86371D8F070FB6FFD87DCBB23",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7B06D2DC5DD5FFD86371D8F070FB6FFD87DCBB23" : 9223372036854775807,
+    "1053529095D689E757B31A712D38F943F2F8EFAF" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "B124B8D6-F22B-4D48-A833-313E6B80425F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7B06D2DC5DD5FFD86371D8F070FB6FFD87DCBB23" : "PARKR\/",
+    "1053529095D689E757B31A712D38F943F2F8EFAF" : "..\/.."
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PARKR",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "PARKR.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/tlambrou\/nb-question.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1053529095D689E757B31A712D38F943F2F8EFAF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/tlambrou\/PARKR.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7B06D2DC5DD5FFD86371D8F070FB6FFD87DCBB23"
+    }
+  ]
+}

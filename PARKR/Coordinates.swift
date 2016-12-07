@@ -8,16 +8,18 @@
 
 import Foundation
 import SwiftyJSON
+import UIKit
+import MapKit
 
 class Coordinates {
-  let latitude: Float
-  let longitude: Float
+  var latitude: CLLocationDegrees
+  var longitude: CLLocationDegrees
   
   init(json: JSON) {
     
     let coordArray = json.arrayValue
     
-    self.latitude = coordArray[0].floatValue
-    self.longitude = coordArray[1].floatValue
+    self.latitude = CLLocationDegrees(String(describing: coordArray[0]))!
+    self.longitude = CLLocationDegrees(String(describing: coordArray[1]))!
   }
 }

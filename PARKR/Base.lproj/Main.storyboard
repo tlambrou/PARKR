@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ItY-do-lno">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PARKR" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MapViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -39,12 +39,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-98.400000000000006" y="123.68815592203899"/>
+            <point key="canvasLocation" x="1510" y="132"/>
         </scene>
-        <!--Time Display View Controller-->
+        <!--View Controller-->
         <scene sceneID="pd3-AR-9Wa">
             <objects>
-                <viewController id="ItY-do-lno" customClass="TimeDisplayViewController" customModule="PARKR" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ItY-do-lno" customClass="ViewController" customModule="PARKR" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DAY-sh-cC2"/>
                         <viewControllerLayoutGuide type="bottom" id="Kks-KU-Ck9"/>
@@ -59,11 +59,12 @@
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="emb-oz-Ly8">
                                 <rect key="frame" x="0.0" y="593" width="375" height="74"/>
-                                <color key="backgroundColor" red="0.55100190740628896" green="0.52044006725910807" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.3037178814" green="0.3839687705" blue="0.44438821080000002" alpha="0.5994895697" colorSpace="deviceRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="74" id="LkB-m3-opM"/>
                                     <constraint firstAttribute="width" constant="375" id="ojg-kF-XSM"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
                                 <state key="normal" title="Park Here">
                                     <color key="titleColor" red="0.95393846079060896" green="1" blue="0.98516529161088118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -141,7 +142,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="timeLabel" destination="tS5-0A-cbH" id="NVa-i9-Knd"/>
+                        <outlet property="TimedTimeLabel" destination="tS5-0A-cbH" id="YLY-UE-qvX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jtm-dP-WVP" userLabel="First Responder" sceneMemberID="firstResponder"/>

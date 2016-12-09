@@ -6,6 +6,7 @@
 //  Copyright © 2016 SsosSoft. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import MapKit
 import CoreLocation
@@ -51,7 +52,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     let currentBlock = findNearestBlock(currentLocation: locationManager.location!)
     
-    
+    print(getAllUniqueValues(theData: AllTimedParkingData))
        
   }
   
@@ -91,6 +92,7 @@ func readJSON(from file: String) {
   let text = try! String(contentsOfFile: path!) // read as string
   
   let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+  print(json)
 
   let json2 = JSON(json!)
   
@@ -114,7 +116,7 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
   for location in AllTimedParkingData {
     
-    let distance = sqrt((pow((location.midPoint?.latitude)!, 2) - pow(currentLocation.coordinate.latitude, 2)))
+    let distance = CLLocationDistance(sqrt((pow((Double((location.midPoint?.latitude)!)), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
     
     if distance < closestDistance {
       closestDistance = distance
@@ -149,13 +151,18 @@ func getAllUniqueValues (theData: [TimedParking]) -> [String] {
   
   for block in theData {
     
-    var counter: Int = 0
+    var test: Bool = false
     
     for value in uniqueValues {
   
-      if block.days != value {
+      if block.days == value {
+        
+        test = true
         
       }
+    }
+    if test == false {
+      uniqueValues.append(block.days)
     }
     
     

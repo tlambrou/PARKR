@@ -20,12 +20,37 @@ class TimedParking {
   
   init(json: JSON) {
     
-    let timeBegin = Double(json["properties"]["hours_begin"].stringValue)!/100
-    let hourBegin = floor(abs(timeBegin))
-    let minuteBegin = Int((timeBegin.truncatingRemainder(dividingBy: hourBegin))*100)
-    let timeEnd = Double(json["properties"]["hours_end"].stringValue)!/100
-    let hourEnd = floor(abs(timeEnd))
-    let minuteEnd = Int((timeBegin.truncatingRemainder(dividingBy: hourEnd))*100)
+    let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
+    let timeBegin = (number ?? 0)
+    print(timeBegin)
+    let hourBegin = floor(timeBegin)
+    print(hourBegin)
+    
+    var minuteBegin: Int
+    if hourBegin == 0 {
+      minuteBegin = 0
+    } else {
+      minuteBegin = Int((timeBegin.truncatingRemainder(dividingBy: hourBegin))*100)
+    }
+    
+//    let string:string = "cheese"
+//    if string.length == 4{
+//      var output
+//      for
+//    }
+    
+    
+    print(minuteBegin)
+    let number2: Double? = Double(json["properties"]["hours_end"].intValue) / 100
+    let timeEnd = number2 ?? 0
+    let hourEnd = floor(timeEnd)
+    
+    var minuteEnd: Int
+    if hourEnd == 0 {
+      minuteEnd = 0
+    } else {
+      minuteEnd = Int((timeEnd.truncatingRemainder(dividingBy: hourEnd))*100)
+    }
     
     
     self.days = json["properties"]["days"].stringValue

@@ -12,8 +12,8 @@ import UIKit
 import MapKit
 
 class Coordinates {
-  var latitude: CLLocationDegrees
-  var longitude: CLLocationDegrees
+  var latitude: CLLocationDegrees?
+  var longitude: CLLocationDegrees?
   
   init(json: JSON) {
     

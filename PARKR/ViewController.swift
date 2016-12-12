@@ -92,7 +92,7 @@ func readJSON(from file: String) {
   let text = try! String(contentsOfFile: path!) // read as string
   
   let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-  print(json)
+  print(json!)
 
   let json2 = JSON(json!)
   
@@ -116,17 +116,26 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
   for location in AllTimedParkingData {
     
-    let distance = CLLocationDistance(sqrt((pow((Double((location.midPoint?.latitude)!)), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
+    if location.midPoint != nil {
+    let distance = currentLocation.distance(from: location.midPoint!)
+//      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
     
     if distance < closestDistance {
       closestDistance = distance
       closest = location
     }
-    
+    }
   }
   
   return closest!
 
+}
+
+func distance (pointA: CLLocation, pointB: CLLocation) -> CLLocationDistance {
+  
+  let distance: CLLocationDistance = pointB.distance(from: pointA)
+  
+  return distance
 }
 
 func findNextTimedMove (nearestBlock: TimedParking) -> Date {

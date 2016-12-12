@@ -7,16 +7,36 @@
 //
 
 import Foundation
-
 import SwiftyJSON
+import UIKit
+import MapKit
 
 class TimedParking {
   let days: String
   let hoursBegin: DateComponents
   let hoursEnd: DateComponents
   let hours: Int
-  var geom: [Coordinates]
-  var midPoint: Coordinates? = nil
+  var midPoint: CLLocation?
+  var geom: [Coordinates] {
+    didSet {
+      if self.geom.count > 1 {
+        if let secondLat = geom[1].latitude {
+          if let firstLat = geom[0].latitude {
+            if let secondLong = geom[1].longitude {
+              if let firstLong = geom[0].longitude {
+                let long = (secondLong - firstLong)/2
+                let lat = (secondLat - firstLat)/2
+                midPoint = CLLocation(latitude: lat, longitude: long)
+              }
+            }
+            
+          }
+        }
+      }
+      
+    }
+  }
+  
   
   init(json: JSON) {
     
@@ -33,11 +53,11 @@ class TimedParking {
       minuteBegin = Int((timeBegin.truncatingRemainder(dividingBy: hourBegin))*100)
     }
     
-//    let string:string = "cheese"
-//    if string.length == 4{
-//      var output
-//      for
-//    }
+    //    let string:string = "cheese"
+    //    if string.length == 4{
+    //      var output
+    //      for
+    //    }
     
     
     print(minuteBegin)
@@ -62,8 +82,21 @@ class TimedParking {
       return coord
     }
     
-    self.midPoint?.latitude = (self.geom[1].latitude - self.geom[0].latitude)/2
-    self.midPoint?.longitude = (self.geom[1].longitude - self.geom[0].longitude)/2
+    if self.geom.count > 1 {
+      if let secondLat = self.geom[1].latitude {
+        if let firstLat = self.geom[0].latitude {
+          if let secondLong = self.geom[1].longitude {
+            if let firstLong = self.geom[0].longitude {
+              let long = (secondLong - firstLong)/2
+              let lat = (secondLat - firstLat)/2
+              midPoint = CLLocation(latitude: lat, longitude: long)
+            }
+          }
+          
+        }
+      }
+    }
+    
     
     //    print("COORDS")
     //    for i in self.geom {

@@ -52,8 +52,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     let currentBlock = findNearestBlock(currentLocation: locationManager.location!)
     
-    print(getAllUniqueValues(theData: AllTimedParkingData))
-       
+    print("\n\n All unique values for days of the week \(getDOWUniqueValues(theData: AllTimedParkingData)).\n\n\n")
+    
   }
   
   
@@ -93,7 +93,7 @@ func readJSON(from file: String) {
   
   let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
   print(json!)
-
+  
   let json2 = JSON(json!)
   
   let allData = json2["features"].arrayValue
@@ -102,10 +102,10 @@ func readJSON(from file: String) {
     return TimedParking(json: entry)
   })
   
-    
-    
-//  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-//  print(json)
+  
+  
+  //  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+  //  print(json)
   
 }
 
@@ -117,18 +117,18 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   for location in AllTimedParkingData {
     
     if location.midPoint != nil {
-    let distance = currentLocation.distance(from: location.midPoint!)
-//      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
-    
-    if distance < closestDistance {
-      closestDistance = distance
-      closest = location
-    }
+      let distance = currentLocation.distance(from: location.midPoint!)
+      //      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
+      
+      if distance < closestDistance {
+        closestDistance = distance
+        closest = location
+      }
     }
   }
   
   return closest!
-
+  
 }
 
 func distance (pointA: CLLocation, pointB: CLLocation) -> CLLocationDistance {
@@ -153,30 +153,78 @@ func findNextTimedMove (nearestBlock: TimedParking) -> Date {
   return solutionTime
 }
 
+enum UniqueValuesType: Int {
+  case daysOfWeek, hoursBegin, hoursEnd, timeLimit
+}
 
-func getAllUniqueValues (theData: [TimedParking]) -> [String] {
+func getDOWUniqueValues (theData: [TimedParking], type: UniqueValuesType) -> [String] {
   
-  var uniqueValues: [String] = [theData[0].days]
+  // Find which type was requested
   
-  for block in theData {
+  switch type {
     
-    var test: Bool = false
+  case .daysOfWeek:
     
-    for value in uniqueValues {
-  
-      if block.days == value {
+    var uniqueValues = [theData[0].days]
+    
+    for block in theData {
+      
+      var test: Bool = false
+      
+      for value in uniqueValues {
         
-        test = true
-        
+        if block.days == value {
+          
+          test = true
+          
+        }
+      }
+      if test == false {
+        uniqueValues.append(block.days)
       }
     }
-    if test == false {
-      uniqueValues.append(block.days)
+    
+    return uniqueValues
+    
+  case .hoursBegin:
+    
+    let formatter = DateFormatter()
+    formatter.dateStyle = DateFormatter.Style.long
+    formatter.timeStyle = .medium
+    
+    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
+    
+    for block in theData {
+      
+      var test: Bool = false
+      
+      for value in uniqueValues {
+        
+        if block.hoursBegin == value {
+          
+          test = true
+          
+        }
+      }
+      if test == false {
+        uniqueValues.append()
+      }
     }
     
+    return [uniqueValues]
     
+  case .hoursEnd:
+    var uniqueValues = [theData[0].hoursEnd.date]
     
+  case .timeLimit:
+    var uniqueValues = [theData[0].hours]
   }
   
-  return uniqueValues
+  
+  
+  
+  
+  
+  
+  
 }

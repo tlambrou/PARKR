@@ -29,6 +29,7 @@
 		9618A7B31DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9618A7B51DDE829800A86F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		965158141DF7BFD800623FEB /* Extra */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Extra; sourceTree = "<group>"; };
+		965BE2CB1E1340D300189EB1 /* SampleData.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = SampleData.geojson; sourceTree = "<group>"; };
 		967432991DED6961000F3ABB /* Coordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		967BBD5B1DECC32100B8DC2B /* TimedParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimedParking.swift; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* TimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimedParkingData.geojson; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 				9618A7B51DDE829800A86F7D /* Info.plist */,
 				965158141DF7BFD800623FEB /* Extra */,
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
+				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
 			);
 			path = PARKR;
 			sourceTree = "<group>";

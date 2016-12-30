@@ -15,6 +15,14 @@ import SwiftyJSON
 import Darwin
 
 
+private extension MKPolyline {
+  convenience init(coordinates coords: Array<CLLocationCoordinate2D>) {
+    let unsafeCoordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.allocate(capacity: coords.count)
+    unsafeCoordinates.initialize(from: coords)
+    self.init(coordinates: unsafeCoordinates, count: coords.count)
+    unsafeCoordinates.deallocate(capacity: coords.count)
+  }
+}
 
 var AllTimedParkingData = [TimedParking]()
 
@@ -28,7 +36,34 @@ class ViewController: UIViewController, MKMapViewDelegate {
   var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
   
+  func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    let location = locations.first!
+    let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 500, 500)
+    mapView.setRegion(coordinateRegion, animated: true)
+    locationManager.stopUpdatingLocation()
+  }
   
+  func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    
+    
+    switch status {
+    case .notDetermined:
+      print("NotDetermined")
+    case .restricted:
+      print("Restricted")
+    case .denied:
+      print("Denied")
+    case .authorizedAlways:
+      print("AuthorizedAlways")
+    case .authorizedWhenInUse:
+      print("AuthorizedWhenInUse")
+      locationManager.startUpdatingLocation()
+    }
+  }
+  
+  func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    print("Failed to initialize GPS: ", error.description)
+  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(true)
@@ -49,13 +84,69 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     print("\n\n\n\n Total Number of Data Points in Timed Parking Data: \(AllTimedParkingData.count)\n\n\n\n\n")
     
+    // Create all of the Lines
+    
+    //    var index = 0
+    //    for i in AllTimedParkingData {
+    //      index += 1
+    //      if i.geometry.count > 2 {
+    //        print("\n\nElement: \(index)\nData: \(i.geometry)\n\n")
+    //      }
+    //    }
+    
+    
     
     let currentBlock = findNearestBlock(currentLocation: locationManager.location!)
     
-    print("\n\n All unique values for days of the week \(getDOWUniqueValues(theData: AllTimedParkingData)).\n\n\n")
+    //    let renderer = MKPolylineRenderer(polyline: currentBlock.line!)
+    
+    //    renderer.fillColor = UIColor.green
+    
+    mapView.delegate = self
+    
+    mapView.showsCompass = true
+    mapView.showsPointsOfInterest = true
+    mapView.showsUserLocation = true
+    mapView.showsBuildings = true
+    
+    mapView.add(AllTimedParkingData[0].line!, level: MKOverlayLevel.aboveLabels)
+    
+//    AllTimedParkingData.map { park in
+//    
+//      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
+//
+//    }
+  
+    
+    
+    
+    print(AllTimedParkingData[0].line ?? "\n\n no line value \n\n")
+    
+    print(AllTimedParkingData[0].mapRect ?? "\n\n no mapRect value \n\n")
+    
+    mapView.setVisibleMapRect(AllTimedParkingData[0].mapRect!, animated: true)
+    
+    
+    
+    
+    //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
+    
+    //    print("\n\n All unique values for days of the week \(getUniqueValues(theData: AllTimedParkingData)).\n\n\n")
+    
+    //    print("\n\n\n\(AllTimedParkingData[0].geometry)\n\n\n")
     
   }
   
+  
+  
+  func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    
+    let polylineRenderer = MKPolylineRenderer(overlay: overlay)
+    polylineRenderer.strokeColor = UIColor.green
+    polylineRenderer.lineWidth = 5
+    return polylineRenderer
+    
+  }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -92,7 +183,7 @@ func readJSON(from file: String) {
   let text = try! String(contentsOfFile: path!) // read as string
   
   let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-  print(json!)
+  //  print(json!)
   
   let json2 = JSON(json!)
   
@@ -116,6 +207,9 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
   for location in AllTimedParkingData {
     
+//    Based on actual line
+    
+    
     if location.midPoint != nil {
       let distance = currentLocation.distance(from: location.midPoint!)
       //      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
@@ -125,6 +219,20 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
         closest = location
       }
     }
+    
+    
+//    Based on midpoint
+    
+//    if location.midPoint != nil {
+//      let distance = currentLocation.distance(from: location.midPoint!)
+//      
+//      if distance < closestDistance {
+//        closestDistance = distance
+//        closest = location
+//      }
+//    }
+
+    
   }
   
   return closest!
@@ -157,74 +265,72 @@ enum UniqueValuesType: Int {
   case daysOfWeek, hoursBegin, hoursEnd, timeLimit
 }
 
-func getDOWUniqueValues (theData: [TimedParking], type: UniqueValuesType) -> [String] {
-  
-  // Find which type was requested
-  
-  switch type {
-    
-  case .daysOfWeek:
-    
-    var uniqueValues = [theData[0].days]
-    
-    for block in theData {
-      
-      var test: Bool = false
-      
-      for value in uniqueValues {
-        
-        if block.days == value {
-          
-          test = true
-          
-        }
-      }
-      if test == false {
-        uniqueValues.append(block.days)
-      }
-    }
-    
-    return uniqueValues
-    
-  case .hoursBegin:
-    
-    let formatter = DateFormatter()
-    formatter.dateStyle = DateFormatter.Style.long
-    formatter.timeStyle = .medium
-    
-    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
-    
-    for block in theData {
-      
-      var test: Bool = false
-      
-      for value in uniqueValues {
-        
-        if block.hoursBegin == value {
-          
-          test = true
-          
-        }
-      }
-      if test == false {
-        uniqueValues.append()
-      }
-    }
-    
-    return [uniqueValues]
-    
-  case .hoursEnd:
-    var uniqueValues = [theData[0].hoursEnd.date]
-    
-  case .timeLimit:
-    var uniqueValues = [theData[0].hours]
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-}
+//func getDOWUniqueValues (theData: [TimedParking], type: UniqueValuesType) -> [String] {
+//
+//  // Find which type was requested
+//
+//  switch type {
+//
+//  case .daysOfWeek:
+//
+//    var uniqueValues = [theData[0].days]
+//
+//    for block in theData {
+//
+//      var test: Bool = false
+//
+//      for value in uniqueValues {
+//
+//        if block.days == value {
+//
+//          test = true
+//
+//        }
+//      }
+//      if test == false {
+//        uniqueValues.append(block.days)
+//      }
+//    }
+//
+//    return uniqueValues
+//
+//  case .hoursBegin:
+//
+//
+//
+//    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
+//
+//    for block in theData {
+//
+//      var test: Bool = false
+//
+//      for value in uniqueValues {
+//
+//        if block.hoursBegin == value {
+//
+//          test = true
+//
+//        }
+//      }
+//      if test == false {
+//        uniqueValues.append()
+//      }
+//    }
+//
+//    return [uniqueValues]
+//
+//  case .hoursEnd:
+//    var uniqueValues = [theData[0].hoursEnd.date]
+//
+//  case .timeLimit:
+//    var uniqueValues = [theData[0].hours]
+//  }
+//
+//
+////  let testLine: MKPolyline = MKPolyline.init(coordinates: AllTimedParkingData[0].geom, count: AllTimedParkingData[0].geom.count)
+//
+//
+//
+//
+//
+//}

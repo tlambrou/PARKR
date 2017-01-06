@@ -111,12 +111,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     mapView.add(AllTimedParkingData[0].line!, level: MKOverlayLevel.aboveLabels)
     
-//    AllTimedParkingData.map { park in
-//    
-//      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
-//
-//    }
-  
+    //    AllTimedParkingData.map { park in
+    //
+    //      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
+    //
+    //    }
+    
     
     
     
@@ -207,7 +207,77 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
   for location in AllTimedParkingData {
     
-//    Based on actual line
+    //    Based on actual line
+    
+    let x2 = location.geometry[1].longitude
+    let x1 = location.geometry[0].longitude
+    let y2 = location.geometry[1].latitude
+    let y1 = location.geometry[0].latitude
+    
+    let dx = x2 - x1
+    let dy = y2 - y1
+    
+    let slope = dx / dy
+    
+    let p1 = CLLocation(latitude: y1, longitude: x1)
+    
+    let p2 = CLLocation(latitude: y2, longitude: x2)
+    
+    let segDist = p1.distance(from: p2)
+    
+    //    let yInt = y1 - (slope * x1)
+    
+    
+    
+    func distanceCurrentLocToSegment(p1: CLLocation, p2: CLLocation) -> Double {
+      
+      let x1 = p1.coordinate.longitude
+      let x2 = p2.coordinate.longitude
+      let y1 = p1.coordinate.latitude
+      let y2 = p2.coordinate.latitude
+      
+      var ix: Double = 0
+      var iy: Double = 0
+      
+      // Find magnitude of line segment
+      func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
+        return sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))
+      }
+      
+      let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
+      
+      if lineMag < 0.00000001 {
+        print("short segment")
+        return 9999
+      }
+      
+      let px = currentLocation.coordinate.longitude
+      let py = currentLocation.coordinate.latitude
+      
+      // Find distance "u"
+      var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
+      u = u / (lineMag * lineMag)
+      
+      if ((u < 0.00001) || (u > 1)) {
+        ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
+        iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
+        if ix > iy {
+          return iy
+        } else {
+          return ix
+        }
+      } else {
+        ix = x1 + u * (x2 - x1)
+        iy = y1 + u * (y2 - y1)
+        return lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)
+      }
+      
+      
+      
+      
+    }
+    
+    
     
     
     if location.midPoint != nil {
@@ -221,17 +291,17 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
     }
     
     
-//    Based on midpoint
+    //    Based on midpoint
     
-//    if location.midPoint != nil {
-//      let distance = currentLocation.distance(from: location.midPoint!)
-//      
-//      if distance < closestDistance {
-//        closestDistance = distance
-//        closest = location
-//      }
-//    }
-
+    //    if location.midPoint != nil {
+    //      let distance = currentLocation.distance(from: location.midPoint!)
+    //
+    //      if distance < closestDistance {
+    //        closestDistance = distance
+    //        closest = location
+    //      }
+    //    }
+    
     
   }
   

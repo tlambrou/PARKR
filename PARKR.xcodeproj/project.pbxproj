@@ -13,6 +13,7 @@
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
 		965158151DF7BFD800623FEB /* Extra in Resources */ = {isa = PBXBuildFile; fileRef = 965158141DF7BFD800623FEB /* Extra */; };
+		965BE2CD1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */; };
 		9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967432991DED6961000F3ABB /* Coordinates.swift */; };
 		967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
 		96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* TimedParkingData.geojson */; };
@@ -30,6 +31,7 @@
 		9618A7B51DDE829800A86F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		965158141DF7BFD800623FEB /* Extra */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Extra; sourceTree = "<group>"; };
 		965BE2CB1E1340D300189EB1 /* SampleData.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = SampleData.geojson; sourceTree = "<group>"; };
+		965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimplifiedTimedParkingData.geojson; sourceTree = "<group>"; };
 		967432991DED6961000F3ABB /* Coordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		967BBD5B1DECC32100B8DC2B /* TimedParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimedParking.swift; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* TimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimedParkingData.geojson; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				9618A7B51DDE829800A86F7D /* Info.plist */,
 				965158141DF7BFD800623FEB /* Extra */,
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
+				965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */,
 				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
 			);
 			path = PARKR;
@@ -132,7 +135,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = SsosSoft;
 				TargetAttributes = {
 					9618A7A51DDE829800A86F7D = {
@@ -165,6 +168,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				965BE2CD1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson in Resources */,
 				9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */,
 				9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */,
 				9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */,
@@ -275,6 +279,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -324,6 +329,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -352,6 +358,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = U7U4U44M6F;
 				INFOPLIST_FILE = PARKR/Info.plist;
@@ -366,6 +373,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C24629A69058071A6E22CD8E /* Pods-PARKR.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = U7U4U44M6F;
 				INFOPLIST_FILE = PARKR/Info.plist;

@@ -104,13 +104,13 @@ class TimedParking {
       return location
     }
     
-    print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
+//    print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
     
     self.line = MKPolyline(coordinates: coordinates, count: coordinates.count)
     
     self.mapRect = self.line?.boundingMapRect
     
-    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
+//    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
     
     
     if self.geom.count > 1 {

@@ -50,5 +50,23 @@ func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) 
   
 }
 
+// Test Case 1
 
+var p = CLLocation(latitude: 5, longitude: 5)
+var p1 = CLLocation(latitude: 10, longitude: 10)
+var p2 = CLLocation(latitude: 20, longitude: 20)
+
+if (abs(distanceCurrentLocToSegment(p: p , p1: p1, p2: p2)) - 7.0710678118654) > 0.0001 {
+  print("Stop - Error 1")
+}
+
+// Test Case 2
+
+p = CLLocation(latitude: 15, longitude: 15)
+p1 = CLLocation(latitude: 10, longitude: 10)
+p2 = CLLocation(latitude: 20, longitude: 20)
+
+if (abs(distanceCurrentLocToSegment(p: p , p1: p1, p2: p2)) - 7.0710678118654) > 0.0001 {
+  print("Stop - Error 2")
+}
 

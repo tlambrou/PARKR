@@ -109,7 +109,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
     
-    mapView.add(AllTimedParkingData[0].line!, level: MKOverlayLevel.aboveLabels)
+    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
     
     //    AllTimedParkingData.map { park in
     //
@@ -117,14 +117,14 @@ class ViewController: UIViewController, MKMapViewDelegate {
     //
     //    }
     
+    print("\n\n\n", currentBlock.id, currentBlock.geometry, "\n\n\n")
     
     
+    print(currentBlock.line ?? "\n\n no line value \n\n")
     
-    print(AllTimedParkingData[0].line ?? "\n\n no line value \n\n")
+    print(currentBlock.mapRect ?? "\n\n no mapRect value \n\n")
     
-    print(AllTimedParkingData[0].mapRect ?? "\n\n no mapRect value \n\n")
-    
-    mapView.setVisibleMapRect(AllTimedParkingData[0].mapRect!, animated: true)
+    mapView.setVisibleMapRect(currentBlock.mapRect!, animated: true)
     
     
     
@@ -205,103 +205,107 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   var closest: TimedParking?
   var closestDistance: CLLocationDistance = CLLocationDistance(99999999)
   
+  
   for location in AllTimedParkingData {
-    
-    //    Based on actual line
-    
-    let x2 = location.geometry[1].longitude
-    let x1 = location.geometry[0].longitude
-    let y2 = location.geometry[1].latitude
-    let y1 = location.geometry[0].latitude
-    
-    let dx = x2 - x1
-    let dy = y2 - y1
-    
-    let slope = dx / dy
-    
-    let p1 = CLLocation(latitude: y1, longitude: x1)
-    
-    let p2 = CLLocation(latitude: y2, longitude: x2)
-    
-    let segDist = p1.distance(from: p2)
-    
-    //    let yInt = y1 - (slope * x1)
-    
-    
-    
-    func distanceCurrentLocToSegment(p1: CLLocation, p2: CLLocation) -> Double {
+    if location.geometry.count > 1 {
+      //    Based on actual line
       
-      let x1 = p1.coordinate.longitude
-      let x2 = p2.coordinate.longitude
-      let y1 = p1.coordinate.latitude
-      let y2 = p2.coordinate.latitude
+      let x2 = location.geometry[1].longitude
+      let x1 = location.geometry[0].longitude
+      let y2 = location.geometry[1].latitude
+      let y1 = location.geometry[0].latitude
       
-      var ix: Double = 0
-      var iy: Double = 0
+      let dx = x2 - x1
+      let dy = y2 - y1
       
-      // Find magnitude of line segment
-      func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
-        return sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))
-      }
+      let slope = dx / dy
       
-      let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
+      let p1 = CLLocation(latitude: y1, longitude: x1)
       
-      if lineMag < 0.00000001 {
-        print("short segment")
-        return 9999
-      }
+      let p2 = CLLocation(latitude: y2, longitude: x2)
       
-      let px = currentLocation.coordinate.longitude
-      let py = currentLocation.coordinate.latitude
+      let segDist = p1.distance(from: p2)
       
-      // Find distance "u"
-      var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
-      u = u / (lineMag * lineMag)
+      //    let yInt = y1 - (slope * x1)
       
-      if ((u < 0.00001) || (u > 1)) {
-        ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
-        iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
-        if ix > iy {
-          return iy
-        } else {
-          return ix
+      
+      
+      func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
+        
+        let x1 = p1.coordinate.longitude
+        let x2 = p2.coordinate.longitude
+        let y1 = p1.coordinate.latitude
+        let y2 = p2.coordinate.latitude
+        
+        var ix: Double = 0
+        var iy: Double = 0
+        
+        // Find magnitude of line segment
+        func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
+          return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
         }
-      } else {
-        ix = x1 + u * (x2 - x1)
-        iy = y1 + u * (y2 - y1)
-        return lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)
+        
+        let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
+        
+        if lineMag < 0.00000001 {
+          print("short segment")
+          return CLLocationDistance(abs(9999))
+        }
+        
+        let px = p.coordinate.longitude
+        let py = p.coordinate.latitude
+        
+        // Find distance "u"
+        var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
+        u = u / (lineMag * lineMag)
+        
+        if ((u < 0.00001) || (u > 1)) {
+          ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
+          iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
+          if ix > iy {
+            return CLLocationDistance(abs(iy))
+          } else {
+            return CLLocationDistance(abs(ix))
+          }
+        } else {
+          ix = x1 + u * (x2 - x1)
+          iy = y1 + u * (y2 - y1)
+          return CLLocationDistance(abs(lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)))
+        }
+        
       }
       
+      let distance = distanceCurrentLocToSegment(p: currentLocation, p1: p1, p2: p2)
       
-      
-      
-    }
-    
-    
-    
-    
-    if location.midPoint != nil {
-      let distance = currentLocation.distance(from: location.midPoint!)
-      //      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
+      print("\n\n\n", "Current Distance: ", distance, "\n", "Closest Distance: ", closestDistance)
       
       if distance < closestDistance {
-        closestDistance = distance
         closest = location
+        closestDistance = distance
       }
+      
+      //    if location.midPoint != nil {
+      //      let distance = currentLocation.distance(from: location.midPoint!)
+      //      //      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
+      //
+      //      if distance < closestDistance {
+      //        closestDistance = distance
+      //        closest = location
+      //      }
+      //    }
+      
+      
+      //    Based on midpoint
+      
+      //    if location.midPoint != nil {
+      //      let distance = currentLocation.distance(from: location.midPoint!)
+      //
+      //      if distance < closestDistance {
+      //        closestDistance = distance
+      //        closest = location
+      //      }
+      //    }
     }
-    
-    
-    //    Based on midpoint
-    
-    //    if location.midPoint != nil {
-    //      let distance = currentLocation.distance(from: location.midPoint!)
-    //
-    //      if distance < closestDistance {
-    //        closestDistance = distance
-    //        closest = location
-    //      }
-    //    }
-    
     
   }
   

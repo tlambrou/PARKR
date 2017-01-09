@@ -108,6 +108,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     mapView.showsPointsOfInterest = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
+//    mapView.layer.cornerRadius = 20.0
     
     mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
     
@@ -119,15 +120,13 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     print("\n\n\n", currentBlock.id, currentBlock.geometry, "\n\n\n")
     
-    
     print(currentBlock.line ?? "\n\n no line value \n\n")
     
     print(currentBlock.mapRect ?? "\n\n no mapRect value \n\n")
     
-    mapView.setVisibleMapRect(currentBlock.mapRect!, animated: true)
+    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
     
-    
-    
+    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
     
     //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
     

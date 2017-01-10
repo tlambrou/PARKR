@@ -146,7 +146,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
 <<<<<<< HEAD
+<<<<<<< HEAD
     //    mapView.layer.cornerRadius = 20.0
+=======
+>>>>>>> parent of c22ce96... Rearranged layout
 =======
 >>>>>>> parent of c22ce96... Rearranged layout
     
@@ -157,6 +160,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
 <<<<<<< HEAD
 =======
+    
     
     print(currentBlock.line ?? "\n\n no line value \n\n")
 >>>>>>> parent of c22ce96... Rearranged layout
@@ -177,11 +181,17 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
     }
     
+<<<<<<< HEAD
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("Failed to initialize GPS: ", error.description)
     }
 =======
     mapView.setVisibleMapRect(currentBlock.mapRect!, animated: true)
+=======
+    mapView.setVisibleMapRect(currentBlock.mapRect!, animated: true)
+    
+    
+>>>>>>> parent of c22ce96... Rearranged layout
     
     
     

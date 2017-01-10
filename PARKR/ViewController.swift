@@ -113,6 +113,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
 >>>>>>> origin/master
     
+<<<<<<< HEAD
     let currentBlock = findNearestBlock(currentLocation: location)
     
 <<<<<<< HEAD
@@ -124,6 +125,15 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.show(vc as! UIViewController, sender: vc)
     }
 =======
+=======
+    guard let location = locationManager.location else {
+      print("No location Tassos?")
+      return 
+    }
+    
+    let currentBlock = findNearestBlock(currentLocation: location)
+    
+>>>>>>> origin/master
     
     //    let renderer = MKPolylineRenderer(polyline: currentBlock.line!)
     
@@ -244,6 +254,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
 <<<<<<< HEAD
 =======
+   
+    
    
     
   }

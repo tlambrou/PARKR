@@ -14,6 +14,7 @@ import Alamofire
 import SwiftyJSON
 import Darwin
 
+// Convenience init for creating Polyline
 
 private extension MKPolyline {
   convenience init(coordinates coords: Array<CLLocationCoordinate2D>) {
@@ -24,6 +25,8 @@ private extension MKPolyline {
   }
 }
 
+
+// Global variable for all timed parking data
 var AllTimedParkingData = [TimedParking]()
 
 class ViewController: UIViewController, MKMapViewDelegate {
@@ -37,11 +40,14 @@ class ViewController: UIViewController, MKMapViewDelegate {
   let showAlert = UIAlertController()
   
   func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    let location = locations.first!
+    print("\n\n Location Manager updated \n\n")
+    let location = locations.last!
     let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 500, 500)
     mapView.setRegion(coordinateRegion, animated: true)
     locationManager.stopUpdatingLocation()
   }
+  
+
   
   func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
@@ -80,6 +86,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    
+    // load JSON in background 
+    // show progress thing
+    // When backlground process is done 
+    // hide progress thing
+    // Show data...
     readJSON(from: "TimedParkingData.geojson")
     
     print("\n\n\n\n Total Number of Data Points in Timed Parking Data: \(AllTimedParkingData.count)\n\n\n\n\n")
@@ -94,9 +106,13 @@ class ViewController: UIViewController, MKMapViewDelegate {
     //      }
     //    }
     
+    guard let location = locationManager.location else {
+      print("No location Tassos?")
+      return 
+    }
     
+    let currentBlock = findNearestBlock(currentLocation: location)
     
-    let currentBlock = findNearestBlock(currentLocation: locationManager.location!)
     
     //    let renderer = MKPolylineRenderer(polyline: currentBlock.line!)
     
@@ -108,7 +124,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     mapView.showsPointsOfInterest = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
-//    mapView.layer.cornerRadius = 20.0
+    //    mapView.layer.cornerRadius = 20.0
     
     mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
     
@@ -134,7 +150,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     //    print("\n\n\n\(AllTimedParkingData[0].geometry)\n\n\n")
     
+   
+    
   }
+  
   
   
   

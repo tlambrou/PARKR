@@ -145,13 +145,21 @@ class ViewController: UIViewController, MKMapViewDelegate {
     mapView.showsPointsOfInterest = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
+<<<<<<< HEAD
     //    mapView.layer.cornerRadius = 20.0
+=======
+>>>>>>> parent of c22ce96... Rearranged layout
     
     mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
 >>>>>>> origin/master
     
     
     
+<<<<<<< HEAD
+=======
+    
+    print(currentBlock.line ?? "\n\n no line value \n\n")
+>>>>>>> parent of c22ce96... Rearranged layout
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.first!
@@ -160,6 +168,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         locationManager.stopUpdatingLocation()
     }
     
+<<<<<<< HEAD
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             locationManager.requestLocation()
@@ -171,6 +180,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("Failed to initialize GPS: ", error.description)
     }
+=======
+    mapView.setVisibleMapRect(currentBlock.mapRect!, animated: true)
+    
+    
+    
+>>>>>>> parent of c22ce96... Rearranged layout
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)

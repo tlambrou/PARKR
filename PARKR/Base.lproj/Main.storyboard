@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -85,15 +85,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Meter Parking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7dF-aA-fFM">
-                                <rect key="frame" x="0.0" y="271" width="186" height="38"/>
+                                <rect key="frame" x="71" y="272" width="186" height="38"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Move by" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ge4-bH-apl">
-                                <rect key="frame" x="123" y="311" width="83" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -118,6 +111,13 @@
                                 <rect key="frame" x="176" y="216" width="125" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Move by" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ge4-bH-apl">
+                                <rect key="frame" x="138" y="312" width="83" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -155,10 +155,10 @@
             </objects>
             <point key="canvasLocation" x="53.600000000000001" y="146.17691154422789"/>
         </scene>
-        <!--View Controller-->
+        <!--Enlarge Map-->
         <scene sceneID="pd3-AR-9Wa">
             <objects>
-                <viewController id="ItY-do-lno" customClass="ViewController" customModule="PARKR" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EnlargeMap" id="ItY-do-lno" customClass="EnlargeMap" customModule="PARKR" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DAY-sh-cC2"/>
                         <viewControllerLayoutGuide type="bottom" id="Kks-KU-Ck9"/>
@@ -166,10 +166,22 @@
                     <view key="view" contentMode="scaleToFill" id="rQR-lY-pJQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Nwt-gQ-FJ1">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Nwt-gQ-FJ1" firstAttribute="top" secondItem="rQR-lY-pJQ" secondAttribute="top" id="3pI-lS-Kid"/>
+                            <constraint firstItem="Nwt-gQ-FJ1" firstAttribute="leading" secondItem="rQR-lY-pJQ" secondAttribute="leading" id="bWc-wK-Zea"/>
+                            <constraint firstAttribute="trailing" secondItem="Nwt-gQ-FJ1" secondAttribute="trailing" id="ctj-ar-OVj"/>
+                            <constraint firstItem="Kks-KU-Ck9" firstAttribute="top" secondItem="Nwt-gQ-FJ1" secondAttribute="bottom" id="qBA-ug-r9M"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="TimedTimeLabel" destination="tS5-0A-cbH" id="YLY-UE-qvX"/>
+                        <outlet property="largerMapView" destination="Nwt-gQ-FJ1" id="lQL-L0-qGX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jtm-dP-WVP" userLabel="First Responder" sceneMemberID="firstResponder"/>

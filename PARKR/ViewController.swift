@@ -29,7 +29,7 @@ private extension MKPolyline {
 // Global variable for all timed parking data
 var AllTimedParkingData = [TimedParking]()
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
   
   @IBOutlet weak var mapView: MKMapView!
   
@@ -39,18 +39,15 @@ class ViewController: UIViewController, MKMapViewDelegate {
   var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
   
-  func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+  private func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     print("\n\n Location Manager updated \n\n")
     let location = locations.last!
-    let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 500, 500)
-    mapView.setRegion(coordinateRegion, animated: true)
     locationManager.stopUpdatingLocation()
   }
   
   
   
-  func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-    
+  private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
     switch status {
     case .notDetermined:
@@ -79,7 +76,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     } else if CLLocationManager.authorizationStatus() == .denied {
       showAlert.message = "Location services were previously denied. Please enable location services for this app in settings."
     } else if CLLocationManager.authorizationStatus() == .authorizedAlways {
-      locationManager.startUpdatingLocation()
+      locationManager.startMonitoringSignificantLocationChanges()
     }
   }
   
@@ -96,27 +93,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     print("\n\n\n\n Total Number of Data Points in Timed Parking Data: \(AllTimedParkingData.count)\n\n\n\n\n")
     
-    // Create all of the Lines
-    
-    //    var index = 0
-    //    for i in AllTimedParkingData {
-    //      index += 1
-    //      if i.geometry.count > 2 {
-    //        print("\n\nElement: \(index)\nData: \(i.geometry)\n\n")
-    //      }
-    //    }
-    
     guard let location = locationManager.location else {
-      print("No location Tassos?")
+      print("No location Tassos!")
       return
     }
     
     let currentBlock = findNearestBlock(currentLocation: location)
-    
-    
-    //    let renderer = MKPolylineRenderer(polyline: currentBlock.line!)
-    
-    //    renderer.fillColor = UIColor.green
     
     mapView.delegate = self
     
@@ -170,27 +152,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
+  
 }
 
-extension ViewController: CLLocationManagerDelegate {
-  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-    if status == .authorizedWhenInUse {
-      locationManager.requestLocation()
-    }
-  }
-  //This function calls back when the information of the location comes back.
-  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    if let location = locations.first {
-      let span = MKCoordinateSpanMake(0.05, 0.05)
-      let region = MKCoordinateRegionMake(location.coordinate, span)
-      mapView.setRegion(region, animated: true)
-    }
-  }
-  //to check if there is an error
-  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-    print(error.localizedDescription)
-  }
-}
 
 func readJSON(from file: String) {
   
@@ -201,7 +165,6 @@ func readJSON(from file: String) {
   let text = try! String(contentsOfFile: path!) // read as string
   
   let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-  //  print(json!)
   
   let json2 = JSON(json!)
   
@@ -212,10 +175,18 @@ func readJSON(from file: String) {
   })
   
   
-  
   //  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
   //  print(json)
   
+}
+
+func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
+  
+  var subset = [TimedParking]()
+  
+  currentLocation
+  
+  return subset
 }
 
 func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
@@ -225,9 +196,10 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
   
   for location in AllTimedParkingData {
+    
     if location.geometry.count > 1 {
-      //    Based on actual line
       
+      //    Determine closest distance between a point and a line defined by 2 points
       let x2 = location.geometry[1].longitude
       let x1 = location.geometry[0].longitude
       let y2 = location.geometry[1].latitude
@@ -245,8 +217,6 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
       let segDist = p1.distance(from: p2)
       
       //    let yInt = y1 - (slope * x1)
-      
-      
       
       func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
         
@@ -295,7 +265,7 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
       
       let distance = distanceCurrentLocToSegment(p: currentLocation, p1: p1, p2: p2)
       
-      print("\n\n\n", "Current Distance: ", distance, "\n", "Closest Distance: ", closestDistance)
+      //      print("\n\n\n", "Current Distance: ", distance, "\n", "Closest Distance: ", closestDistance)
       
       if distance < closestDistance {
         closest = location
@@ -331,12 +301,6 @@ func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
   
 }
 
-func distance (pointA: CLLocation, pointB: CLLocation) -> CLLocationDistance {
-  
-  let distance: CLLocationDistance = pointB.distance(from: pointA)
-  
-  return distance
-}
 
 func findNextTimedMove (nearestBlock: TimedParking) -> Date {
   

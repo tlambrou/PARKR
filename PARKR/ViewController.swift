@@ -36,6 +36,12 @@ var AllTimedParkingData = [TimedParking]()
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    @IBOutlet weak var blockAddressLabel: UILabel!
+    @IBOutlet weak var moveByTimingLabel: UILabel!
+    @IBOutlet weak var moveOutLabel: UILabel!
+    @IBOutlet weak var durationParkingLabel: UILabel!
+    @IBOutlet weak var geocodingLabel: UILabel!
+        
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var TimedTimeLabel: UILabel!
     
@@ -162,6 +168,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func readJSON(from file: String) {
         print("Begin loading parking data...")
         // TODO: Show progress bar
+        let progressBar = UILabel()
+        
+        
+        
+//        let frame = CGRect(x: Double(mapView.layer.bounds.width/2), y: Double(mapView.layer.bounds.height/2), width: Double(mapView.layer.bounds.width), height: Double(mapView.layer.bounds.width))
+        
+        //progressBar = UILabel(frame: frame)
+        
+        progressBar.text = "Loading..."
+        progressBar.textColor = UIColor.darkGray
+        progressBar.font = UIFont.boldSystemFont(ofSize: 18)
+        progressBar.sizeToFit()
+        self.mapView.addSubview(progressBar)
+        
         DispatchQueue.global().async {
             
             let fileComponents = file.components(separatedBy: ".")
@@ -182,7 +202,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             DispatchQueue.main.async {
                 print("Done loaing parking data...")
+                
                 // TODO: Hide progress
+                
+                progressBar.removeFromSuperview()
+                
                 self.findParking()
             }
         }

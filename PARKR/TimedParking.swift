@@ -19,34 +19,31 @@ class TimedParking {
   var id: Int
   var midPoint: CLLocation?
   var geometry: [CLLocationCoordinate2D]
-  var geom: [Coordinates] {
-    didSet {
-      if self.geom.count > 1 {
-        if let secondLat = geom[1].latitude {
-          if let firstLat = geom[0].latitude {
-            if let secondLong = geom[1].longitude {
-              if let firstLong = geom[0].longitude {
-                let long = (secondLong - firstLong)/2
-                let lat = (secondLat - firstLat)/2
-                midPoint = CLLocation(latitude: lat, longitude: long)
-              }
-            }
-            
-          }
-        }
-      }
-      
-    }
-  }
+//  var geom: [Coordinates] {
+//    didSet {
+//      if self.geom.count > 1 {
+//        if let secondLat = geom[1].latitude {
+//          if let firstLat = geom[0].latitude {
+//            if let secondLong = geom[1].longitude {
+//              if let firstLong = geom[0].longitude {
+//                let long = (secondLong - firstLong)/2
+//                let lat = (secondLat - firstLat)/2
+//                midPoint = CLLocation(latitude: lat, longitude: long)
+//              }
+//            }
+//            
+//          }
+//        }
+//      }
+//      
+//    }
+//  }
   var mapRect: MKMapRect? = nil
   var line: MKPolyline? = nil {
     didSet {
       self.mapRect = self.line!.boundingMapRect
     }
   }
-  
-  
-  
   
   init(json: JSON) {
     
@@ -88,10 +85,10 @@ class TimedParking {
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
     self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
     self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
-    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
-      let coord = Coordinates(json: json)
-      return coord
-    }
+//    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
+//      let coord = Coordinates(json: json)
+//      return coord
+//    }
     
     
     self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
@@ -113,20 +110,20 @@ class TimedParking {
 //    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
     
     
-    if self.geom.count > 1 {
-      if let secondLat = self.geom[1].latitude {
-        if let firstLat = self.geom[0].latitude {
-          if let secondLong = self.geom[1].longitude {
-            if let firstLong = self.geom[0].longitude {
-              let long = (secondLong - firstLong)/2
-              let lat = (secondLat - firstLat)/2
-              midPoint = CLLocation(latitude: lat, longitude: long)
-            }
-          }
-          
-        }
-      }
-    }
+//    if self.geom.count > 1 {
+//      if let secondLat = self.geom[1].latitude {
+//        if let firstLat = self.geom[0].latitude {
+//          if let secondLong = self.geom[1].longitude {
+//            if let firstLong = self.geom[0].longitude {
+//              let long = (secondLong - firstLong)/2
+//              let lat = (secondLat - firstLat)/2
+//              midPoint = CLLocation(latitude: lat, longitude: long)
+//            }
+//          }
+//          
+//        }
+//      }
+//    }
     
     
     //    print("COORDS")
@@ -143,4 +140,25 @@ class TimedParking {
     //    self.image = json["im:image"][2]["label"].stringValue
     //    self.releaseDate = json["im:releaseDate"]["attributes"]["label"].stringValue
   }
+  
+  init(days: String, hoursBegin: DateComponents, hoursEnd: DateComponents, hourLimit: Int, id: Int, geometry: [CLLocationCoordinate2D]) {
+    
+    self.days = days
+    self.hoursBegin = hoursBegin
+    self.hoursEnd = hoursEnd
+    self.hourLimit = hourLimit
+    self.id = id
+    self.geometry = geometry
+    
+    let coordinates: [CLLocationCoordinate2D] = self.geometry.map {
+      location in
+      return location
+    }
+    
+    self.line = MKPolyline(coordinates: coordinates, count: coordinates.count)
+    
+    self.mapRect = self.line?.boundingMapRect
+    
+  }
+  
 }

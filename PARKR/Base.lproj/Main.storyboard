@@ -211,6 +211,9 @@
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K3F-zh-Bzt">
                                         <rect key="frame" x="318" y="9" width="51" height="31"/>
                                         <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="tenMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="s23-dF-kyH"/>
+                                        </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2q-in-c09">
                                         <rect key="frame" x="8" y="14" width="92" height="21"/>
@@ -241,6 +244,9 @@
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HCt-FO-4sb">
                                         <rect key="frame" x="318" y="9" width="51" height="31"/>
                                         <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="thirtyMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="oOX-mB-axe"/>
+                                        </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5H8-TP-fOc">
                                         <rect key="frame" x="8" y="14" width="90" height="21"/>
@@ -271,6 +277,9 @@
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xFL-Nu-NUw">
                                         <rect key="frame" x="318" y="9" width="51" height="31"/>
                                         <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="fifteenMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="fYZ-Nf-tuX"/>
+                                        </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AcN-Lu-YZs">
                                         <rect key="frame" x="8" y="14" width="90" height="21"/>
@@ -415,6 +424,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xUt-mz-cNz"/>
+                    <connections>
+                        <outlet property="fifteenMinuteSwitch" destination="xFL-Nu-NUw" id="ZDj-oR-ZkM"/>
+                        <outlet property="tenMinuteSwitch" destination="K3F-zh-Bzt" id="yrt-Jx-Cg2"/>
+                        <outlet property="thirtyMinuteSwitch" destination="HCt-FO-4sb" id="gdP-Pk-cz1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jtm-dP-WVP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

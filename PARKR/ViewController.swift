@@ -117,6 +117,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     mapView.showsBuildings = true
     //    mapView.layer.cornerRadius = 20.0
     
+    
     mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
     
     //    AllTimedParkingData.map { park in
@@ -135,6 +136,27 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
     
+    // Find all polylines that interset with the mapView
+    var visibleLines = [TimedParking]()
+    for location in AllTimedParkingData {
+      
+      if (location.line?.intersects(currentBlock.mapRect!))! {
+        visibleLines.append(location)
+      }
+      
+    }
+    
+    print("\n\n\n", "Number of lines: ", visibleLines.count, "\n\n")
+    
+    // Paint all these polylines as disabled
+    for line in visibleLines {
+      
+      mapView.add(line.line!)
+      
+    }
+    
+    
+    
     //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
     
     //    print("\n\n All unique values for days of the week \(getUniqueValues(theData: AllTimedParkingData)).\n\n\n")
@@ -143,10 +165,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   }
   
   
-  
-  
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-    
+    // if MKOverlayPathRenderer
     let polylineRenderer = MKPolylineRenderer(overlay: overlay)
     polylineRenderer.strokeColor = UIColor.green
     polylineRenderer.lineWidth = 5
@@ -206,7 +226,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
       }
       
-//      print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
+      //      print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
       
     }
     
@@ -232,8 +252,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       
       let data1 = AllTimedParkingData[0]
       var test = [TimedParking]()
-        
-        test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
+      
+      test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
       
       let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
       
@@ -397,60 +417,60 @@ func getUniqueValues (theData: [TimedParking]) -> [String] {
   
   // Find which type was requested
   
-//  switch type {
-//    
-//  case .daysOfWeek:
+  //  switch type {
+  //
+  //  case .daysOfWeek:
   
-    var uniqueValues = [theData[0].days]
+  var uniqueValues = [theData[0].days]
+  
+  for block in theData {
     
-    for block in theData {
+    var test: Bool = false
+    
+    for value in uniqueValues {
       
-      var test: Bool = false
-      
-      for value in uniqueValues {
+      if block.days == value {
         
-        if block.days == value {
-          
-          test = true
-          
-        }
-      }
-      if test == false {
-        uniqueValues.append(block.days)
+        test = true
+        
       }
     }
-    
-    return uniqueValues
-    
-//  case .hoursBegin:
-//    
-//    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
-//    
-//    for block in theData {
-//      
-//      var test: Bool = false
-//      
-//      for value in uniqueValues {
-//        
-//        if block.hoursBegin == value {
-//          
-//          test = true
-//          
-//        }
-//      }
-//      if test == false {
-//        uniqueValues.append()
-//      }
-//    }
-//    
-//    return [uniqueValues]
-//    
-//  case .hoursEnd:
-//    var uniqueValues = [theData[0].hoursEnd.date]
-//    
-//  case .timeLimit:
-//    var uniqueValues = [theData[0].hours]
+    if test == false {
+      uniqueValues.append(block.days)
+    }
   }
   
+  return uniqueValues
   
-  //  let testLine: MKPolyline = MKPolyline.init(coordinates: AllTimedParkingData[0].geom, count: AllTimedParkingData[0].geom.count)
+  //  case .hoursBegin:
+  //
+  //    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
+  //
+  //    for block in theData {
+  //
+  //      var test: Bool = false
+  //
+  //      for value in uniqueValues {
+  //
+  //        if block.hoursBegin == value {
+  //
+  //          test = true
+  //
+  //        }
+  //      }
+  //      if test == false {
+  //        uniqueValues.append()
+  //      }
+  //    }
+  //
+  //    return [uniqueValues]
+  //
+  //  case .hoursEnd:
+  //    var uniqueValues = [theData[0].hoursEnd.date]
+  //
+  //  case .timeLimit:
+  //    var uniqueValues = [theData[0].hours]
+}
+
+
+//  let testLine: MKPolyline = MKPolyline.init(coordinates: AllTimedParkingData[0].geom, count: AllTimedParkingData[0].geom.count)

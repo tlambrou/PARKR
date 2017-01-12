@@ -49,12 +49,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   let showAlert = UIAlertController()
   
-  private func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    print("\n\n Location Manager updated \n\n")
-    let location = locations.first!
-    let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: mapView.visibleMapRect.size)
-    mapView.visibleMapRect = newRect
-  }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("\n\n Location Manager updated \n\n")
+        let location = locations.first!
+        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: mapView.visibleMapRect.size)
+        mapView.visibleMapRect = newRect
+        
+        //durationParkingLabel.text = ""
+        
+    }
   
   
   
@@ -96,6 +99,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     
+    
     readJSON(from: "TimedParkingData.geojson")
     
     
@@ -110,6 +114,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     let currentBlock = findNearestBlock(currentLocation: location)
+    
     
     mapView.delegate = self
     

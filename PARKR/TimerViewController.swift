@@ -10,6 +10,10 @@ import UIKit
 
 class TimerViewController: UIViewController {
 
+  @IBAction func stopAction(_ sender: UIButton) {
+    // TODO: Stop the timer
+    print("Stop button pressed")
+  }
     override func viewDidLoad() {
         super.viewDidLoad()
 

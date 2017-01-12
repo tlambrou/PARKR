@@ -17,20 +17,7 @@ enum daysOfTheWeek {
 
 class TimedParking {
   var DoW: daysOfTheWeek?
-  var days: String {
-    didSet {
-      switch days {
-      case "M-F":
-        DoW = .mondayThruFriday
-      case "M-Sa":
-        DoW = .mondayThruSaturday
-      case "M-Su":
-        DoW = .mondayThruSunday
-      default:
-        DoW = nil
-      }
-    }
-  }
+  var days: String
   var hoursBegin: DateComponents
   var hoursEnd: DateComponents
   var hourLimit: Int
@@ -99,6 +86,19 @@ class TimedParking {
     
     
     self.days = json["properties"]["days"].stringValue
+    
+    switch days {
+    case "M-F":
+      DoW = .mondayThruFriday
+    case "M-Sa":
+      DoW = .mondayThruSaturday
+    case "M-Su":
+      DoW = .mondayThruSunday
+    default:
+      DoW = nil
+    }
+
+    
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
     self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
@@ -108,6 +108,7 @@ class TimedParking {
 //      return coord
 //    }
     
+  
     
     self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
       let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)

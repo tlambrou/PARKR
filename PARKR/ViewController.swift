@@ -49,11 +49,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   let showAlert = UIAlertController()
   
-  private func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     print("\n\n Location Manager updated \n\n")
     let location = locations.first!
     let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: mapView.visibleMapRect.size)
-    mapView.visibleMapRect = newRect
+    mapView.setVisibleMapRect(newRect, animated: true)
   }
   
   

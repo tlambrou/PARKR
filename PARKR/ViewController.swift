@@ -46,12 +46,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   @IBOutlet weak var TimedTimeLabel: UILabel!
   
   var locationManager = CLLocationManager()
+  
   let showAlert = UIAlertController()
   
   private func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     print("\n\n Location Manager updated \n\n")
-    let location = locations.last!
-    locationManager.stopUpdatingLocation()
+    let location = locations.first!
+    let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: mapView.visibleMapRect.size)
+    mapView.visibleMapRect = newRect
   }
   
   
@@ -69,7 +71,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       print("AuthorizedAlways")
     case .authorizedWhenInUse:
       print("AuthorizedWhenInUse")
-      locationManager.startUpdatingLocation()
+      locationManager.startMonitoringSignificantLocationChanges()
     }
   }
   
@@ -155,7 +157,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       
     }
     
+    let userLocation = locationManager.location
     
+    // Update geocoding label with address based on location
+    CLGeocoder().reverseGeocodeLocation(userLocation!) { (placemark, error) in
+      if error != nil {
+        print ("THERE WAS AN ERROR IN GEOCODING")
+      } else {
+        if let place = placemark?[0] {
+          if let checker = place.subThoroughfare {
+            self.geocodingLabel.text = "\(place.subThoroughfare!) \(place.thoroughfare!)\n\(place.locality!), \(place.administrativeArea!)"
+          }
+        }
+      }
+    }
     
     //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
     
@@ -409,6 +424,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     return solutionTime
   }
+  
   
 } // View controller ends here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -73,7 +73,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     print("\n\n Location Manager updated!!!!!!!!! \n\n")
     
     // TODO: If automatic mode...
-    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+//    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
     
     // Make sure location is not nil
     guard let location = locations.first else {
@@ -133,8 +133,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     updateReverseGeoCoding(location: location)
     
     // Stop updating location and start updating signficant changes to location
-//    locationManager.stopUpdatingLocation()
-//    locationManager.startMonitoringSignificantLocationChanges()
+    locationManager.stopUpdatingLocation()
+    locationManager.startMonitoringSignificantLocationChanges()
     
   }
   

@@ -23,26 +23,20 @@ class TimedParking {
   var hourLimit: Int
   var id: Int
   var midPoint: CLLocation?
-  var geometry: [CLLocationCoordinate2D]
-//  var geom: [Coordinates] {
-//    didSet {
-//      if self.geom.count > 1 {
-//        if let secondLat = geom[1].latitude {
-//          if let firstLat = geom[0].latitude {
-//            if let secondLong = geom[1].longitude {
-//              if let firstLong = geom[0].longitude {
-//                let long = (secondLong - firstLong)/2
-//                let lat = (secondLat - firstLat)/2
-//                midPoint = CLLocation(latitude: lat, longitude: long)
-//              }
-//            }
-//            
-//          }
-//        }
-//      }
-//      
-//    }
-//  }
+  var geometry: [CLLocationCoordinate2D] {
+    didSet {
+      if self.geometry.count > 1 {
+        let secondLat = geometry[1].latitude
+        let firstLat = geometry[0].latitude
+        let secondLong = geometry[1].longitude
+        let firstLong = geometry[0].longitude
+        let long = (secondLong - firstLong)/2
+        let lat = (secondLat - firstLat)/2
+        midPoint = CLLocation(latitude: lat, longitude: long)
+      }
+    }
+  }
+  //  var geom: [Coordinates]
   var mapRect: MKMapRect? = nil
   var line: MKPolyline? = nil {
     didSet {
@@ -97,18 +91,18 @@ class TimedParking {
     default:
       DoW = nil
     }
-
+    
     
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
     self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
     self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
-//    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
-//      let coord = Coordinates(json: json)
-//      return coord
-//    }
+    //    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
+    //      let coord = Coordinates(json: json)
+    //      return coord
+    //    }
     
-  
+    
     
     self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
       let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)
@@ -120,30 +114,23 @@ class TimedParking {
       return location
     }
     
-//    print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
+    //    print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
     
     self.line = MKPolyline(coordinates: coordinates, count: coordinates.count)
     
     self.mapRect = self.line?.boundingMapRect
     
-//    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
+    //    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
     
-    
-//    if self.geom.count > 1 {
-//      if let secondLat = self.geom[1].latitude {
-//        if let firstLat = self.geom[0].latitude {
-//          if let secondLong = self.geom[1].longitude {
-//            if let firstLong = self.geom[0].longitude {
-//              let long = (secondLong - firstLong)/2
-//              let lat = (secondLat - firstLat)/2
-//              midPoint = CLLocation(latitude: lat, longitude: long)
-//            }
-//          }
-//          
-//        }
-//      }
-//    }
-    
+    if geometry.count > 1 {
+      let secondLat = self.geometry[1].latitude
+      let firstLat = self.geometry[0].latitude
+      let secondLong = self.geometry[1].longitude
+      let firstLong = self.geometry[0].longitude
+      let long = (secondLong - firstLong)/2
+      let lat = (secondLat - firstLat)/2
+      self.midPoint = CLLocation(latitude: lat, longitude: long)
+    }
     
     //    print("COORDS")
     //    for i in self.geom {
@@ -177,6 +164,14 @@ class TimedParking {
     self.line = MKPolyline(coordinates: coordinates, count: coordinates.count)
     
     self.mapRect = self.line?.boundingMapRect
+    
+    let secondLat = self.geometry[1].latitude
+    let firstLat = self.geometry[0].latitude
+    let secondLong = self.geometry[1].longitude
+    let firstLong = self.geometry[0].longitude
+    let long = (secondLong - firstLong)/2
+    let lat = (secondLat - firstLat)/2
+    self.midPoint = CLLocation(latitude: lat, longitude: long)
     
   }
   

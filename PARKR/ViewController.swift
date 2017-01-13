@@ -49,17 +49,106 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   let showAlert = UIAlertController()
   
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("\n\n Location Manager updated \n\n")
-        let location = locations.first!
-        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: mapView.visibleMapRect.size)
-        mapView.setVisibleMapRect(newRect, animated: true)
-        
-        //durationParkingLabel.text = ""
-        
-    }  
+  enum renderTypes { case active, inactive }
   
+  var renderer: renderTypes = .active
+  
+  enum modeTypes { case automatic, manual }
+  
+  var mode: modeTypes = .automatic
+  
+//  var animating: Bool = false {
+//    didSet {
+//      if animating == false {
+//        for line in findLinesInMapView() {
+//          renderer = .disabled
+//          mapView.add(line.line!)
+//        }
+//      }
+//    }
+//  }
+  
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    
+    print("\n\n Location Manager updated!!!!!!!!! \n\n")
+    
+    // TODO: If automatic mode...
+    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+    
+    // Make sure location is not nil
+    guard let location = locations.first else {
+      print("No location!")
+      return
+    }
+    
+    
+    
+    // Find all of the nearest blocks within a threshhold...
+    
+    print("\n\nLocation: ", location.coordinate, "\n\n")
+    
+    let subset = findLinesInMapView()
+    print("\n\nSubset in didUpdateLocations: \(subset.count)")
+    
+    // Make sure to see if location is in SF and if not display a message
+    guard subset.count > 0
+      else {
+        print("No Timed Parking Nearby")
+        geocodingLabel.text = "No SF Data Nearby"
+        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
+        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
+        return
+    }
+    
+    // Find the nearest block among all of the nearest blocks...
+    let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+    
+    // Create a composite rect of both the new coordinates and the selected block...
+    let coordRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (currentBlock.mapRect?.size)!)
+    let newRect = MKMapRectUnion(coordRect, currentBlock.mapRect!)
+    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+    mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
+    
+    // Redraw all of the nearby lines...
+    
+    
+    // Paint all these polylines as disabled
+    for line in subset {
+      
+      renderer = .inactive
+      mapView.add(line.line!)
+      
+    }
+    
+    // Paint the active line as active
+    renderer = .active
+    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+    renderer = .inactive
+    
+    // Update all of the rules and times...
+    
+    // Update the reverse geocoding...
+    
+    updateReverseGeoCoding(location: location)
+    
+    // Stop updating location and start updating signficant changes to location
+//    locationManager.stopUpdatingLocation()
+//    locationManager.startMonitoringSignificantLocationChanges()
+    
+  }
+  
+//  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+//    if animated == true && animating == false {
+//      animating = true
+//    }
+//  }
+//  
+//  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+//    if animated == true && animating == true {
+//      animating = false
+//    }
+//  }
   
   private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
@@ -74,11 +163,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       print("AuthorizedAlways")
     case .authorizedWhenInUse:
       print("AuthorizedWhenInUse")
-      locationManager.startMonitoringSignificantLocationChanges()
+      locationManager.startUpdatingLocation()
+      
     }
   }
   
-  func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+  private func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
     print("Failed to initialize GPS: ", error.description)
   }
   
@@ -90,92 +180,93 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     } else if CLLocationManager.authorizationStatus() == .denied {
       showAlert.message = "Location services were previously denied. Please enable location services for this app in settings."
     } else if CLLocationManager.authorizationStatus() == .authorizedAlways {
-      locationManager.startMonitoringSignificantLocationChanges()
+      locationManager.startUpdatingLocation()
     }
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    
-    
-    
     readJSON(from: "TimedParkingData.geojson")
-    
     
   }
   
   func findParking() {
+    
     print("\n\n\n\n Total Number of Data Points in Timed Parking Data: \(AllTimedParkingData.count)\n\n\n\n\n")
     
     guard let location = locationManager.location else {
-      print("No location Tassos!")
+      print("No location!")
       return
     }
     
-    let currentBlock = findNearestBlock(currentLocation: location)
+    locationManager.startUpdatingLocation()
     
+    // Set the delegate
+    locationManager.delegate = self
     
+    // Initialize the MapView
     mapView.delegate = self
-    
     mapView.showsCompass = true
     mapView.showsPointsOfInterest = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
-    //    mapView.layer.cornerRadius = 20.0
+    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+//    let subset = findLinesInMapView()
+//    
+//    print("\n\nSubset in FindParking: \(subset.count)")
+//    
+//    guard subset.count > 0
+//      else {
+//        print("Not in San Francisco!")
+//        geocodingLabel.text = "Oops! Not in San Francisco!"
+//        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
+//        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+//        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: true)
+//        return
+//    }
+    
+//    let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+    
+//    renderer = .inactive
+    
+//    AllTimedParkingData.map { park in
+//      
+//      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
+//      
+//    }
     
     
-    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+//    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+//    
+//    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
     
-    //    AllTimedParkingData.map { park in
+    
+    // Find all polylines that interset with the mapView
+    //    var visibleLines = [TimedParking]()
+    //    for location in AllTimedParkingData {
     //
-    //      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
+    //      if (location.line?.intersects(currentBlock.mapRect!))! {
+    //        visibleLines.append(location)
+    //      }
     //
     //    }
     
-    print("\n\n\n", currentBlock.id, currentBlock.geometry, "\n\n\n")
-    
-    print(currentBlock.line ?? "\n\n no line value \n\n")
-    
-    print(currentBlock.mapRect ?? "\n\n no mapRect value \n\n")
-    
-    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-    
-    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
-    
-    // Find all polylines that interset with the mapView
-    var visibleLines = [TimedParking]()
-    for location in AllTimedParkingData {
-      
-      if (location.line?.intersects(currentBlock.mapRect!))! {
-        visibleLines.append(location)
-      }
-      
-    }
-    
-    print("\n\n\n", "Number of lines: ", visibleLines.count, "\n\n")
+    //    print("\n\n\n", "Number of lines: ", visibleLines.count, "\n\n")
     
     // Paint all these polylines as disabled
-    for line in visibleLines {
-      
-      mapView.add(line.line!)
-      
-    }
+    //    for line in visibleLines {
+    //
+    //      renderer = .disabled
+    //      mapView.add(line.line!)
+    //
+    //    }
     
-    let userLocation = locationManager.location
-    
-    // Update geocoding label with address based on location
-    CLGeocoder().reverseGeocodeLocation(userLocation!) { (placemark, error) in
-      if error != nil {
-        print ("THERE WAS AN ERROR IN GEOCODING")
-      } else {
-        if let place = placemark?[0] {
-          if let checker = place.subThoroughfare {
-            self.geocodingLabel.text = "\(place.subThoroughfare!) \(place.thoroughfare!)\n\(place.locality!), \(place.administrativeArea!)"
-          }
-        }
-      }
-    }
+//    renderer = .active
+//    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+//    renderer = .inactive
+//    
+//    updateReverseGeoCoding(location: location)
     
     //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
     
@@ -184,12 +275,34 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     //    print("\n\n\n\(AllTimedParkingData[0].geometry)\n\n\n")
   }
   
+  func updateReverseGeoCoding(location: CLLocation) {
+    // Update geocoding label with address based on location
+    CLGeocoder().reverseGeocodeLocation(location) { (placemark, error) in
+      if error != nil {
+        print ("\n\nThere was an error geocoding\n\n")
+      } else {
+        if let place = placemark?[0] {
+          if place.subThoroughfare != nil {
+            self.geocodingLabel.text = "\(place.subThoroughfare!) \(place.thoroughfare!)\n\(place.locality!), \(place.administrativeArea!)"
+          }
+        }
+      }
+    }
+    
+  }
   
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
     // if MKOverlayPathRenderer
     let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-    polylineRenderer.strokeColor = UIColor.green
-    polylineRenderer.lineWidth = 5
+    switch renderer {
+    case .active:
+      polylineRenderer.strokeColor = UIColor.green
+      polylineRenderer.lineWidth = 6
+    case .inactive:
+      polylineRenderer.strokeColor = UIColor.purple
+      polylineRenderer.lineWidth = 4
+    }
+    
     return polylineRenderer
     
   }
@@ -198,10 +311,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
-  
-  
-  
   
   func readJSON(from file: String) {
     
@@ -243,17 +352,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         self.outputDataToFile()
         
-        
       }
       
-      //      print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
+//  print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
       
     }
     
-    
-    
-    //  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-    //  print(json)
+//  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+//  print(json)
     
   }
   
@@ -265,14 +371,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     let file = FileHandle(forWritingAtPath: filePath)
     
-    print(file)
+    print(file ?? "default for file")
     
     if file != nil {
       // Set the data we want to write
       
       let data1 = AllTimedParkingData[0]
       var test = [TimedParking]()
-      
+      print(test)
       test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
       
       let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
@@ -293,46 +399,79 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
-  func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
+  
+  func findLinesInMapView() -> [TimedParking] {
     
     var subset = [TimedParking]()
-    print(subset)
-    currentLocation
     
+    for location in AllTimedParkingData {
+      if (location.line?.intersects(mapView.visibleMapRect))! {
+        subset.append(location)
+      }
+    }
     return subset
   }
   
-  func findNearestBlock(currentLocation: CLLocation) -> TimedParking {
+  
+  func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
+    
+    var subset = [TimedParking]()
+    
+    for location in AllTimedParkingData {
+      
+//      if location.midPoint != nil {
+//        print("MidPoint: ", location.midPoint!, "\n", "Distance: ", location.midPoint!.distance(from: currentLocation), "\n", "CLLocationDistance(350): ", CLLocationDistance(350))
+//      } else if location.midPoint == nil {
+//        print("MidPoint: ", "nil", "\n", "Distance: ", "No Distance", "\n", "id: ", location.id)
+//      }
+      
+      let locationConvert = CLLocation.init(latitude: (location.line?.coordinate.latitude)!, longitude: (location.line?.coordinate.longitude)!)
+      
+      if location.line != nil && (locationConvert.distance(from: currentLocation) < CLLocationDistance(300)) {
+        subset.append(location)
+        
+      }
+      
+    }
+    
+    return subset
+  }
+
+  
+  func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
     
     var closest: TimedParking?
     var closestDistance: CLLocationDistance = CLLocationDistance(99999999)
     
-    
-    for location in AllTimedParkingData {
+    for location in data {
       
       if location.geometry.count > 1 {
         
-        //    Determine closest distance between a point and a line defined by 2 points
+        // Create point coordinates for location in the data
         let x2 = location.geometry[1].longitude
         let x1 = location.geometry[0].longitude
         let y2 = location.geometry[1].latitude
         let y1 = location.geometry[0].latitude
         
+        // Calculate the change in x and y
         let dx = x2 - x1
         let dy = y2 - y1
         
+        // Calculate the slope
         let slope = dx / dy
         
+        // Convert points to CLLocation
         let p1 = CLLocation(latitude: y1, longitude: x1)
         
         let p2 = CLLocation(latitude: y2, longitude: x2)
         
+        // Distance between point locations
         let segDist = p1.distance(from: p2)
         
-        //    let yInt = y1 - (slope * x1)
-        
+        // Determine closest distance between a point and a line defined by 2 points
         func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
           
+          // Create point coordinates for longitude & latitude
           let x1 = p1.coordinate.longitude
           let x2 = p2.coordinate.longitude
           let y1 = p1.coordinate.latitude
@@ -341,18 +480,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
           var ix: Double = 0
           var iy: Double = 0
           
-          // Find magnitude of line segment
+          // Function to find magnitude of line segment
           func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
             return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
           }
           
           let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
           
+          // Accounting for a line magnitude threshold that is neglibly zero
           if lineMag < 0.00000001 {
             print("short segment")
             return CLLocationDistance(abs(9999))
           }
           
+          // Create point coordinates for non-line point for comparison
           let px = p.coordinate.longitude
           let py = p.coordinate.latitude
           
@@ -360,6 +501,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
           var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
           u = u / (lineMag * lineMag)
           
+          // Distance calculation
           if ((u < 0.00001) || (u > 1)) {
             ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
             iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
@@ -378,34 +520,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         let distance = distanceCurrentLocToSegment(p: currentLocation, p1: p1, p2: p2)
         
-        //      print("\n\n\n", "Current Distance: ", distance, "\n", "Closest Distance: ", closestDistance)
-        
+        // Closest distance comparison
         if distance < closestDistance {
           closest = location
           closestDistance = distance
         }
         
-        //    if location.midPoint != nil {
-        //      let distance = currentLocation.distance(from: location.midPoint!)
-        //      //      CLLocationDistance(sqrt((pow((Double(()), 2) - pow(Double(currentLocation.coordinate.latitude), 2))))
-        //
-        //      if distance < closestDistance {
-        //        closestDistance = distance
-        //        closest = location
-        //      }
-        //    }
-        
-        
-        //    Based on midpoint
-        
-        //    if location.midPoint != nil {
-        //      let distance = currentLocation.distance(from: location.midPoint!)
-        //
-        //      if distance < closestDistance {
-        //        closestDistance = distance
-        //        closest = location
-        //      }
-        //    }
       }
       
     }
@@ -417,7 +537,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   func findNextTimedMove (nearestBlock: TimedParking) -> Date {
     
-    var solutionTime = Date()
+    let solutionTime = Date()
     let date = Date()
     let calendar = Calendar.current
     
@@ -492,6 +612,3 @@ func getUniqueValues (theData: [TimedParking]) -> [String] {
   //  case .timeLimit:
   //    var uniqueValues = [theData[0].hours]
 }
-
-
-//  let testLine: MKPolyline = MKPolyline.init(coordinates: AllTimedParkingData[0].geom, count: AllTimedParkingData[0].geom.count)

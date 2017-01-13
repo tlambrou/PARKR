@@ -11,19 +11,15 @@ import UserNotifications
 
 class TimerViewController: UIViewController {
     
-    var timer: Timer!
-    
-    var secondsLeft: Int!
-    
-    var hour: Int!
-    var minute: Int!
-    var second: Int!
+    var timer = Timer()
+    var counter = 28800
     
     @IBOutlet weak var tenMinuteSwitch: UISwitch!
     @IBOutlet weak var fifteenMinuteSwitch: UISwitch!
     @IBOutlet weak var thirtyMinuteSwitch: UISwitch!
     
-    
+    @IBOutlet weak var timeLabel: UILabel!
+
     @IBAction func tenMinuteAction(_ sender: UISwitch) {
         if sender.isOn {
             tenMinuteSwitch.setOn(true, animated: false)
@@ -42,7 +38,13 @@ class TimerViewController: UIViewController {
     @IBAction func thirtyMinuteAction(_ sender: UISwitch) {
     }
     
-    
+    func updateTimer () {
+        counter -= 1
+        let hours = Int(counter) / 3600
+        let minutes = Int(counter) / 60 % 60
+        let seconds = Int(counter) % 60
+        timeLabel.text = String(format: "%02i:%02i:%02i",hours,minutes,seconds)
+    }
     @IBAction func stopAction(_ sender: UIButton) {
         // TODO: Stop the timer
         print("Stop button pressed")
@@ -50,7 +52,7 @@ class TimerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        secondsLeft = 16925
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         
         self.cofigureNotification()
         
@@ -60,18 +62,9 @@ class TimerViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func updateTimer() {
-        if secondsLeft > 0 {
-            secondsLeft = secondsLeft - 1
-            hour = secondsLeft / 3600
-            minute = (secondsLeft % 3600) / 60
-            second = (secondsLeft % 3600) % 60
-        } else {
-            secondsLeft = 16925
-        }
-    }
     
-        
+    
+    
     func cofigureNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
             if success {

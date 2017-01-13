@@ -12,7 +12,7 @@ import UserNotifications
 class TimerViewController: UIViewController {
     
     var timer = Timer()
-    var counter = 28800
+    var counter = 7200
     
     @IBOutlet weak var tenMinuteSwitch: UISwitch!
     @IBOutlet weak var fifteenMinuteSwitch: UISwitch!
@@ -23,7 +23,7 @@ class TimerViewController: UIViewController {
     @IBAction func tenMinuteAction(_ sender: UISwitch) {
         if sender.isOn {
             tenMinuteSwitch.setOn(true, animated: false)
-            scheduleNotification(timeInterval: 5, completion: { (success) in
+            scheduleNotification(timeInterval: 6600, completion: { (success) in
                 if success {
                     print("successfully scheduled notification")
                 } else {
@@ -34,8 +34,28 @@ class TimerViewController: UIViewController {
     }
     
     @IBAction func fifteenMinuteAction(_ sender: UISwitch) {
+        if sender.isOn {
+            fifteenMinuteSwitch.setOn(true, animated: false)
+            scheduleNotification(timeInterval: 6300, completion: { (success) in
+                if success {
+                    print("successfully scheduled notification")
+                } else {
+                    print("Error scheduling notification")
+                }
+            })
+        }
     }
     @IBAction func thirtyMinuteAction(_ sender: UISwitch) {
+        if sender.isOn {
+            thirtyMinuteSwitch.setOn(true, animated: false)
+            scheduleNotification(timeInterval: 5400, completion: { (success) in
+                if success {
+                    print("successfully scheduled notification")
+                } else {
+                    print("Error scheduling notification")
+                }
+            })
+        }
     }
     
     func updateTimer () {
@@ -47,6 +67,7 @@ class TimerViewController: UIViewController {
     }
     @IBAction func stopAction(_ sender: UIButton) {
         // TODO: Stop the timer
+        timer.invalidate()
         print("Stop button pressed")
     }
     override func viewDidLoad() {

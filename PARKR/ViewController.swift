@@ -538,16 +538,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   func updateRules(location: TimedParking) {
     
+    let formatter = DateFormatter()
     
     let text = String(location.hourLimit) + " hr limit"
     durationParkingLabel.text = text
     let text2 = String(describing: location.hoursBegin.hour!) + "am - " + String(describing: location.hoursEnd.hour!) + "pm"
+    print(text, text2)
     moveOutLabel.text = text2
     
     let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
     let date = Date(timeIntervalSinceNow: hourLimit)
     let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-    moveByTimingLabel.text = String(describing: component.hour!) + ":" + String(describing: component.minute!)
+    moveByTimingLabel.text = String(describing: component.hour) + ":" + String(describing: component.minute!)
     
   }
   

@@ -89,7 +89,8 @@ class TimedParking {
     case "M-Su":
       DoW = .mondayThruSunday
     default:
-      DoW = nil
+      print("DOW nil")
+
     }
     
     

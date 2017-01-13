@@ -57,23 +57,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   var mode: modeTypes = .automatic
   
-//  var animating: Bool = false {
-//    didSet {
-//      if animating == false {
-//        for line in findLinesInMapView() {
-//          renderer = .disabled
-//          mapView.add(line.line!)
-//        }
-//      }
-//    }
-//  }
+  //  var animating: Bool = false {
+  //    didSet {
+  //      if animating == false {
+  //        for line in findLinesInMapView() {
+  //          renderer = .disabled
+  //          mapView.add(line.line!)
+  //        }
+  //      }
+  //    }
+  //  }
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     
     print("\n\n Location Manager updated!!!!!!!!! \n\n")
     
     // TODO: If automatic mode...
-//    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+    //    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
     
     // Make sure location is not nil
     guard let location = locations.first else {
@@ -127,6 +127,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     renderer = .inactive
     
     // Update all of the rules and times...
+    updateRules(location: currentBlock)
     
     // Update the reverse geocoding...
     
@@ -138,17 +139,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
-//  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-//    if animated == true && animating == false {
-//      animating = true
-//    }
-//  }
-//  
-//  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-//    if animated == true && animating == true {
-//      animating = false
-//    }
-//  }
+  //  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+  //    if animated == true && animating == false {
+  //      animating = true
+  //    }
+  //  }
+  //
+  //  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+  //    if animated == true && animating == true {
+  //      animating = false
+  //    }
+  //  }
   
   private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
@@ -212,35 +213,35 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
-//    let subset = findLinesInMapView()
-//    
-//    print("\n\nSubset in FindParking: \(subset.count)")
-//    
-//    guard subset.count > 0
-//      else {
-//        print("Not in San Francisco!")
-//        geocodingLabel.text = "Oops! Not in San Francisco!"
-//        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
-//        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-//        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: true)
-//        return
-//    }
+    //    let subset = findLinesInMapView()
+    //
+    //    print("\n\nSubset in FindParking: \(subset.count)")
+    //
+    //    guard subset.count > 0
+    //      else {
+    //        print("Not in San Francisco!")
+    //        geocodingLabel.text = "Oops! Not in San Francisco!"
+    //        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
+    //        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+    //        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: true)
+    //        return
+    //    }
     
-//    let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+    //    let currentBlock = findNearestBlock(data: subset, currentLocation: location)
     
-//    renderer = .inactive
+    //    renderer = .inactive
     
-//    AllTimedParkingData.map { park in
-//      
-//      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
-//      
-//    }
+    //    AllTimedParkingData.map { park in
+    //
+    //      mapView.add(park.line!, level: MKOverlayLevel.aboveLabels)
+    //
+    //    }
     
     
-//    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-//    
-//    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
-
+    //    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+    //
+    //    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
+    
     
     
     // Find all polylines that interset with the mapView
@@ -263,11 +264,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     //
     //    }
     
-//    renderer = .active
-//    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
-//    renderer = .inactive
-//    
-//    updateReverseGeoCoding(location: location)
+    //    renderer = .active
+    //    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+    //    renderer = .inactive
+    //
+    //    updateReverseGeoCoding(location: location)
     
     //    mapView.addOverlays(currentBlock.line! as MKOverlay, level: MKOverlayLevel.aboveRoads)
     
@@ -355,12 +356,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
       }
       
-//  print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
+      //  print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
       
     }
     
-//  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-//  print(json)
+    //  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
+    //  print(json)
     
   }
   
@@ -420,11 +421,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     for location in AllTimedParkingData {
       
-//      if location.midPoint != nil {
-//        print("MidPoint: ", location.midPoint!, "\n", "Distance: ", location.midPoint!.distance(from: currentLocation), "\n", "CLLocationDistance(350): ", CLLocationDistance(350))
-//      } else if location.midPoint == nil {
-//        print("MidPoint: ", "nil", "\n", "Distance: ", "No Distance", "\n", "id: ", location.id)
-//      }
+      //      if location.midPoint != nil {
+      //        print("MidPoint: ", location.midPoint!, "\n", "Distance: ", location.midPoint!.distance(from: currentLocation), "\n", "CLLocationDistance(350): ", CLLocationDistance(350))
+      //      } else if location.midPoint == nil {
+      //        print("MidPoint: ", "nil", "\n", "Distance: ", "No Distance", "\n", "id: ", location.id)
+      //      }
       
       let locationConvert = CLLocation.init(latitude: (location.line?.coordinate.latitude)!, longitude: (location.line?.coordinate.longitude)!)
       
@@ -437,7 +438,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     return subset
   }
-
+  
   
   func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
     
@@ -535,21 +536,67 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
-  
-  func findNextTimedMove (nearestBlock: TimedParking) -> Date {
+  func updateRules(location: TimedParking) {
     
-    let solutionTime = Date()
-    let date = Date()
-    let calendar = Calendar.current
     
-    if calendar.isDateInWeekend(date) {
-      
-      
-      
-    }
+    let text = String(location.hourLimit) + " hr limit"
+    durationParkingLabel.text = text
+    let text2 = String(describing: location.hoursBegin.hour!) + "am - " + String(describing: location.hoursEnd.hour!) + "pm"
+    moveOutLabel.text = text2
     
-    return solutionTime
+    let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+    let date = Date(timeIntervalSinceNow: hourLimit)
+    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+    moveByTimingLabel.text = String(describing: component.hour!) + ":" + String(describing: component.minute!)
+    
   }
+  
+  
+  
+//  func findNextTimedMove (nearestBlock: TimedParking) -> Date {
+//    
+//    var solutionTime: DateComponents
+//    let userCalendar = Calendar.autoupdatingCurrent
+//    let date = Date()
+//    let calendar = Calendar.current
+//    let currentDateDC = userCalendar.dateComponents([.calendar, .day, .hour, .minute, .second, .weekday, .weekdayOrdinal], from: date)
+//    let todayHoursBegin = DateComponents(calendar: userCalendar, year: currentDateDC.year, month: currentDateDC.month, day: currentDateDC.day, hour: nearestBlock.hoursBegin.hour, minute: nearestBlock.hoursBegin.minute, weekday: currentDateDC.weekday, weekdayOrdinal: currentDateDC.weekdayOrdinal, quarter: currentDateDC.quarter, weekOfMonth: currentDateDC.weekOfMonth, weekOfYear: currentDateDC.weekOfYear, yearForWeekOfYear: currentDateDC.yearForWeekOfYear)
+//    let todayHoursEnd = DateComponents(calendar: userCalendar, year: currentDateDC.year, month: currentDateDC.month, day: currentDateDC.day, hour: nearestBlock.hoursEnd.hour, minute: nearestBlock.hoursEnd.minute, weekday: currentDateDC.weekday, weekdayOrdinal: currentDateDC.weekdayOrdinal, quarter: currentDateDC.quarter, weekOfMonth: currentDateDC.weekOfMonth, weekOfYear: currentDateDC.weekOfYear, yearForWeekOfYear: currentDateDC.yearForWeekOfYear)
+//    
+//    let dateTodayHoursBegin = calendar.date(from: todayHoursBegin)
+//    let dateTodayHoursEnd = calendar.date(from: todayHoursEnd)
+//    var timeTillNextMove: DateComponents
+//    
+//    switch nearestBlock.DoW {
+//    case .mondayThruFriday:
+//      switch currentDateDC.weekday! {
+//      case 1:
+//    
+//      case 2, 3, 4, 5:
+//        if date < dateTodayHoursBegin! {
+//          timeTillNextMove = dateTodayHoursBegin! - date
+//          timeTillNextMove.hour = timeTillNextMove.hour! + nearestBlock.hourLimit
+//        } else if date > dateTodayHoursBegin! && date < dateTodayHoursEnd! {
+//          timeTillNextMove = calendar.dateComponents(in: userCalendar.timeZone, from: date)
+//          timeTillNextMove.hour = timeTillNextMove.hour! + nearestBlock.hourLimit
+//        } else if date > dateTodayHoursEnd! {
+//          timeTillNextMove = calendar.
+//        }
+//      case 6:
+//        
+//      case 7:
+//        
+//      default:
+//        print("Not valid gregorian calendar")
+//        break
+//      }
+//    case .mondayThruSaturday:
+//      
+//    case .mondayThruSunday:
+//    }
+//    
+//    return solutionTime
+//  }
   
   
 } // View controller ends here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

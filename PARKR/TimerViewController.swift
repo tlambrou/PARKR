@@ -10,6 +10,15 @@ import UIKit
 import UserNotifications
 
 class TimerViewController: UIViewController {
+    
+    var timer: Timer!
+    
+    var secondsLeft: Int!
+    
+    var hour: Int!
+    var minute: Int!
+    var second: Int!
+    
     @IBOutlet weak var tenMinuteSwitch: UISwitch!
     @IBOutlet weak var fifteenMinuteSwitch: UISwitch!
     @IBOutlet weak var thirtyMinuteSwitch: UISwitch!
@@ -41,15 +50,28 @@ class TimerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        secondsLeft = 16925
+        
         self.cofigureNotification()
         
         tenMinuteSwitch.setOn(false, animated: true)
         fifteenMinuteSwitch.setOn(false, animated: true)
         thirtyMinuteSwitch.setOn(false, animated: true)
         // Do any additional setup after loading the view.
-        
     }
     
+    func updateTimer() {
+        if secondsLeft > 0 {
+            secondsLeft = secondsLeft - 1
+            hour = secondsLeft / 3600
+            minute = (secondsLeft % 3600) / 60
+            second = (secondsLeft % 3600) % 60
+        } else {
+            secondsLeft = 16925
+        }
+    }
+    
+        
     func cofigureNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
             if success {

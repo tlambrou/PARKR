@@ -139,6 +139,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     print(currentBlock.mapRect ?? "\n\n no mapRect value \n\n")
     
+    
     let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
     
     mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)

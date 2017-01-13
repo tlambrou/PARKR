@@ -240,6 +240,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 //    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
 //    
 //    mapView.setVisibleMapRect(currentBlock.mapRect!, edgePadding: edge, animated: true)
+
     
     
     // Find all polylines that interset with the mapView

@@ -379,6 +379,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xUt-mz-cNz"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="fifteenMinuteSwitch" destination="xFL-Nu-NUw" id="ZDj-oR-ZkM"/>
                         <outlet property="tenMinuteSwitch" destination="K3F-zh-Bzt" id="yrt-Jx-Cg2"/>

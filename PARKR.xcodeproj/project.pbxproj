@@ -13,7 +13,6 @@
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
 		965158151DF7BFD800623FEB /* Extra in Resources */ = {isa = PBXBuildFile; fileRef = 965158141DF7BFD800623FEB /* Extra */; };
-		965BE2CD1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */; };
 		9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967432991DED6961000F3ABB /* Coordinates.swift */; };
 		967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
 		96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* TimedParkingData.geojson */; };
@@ -180,7 +179,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				965BE2CD1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson in Resources */,
 				9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */,
 				9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */,
 				9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */,

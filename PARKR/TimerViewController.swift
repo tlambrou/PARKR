@@ -102,8 +102,8 @@ class TimerViewController: UIViewController {
         
         
         notif.title = "PARKR"
-        notif.subtitle = "It's time to move out!!!"
-        notif.body = "Your parking time limit has been reached, it is time to move out your car. unless if you want parking ticket.:)"
+        notif.subtitle = "Don't get a ticket or towed!!!"
+        notif.body = "Move your car soon to avoid getting a ticket!! :)"
         
         let notificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: "parkerNotification", content: notif, trigger: notificationTrigger)

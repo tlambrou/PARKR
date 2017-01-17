@@ -42,3 +42,19 @@ Unique Values for String values for Days of the Week
 //        print(error)
 //      }
 //    }
+
+
+Update map to current location
+
+Wait till mapView has updated to current location
+
+Form a query from the mapRect coordinates of the visibleMap view
+
+Perform the JSON query
+
+Serialize the JSON results
+
+Clear the previous lines
+
+Render the appropriate lines
+

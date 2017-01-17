@@ -55,9 +55,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let showAlert = UIAlertController()
     
     enum renderTypes { case active, inactive }
-    
+  
     var renderer: renderTypes = .active
+
     
+    // Redraw all of the nearby lines...
+
     enum modeTypes { case automatic, manual }
     
     var mode: modeTypes = .automatic
@@ -143,19 +146,44 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager.startMonitoringSignificantLocationChanges()
         
     }
-    
+  
     //  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
     //    if animated == true && animating == false {
     //      animating = true
-    //    }
-    //  }
-    //
-    //  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-    //    if animated == true && animating == true {
-    //      animating = false
-    //    }
-    //  }
-    
+
+//    locationManager.startUpdatingLocation()
+//    
+//    // Set the delegate
+//    locationManager.delegate = self
+//    
+//    // Initialize the MapView
+//    mapView.delegate = self
+//    mapView.showsCompass = true
+//    mapView.showsPointsOfInterest = true
+//    mapView.showsUserLocation = true
+//    mapView.showsBuildings = true
+////    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+//    //    let subset = findLinesInMapView()
+//    //
+//    //    print("\n\nSubset in FindParking: \(subset.count)")
+//    //
+//    //    guard subset.count > 0
+//    //      else {
+//    //        print("Not in San Francisco!")
+//    //        geocodingLabel.text = "Oops! Not in San Francisco!"
+//    //        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
+//    //        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+//    //        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: true)
+//    //        return
+//    //    }
+//    //  }
+//    //
+//    //  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+//    //    if animated == true && animating == true {
+//    //      animating = false
+//    //    }
+//    //  }
+  
     private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         
         switch status {
@@ -441,7 +469,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return subset
     }
     
-    
+  
     func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
         
         var subset = [TimedParking]()
@@ -464,7 +492,24 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         return subset
+
+    for location in AllTimedParkingData {
+      if (location.line?.intersects(mapView.visibleMapRect))! {
+        subset.append(location)
+      }
     }
+    return subset
+  }
+  
+//  func queryForCurrentBoundingMap (mapRect: MKMapRect) -> String {
+//    
+//    
+//    
+//  }
+  
+  
+  
+  
     
     
     func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {

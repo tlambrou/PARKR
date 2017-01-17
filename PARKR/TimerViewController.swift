@@ -68,7 +68,7 @@ class TimerViewController: UIViewController {
     @IBAction func stopAction(_ sender: UIButton) {
         // TODO: Stop the timer
         timer.invalidate()
-        print("Stop button pressed")
+        self.dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()

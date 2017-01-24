@@ -17,9 +17,7 @@
 		967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
 		96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* TimedParkingData.geojson */; };
 		96EDCAD11E25BDEA00B06ED3 /* DateUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */; };
-		96EDCAD31E2602C900B06ED3 /* Output.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EDCAD21E2602C900B06ED3 /* Output.swift */; };
 		C6476F561E2709C500F15EFC /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6476F551E2709C500F15EFC /* TimerViewController.swift */; };
-		C66E828F1E24523000366D17 /* EnlargeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66E828E1E24523000366D17 /* EnlargeMap.swift */; };
 		CAB280297B62756ABA0FEC2C /* Pods_PARKR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 912691BB98FE905640C19DBF /* Pods_PARKR.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,11 +37,9 @@
 		967BBD5B1DECC32100B8DC2B /* TimedParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimedParking.swift; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* TimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimedParkingData.geojson; sourceTree = "<group>"; };
 		96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateUtilities.swift; sourceTree = "<group>"; };
-		96EDCAD21E2602C900B06ED3 /* Output.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Output.swift; sourceTree = "<group>"; };
 		B58E590C08AD615E1DF606D7 /* Pods-PARKR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PARKR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PARKR/Pods-PARKR.debug.xcconfig"; sourceTree = "<group>"; };
 		C24629A69058071A6E22CD8E /* Pods-PARKR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PARKR.release.xcconfig"; path = "Pods/Target Support Files/Pods-PARKR/Pods-PARKR.release.xcconfig"; sourceTree = "<group>"; };
 		C6476F551E2709C500F15EFC /* TimerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
-		C66E828E1E24523000366D17 /* EnlargeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnlargeMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +98,6 @@
 				967432991DED6961000F3ABB /* Coordinates.swift */,
 				96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */,
 				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
-				C66E828E1E24523000366D17 /* EnlargeMap.swift */,
 				9618A7B01DDE829800A86F7D /* Assets.xcassets */,
 				9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */,
 				9618A7B51DDE829800A86F7D /* Info.plist */,
@@ -110,7 +105,6 @@
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
 				965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */,
 				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
-				96EDCAD21E2602C900B06ED3 /* Output.swift */,
 				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
 			);
 			path = PARKR;
@@ -247,8 +241,6 @@
 				9618A7AC1DDE829800A86F7D /* ViewController.swift in Sources */,
 				9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */,
 				C6476F561E2709C500F15EFC /* TimerViewController.swift in Sources */,
-				96EDCAD31E2602C900B06ED3 /* Output.swift in Sources */,
-				C66E828F1E24523000366D17 /* EnlargeMap.swift in Sources */,
 				9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

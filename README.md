@@ -1,5 +1,6 @@
 ![parkr](https://cloud.githubusercontent.com/assets/17153572/22235898/1c7f4bce-e1b7-11e6-8c8b-720791bf1884.png)
 
+```https://kaka21garuda.github.io/PARKR-LandingPage/```
 
 ## Table of Contents
   * [App Design](#app-design)
@@ -56,4 +57,3 @@ Read and understand the parking rules wherever you go and avoid parking tickets.
 ![simulator screen shot jan 23 2017 10 22 52 pm](https://cloud.githubusercontent.com/assets/17153572/22236460/95bf47ac-e1ba-11e6-85cf-813e55dcc845.png)
 
 ![simulator screen shot jan 23 2017 10 23 01 pm](https://cloud.githubusercontent.com/assets/17153572/22236505/e0f750ac-e1ba-11e6-8106-c09264df11ff.png)
- 

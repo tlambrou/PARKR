@@ -75,7 +75,7 @@ class TimerViewController: UIViewController {
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         
-        self.cofigureNotification()
+        self.configureNotification()
         
         tenMinuteSwitch.setOn(false, animated: true)
         fifteenMinuteSwitch.setOn(false, animated: true)
@@ -86,7 +86,7 @@ class TimerViewController: UIViewController {
     
     
     
-    func cofigureNotification() {
+    func configureNotification() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
             if success {
                 print("notification access granted")
@@ -98,8 +98,6 @@ class TimerViewController: UIViewController {
     
     func scheduleNotification(timeInterval: TimeInterval, completion: @escaping (_ Success: Bool) -> ()) {
         let notif = UNMutableNotificationContent()
-        
-        
         
         notif.title = "PARKR"
         notif.subtitle = "Don't get a ticket or towed!!!"

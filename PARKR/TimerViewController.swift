@@ -11,8 +11,10 @@ import UserNotifications
 
 class TimerViewController: UIViewController {
     
+    var viewControllerInstance: ViewController!
+    
     var timer = Timer()
-    var counter = 7200
+    var counter = 0
     
     @IBOutlet weak var tenMinuteSwitch: UISwitch!
     @IBOutlet weak var fifteenMinuteSwitch: UISwitch!
@@ -72,6 +74,8 @@ class TimerViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        counter = viewControllerInstance.limit * 3600
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         

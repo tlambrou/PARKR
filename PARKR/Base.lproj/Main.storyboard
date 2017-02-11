@@ -78,7 +78,7 @@
                                     <color key="titleColor" red="0.95393846079060896" green="1" blue="0.98516529161088118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="ItY-do-lno" kind="show" id="fOU-7N-pCk"/>
+                                    <action selector="parkHereAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9hz-PI-FWg"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="I9g-eD-Bkv">
@@ -147,6 +147,7 @@
                         <outlet property="mapView" destination="tho-He-8Sh" id="uu9-KQ-hFn"/>
                         <outlet property="moveByTimingLabel" destination="sJm-K5-nXH" id="tzU-Pa-69V"/>
                         <outlet property="moveOutLabel" destination="fi5-vv-1Gm" id="eKA-ab-wGw"/>
+                        <segue destination="ItY-do-lno" kind="show" identifier="moveTimerSegue" id="TEm-bt-S31"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

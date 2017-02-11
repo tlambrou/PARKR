@@ -36,6 +36,8 @@ var AllTimedParkingData = [TimedParking]()
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    var limit: Int = 0
+    
     var touchPoint: CGPoint!
     var touchPointCoordinate: CLLocationCoordinate2D!
     
@@ -54,6 +56,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var TimedTimeLabel: UILabel!
+    
+    @IBAction func parkHereAction(_ sender: UIButton) {
+        
+        self.performSegue(withIdentifier: "moveTimerSegue", sender: nil)
+        
+    }
+    
     
     var locationManager = CLLocationManager()
     
@@ -561,8 +570,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let start = String(describing: location.hoursBegin.hour!)
         let end = String(location.hoursEnd.hour!)
         let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-        print("\n\n\nlocation Hr LIMIT \(text)")
-        print("\n\n\nlocation Hr BEGIN \(start)")
+        limit = location.hourLimit
+        print("LIMIT: \(limit)")
         moveOutLabel.text = text2
         
         let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
@@ -582,8 +591,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "moveTimerSegue" {
+            let timerView: TimerViewController = segue.destination as! TimerViewController
+            timerView.viewControllerInstance = self
+        }
+    }
+    
 }
-
 
 
 //// MARK: - Unique Values

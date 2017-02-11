@@ -46,8 +46,11 @@ class TimedParking {
   
   init(json: JSON) {
     
-    let number:Double? = Double(json["hours_begin"].intValue) / 100
-    let timeBegin = (number ?? 0)
+    
+    
+    print(json)
+    let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
+    let timeBegin = (number!)
     //    print(timeBegin)
     let hourBegin = floor(timeBegin)
     //    print(hourBegin)
@@ -67,9 +70,12 @@ class TimedParking {
     
     
     //    print(minuteBegin)
-    let number2: Double? = Double(json["hours_end"].intValue) / 100
+    let number2: Double? = Double(json["properties"]["hours_end"].intValue) / 100
+    print("NUMBER2: \(number2!)")
     let timeEnd = number2 ?? 0
     let hourEnd = floor(timeEnd)
+    
+
     
     var minuteEnd: Int
     if hourEnd == 0 {
@@ -98,6 +104,10 @@ class TimedParking {
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
     self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
     self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
+    
+    print("Hrs Begin \(self.hoursBegin)")
+    print("Hrs End \(self.hoursEnd)")
+    print("Hrs Limit \(self.hourLimit)")
     //    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
     //      let coord = Coordinates(json: json)
     //      return coord

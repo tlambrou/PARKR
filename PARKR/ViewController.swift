@@ -395,7 +395,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 //        
 //    }
     
-    
+    // MARK: - Nearest Line
     func findLinesInMapView() -> [TimedParking] {
         
         var subset = [TimedParking]()
@@ -547,6 +547,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     
+    // MARK: - Update rules
     func updateRules(location: TimedParking) {
         
         let formatter = DateFormatter()
@@ -556,129 +557,63 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         let text = String(location.hourLimit)
-        durationParkingLabel.text = text
-        let start = String(describing: location.hoursBegin.hour?.hours)
-        let text2 = "8am - 6pm"
+        durationParkingLabel.text = "\(text) hr parking"
+        let start = String(describing: location.hoursBegin.hour!)
+        let end = String(location.hoursEnd.hour!)
+        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
         print("\n\n\nlocation Hr LIMIT \(text)")
         print("\n\n\nlocation Hr BEGIN \(start)")
-        print(text, text2)
         moveOutLabel.text = text2
         
         let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
         let date = Date(timeIntervalSinceNow: hourLimit)
-        print(formatter.string(from: date))
+        print("FORMATTER : \(formatter.string(from: date))")
         //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
         //    moveByTimingLabel.text = formatter.string(from: date)
-        moveByTimingLabel.text = "10:00am"
+        moveByTimingLabel.text = "\(formatter.string(from: date))"
         
     }
     
-    
-    
-    //  func findNextTimedMove (nearestBlock: TimedParking) -> Date {
-    //
-    //    var solutionTime: DateComponents
-    //    let userCalendar = Calendar.autoupdatingCurrent
-    //    let date = Date()
-    //    let calendar = Calendar.current
-    //    let currentDateDC = userCalendar.dateComponents([.calendar, .day, .hour, .minute, .second, .weekday, .weekdayOrdinal], from: date)
-    //    let todayHoursBegin = DateComponents(calendar: userCalendar, year: currentDateDC.year, month: currentDateDC.month, day: currentDateDC.day, hour: nearestBlock.hoursBegin.hour, minute: nearestBlock.hoursBegin.minute, weekday: currentDateDC.weekday, weekdayOrdinal: currentDateDC.weekdayOrdinal, quarter: currentDateDC.quarter, weekOfMonth: currentDateDC.weekOfMonth, weekOfYear: currentDateDC.weekOfYear, yearForWeekOfYear: currentDateDC.yearForWeekOfYear)
-    //    let todayHoursEnd = DateComponents(calendar: userCalendar, year: currentDateDC.year, month: currentDateDC.month, day: currentDateDC.day, hour: nearestBlock.hoursEnd.hour, minute: nearestBlock.hoursEnd.minute, weekday: currentDateDC.weekday, weekdayOrdinal: currentDateDC.weekdayOrdinal, quarter: currentDateDC.quarter, weekOfMonth: currentDateDC.weekOfMonth, weekOfYear: currentDateDC.weekOfYear, yearForWeekOfYear: currentDateDC.yearForWeekOfYear)
-    //
-    //    let dateTodayHoursBegin = calendar.date(from: todayHoursBegin)
-    //    let dateTodayHoursEnd = calendar.date(from: todayHoursEnd)
-    //    var timeTillNextMove: DateComponents
-    //
-    //    switch nearestBlock.DoW {
-    //    case .mondayThruFriday:
-    //      switch currentDateDC.weekday! {
-    //      case 1:
-    //
-    //      case 2, 3, 4, 5:
-    //        if date < dateTodayHoursBegin! {
-    //          timeTillNextMove = dateTodayHoursBegin! - date
-    //          timeTillNextMove.hour = timeTillNextMove.hour! + nearestBlock.hourLimit
-    //        } else if date > dateTodayHoursBegin! && date < dateTodayHoursEnd! {
-    //          timeTillNextMove = calendar.dateComponents(in: userCalendar.timeZone, from: date)
-    //          timeTillNextMove.hour = timeTillNextMove.hour! + nearestBlock.hourLimit
-    //        } else if date > dateTodayHoursEnd! {
-    //          timeTillNextMove = calendar.
-    //        }
-    //      case 6:
-    //
-    //      case 7:
-    //
-    //      default:
-    //        print("Not valid gregorian calendar")
-    //        break
-    //      }
-    //    case .mondayThruSaturday:
-    //
-    //    case .mondayThruSunday:
-    //    }
-    //
-    //    return solutionTime
-    //  }
-    
-    
-} // View controller ends here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-func getUniqueValues (theData: [TimedParking]) -> [String] {
-    
-    // Find which type was requested
-    
-    //  switch type {
-    //
-    //  case .daysOfWeek:
-    
-    var uniqueValues = [theData[0].days]
-    
-    for block in theData {
-        
-        var test: Bool = false
-        
-        for value in uniqueValues {
-            
-            if block.days == value {
-                
-                test = true
-                
-            }
-        }
-        if test == false {
-            uniqueValues.append(block.days)
+    func hourNightPM(hour: Int) -> String {
+        if hour > 12 {
+            return String(hour - 12)
+        } else {
+            return String(hour)
         }
     }
     
-    return uniqueValues
-    
-    //  case .hoursBegin:
-    //
-    //    var uniqueValues = [formatter.string(from: theData[0].hoursBegin)]
-    //
-    //    for block in theData {
-    //
-    //      var test: Bool = false
-    //
-    //      for value in uniqueValues {
-    //
-    //        if block.hoursBegin == value {
-    //
-    //          test = true
-    //
-    //        }
-    //      }
-    //      if test == false {
-    //        uniqueValues.append()
-    //      }
-    //    }
-    //
-    //    return [uniqueValues]
-    //
-    //  case .hoursEnd:
-    //    var uniqueValues = [theData[0].hoursEnd.date]
-    //
-    //  case .timeLimit:
-    //    var uniqueValues = [theData[0].hours]
 }
+
+
+
+//// MARK: - Unique Values
+//func getUniqueValues (theData: [TimedParking]) -> [String] {
+//    
+//    // Find which type was requested
+//    
+//    //  switch type {
+//    //
+//    //  case .daysOfWeek:
+//    
+//    var uniqueValues = [theData[0].days]
+//    
+//    for block in theData {
+//        
+//        var test: Bool = false
+//        
+//        for value in uniqueValues {
+//            
+//            if block.days == value {
+//                
+//                test = true
+//                
+//            }
+//        }
+//        if test == false {
+//            uniqueValues.append(block.days)
+//        }
+//    }
+//    
+//    return uniqueValues
+//
+//}

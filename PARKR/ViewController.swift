@@ -559,6 +559,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // MARK: - Update rules
     func updateRules(location: TimedParking) {
         
+        
+        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+        let date = Date(timeIntervalSinceNow: hourLimit)
+        
+        checkMoveByDatePassed(date: date, location: location)
+        
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         let hourBegin = Calendar.current.date(from: location.hoursBegin)
@@ -566,17 +572,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         let text = String(location.hourLimit)
+        
         durationParkingLabel.text = "\(text) hr parking"
         let start = String(describing: location.hoursBegin.hour!)
         let end = String(location.hoursEnd.hour!)
         let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
         limit = location.hourLimit
-        print("LIMIT: \(limit)")
+       
         moveOutLabel.text = text2
+       
         
-        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-        let date = Date(timeIntervalSinceNow: hourLimit)
-        print("FORMATTER : \(formatter.string(from: date))")
+        checkMoveByDatePassed(date: date, location: location)
         //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
         //    moveByTimingLabel.text = formatter.string(from: date)
         moveByTimingLabel.text = "\(formatter.string(from: date))"
@@ -589,6 +595,27 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         } else {
             return String(hour)
         }
+    }
+    
+    func checkMoveByDatePassed(date: Date, location: TimedParking) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm"
+        
+        let calendar = Calendar.current
+        let componentMinute = calendar.component(.minute, from: date)
+        let componentHour = calendar.component(.hour, from: date)
+        
+        let minute = componentMinute.minute
+        let hour = componentHour.hour
+        
+        print("****** HOUR: \(minute.minute!)")
+        
+        // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+        
+        if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
+            location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
+        }
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

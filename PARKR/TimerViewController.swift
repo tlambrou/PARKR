@@ -91,7 +91,7 @@ class TimerViewController: UIViewController {
     
     
     func configureNotification() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .bteradge, .sound]) { (success, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
             if success {
                 print("notification access granted")
             } else {

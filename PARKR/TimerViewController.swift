@@ -70,6 +70,7 @@ class TimerViewController: UIViewController {
     @IBAction func stopAction(_ sender: UIButton) {
         // TODO: Stop the timer
         timer.invalidate()
+        
         self.dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
@@ -89,9 +90,8 @@ class TimerViewController: UIViewController {
     
     
     
-    
     func configureNotification() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .bteradge, .sound]) { (success, error) in
             if success {
                 print("notification access granted")
             } else {

@@ -15,7 +15,7 @@ class Coordinates {
   
   var latitude: CLLocationDegrees?
   var longitude: CLLocationDegrees?
-//  var coordinates: CLLocationCoordinate2D?
+  //  var coordinates: CLLocationCoordinate2D?
   
   init(json: JSON) {
     
@@ -23,6 +23,6 @@ class Coordinates {
     
     self.latitude = CLLocationDegrees(String(describing: coordArray[1]))!
     self.longitude = CLLocationDegrees(String(describing: coordArray[0]))!
-//    self.coordinates?.latitude = 
+    //    self.coordinates?.latitude =
   }
 }

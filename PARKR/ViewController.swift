@@ -638,12 +638,78 @@ func hourNightPM(hour: Int) -> String {
     let minute = componentMinute.minute
     let hour = componentHour.hour
     
+<<<<<<< Updated upstream
     print("****** HOUR: \(minute.minute!)")
+=======
+    // MARK: - Update rules
+    func updateRules(location: TimedParking) {
+        
+        
+        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+        let date = Date(timeIntervalSinceNow: hourLimit)
+        
+        let checkLocation = checkMoveByDatePassed(date: date, location: location)
+        
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+//        let hourBegin = Calendar.current.date(from: location.hoursBegin)
+//        let hourEnd = Calendar.current.date(from: location.hoursEnd)
+        
+        
+        let text = String(checkLocation.hourLimit)
+        
+        durationParkingLabel.text = "\(text) hr parking"
+        let start = String(describing: checkLocation.hoursBegin.hour!)
+        let end = String(checkLocation.hoursEnd.hour!)
+        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+        limit = checkLocation.hourLimit
+       
+        moveOutLabel.text = text2
+        
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour, .minute], from: date)
+        print("DATE*******: \(date)")
+       
+        //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+        //    moveByTimingLabel.text = formatter.string(from: date)
+        moveByTimingLabel.text = "\(components.hour!): \(components.minute!)"
+        
+    }
+>>>>>>> Stashed changes
     
     // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
     
+<<<<<<< Updated upstream
     if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
       location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
+=======
+    func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm"
+        
+        let calendar = Calendar.current
+        let componentMinute = calendar.component(.minute, from: date)
+        let componentHour = calendar.component(.hour, from: date)
+        
+        let minute = componentMinute.minute
+        let hour = componentHour.hour
+        
+        
+        // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+        print("HOUR: \(hour.hour!)")
+        print("LOCATION Hrs end \(location.hoursEnd.hour!)")
+        
+        print("MINUTE: \(minute.minute!)")
+        print("LOCATION min end \(location.hoursEnd.minute!)")
+        
+        if hour.hour! >= location.hoursEnd.hour! && minute.minute! > location.hoursEnd.minute! {
+            location.hourLimit = hour.hour! - location.hoursBegin.hour!
+            return location
+        } else {
+            return location
+        }
+        
+>>>>>>> Stashed changes
     }
     
   }

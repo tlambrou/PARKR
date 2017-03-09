@@ -68,6 +68,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   let showAlert = UIAlertController()
   
+  enum ruleType { case timed, metered, towAway, streetCleaning, permit }
+  
   enum renderTypes { case active, inactive }
   
   var renderer: renderTypes = .active
@@ -79,8 +81,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   var mode: modeTypes = .automatic
   
-  // MARK: - Location Manager Func
+  // MARK: - Location Manager Function
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    
     
     print("\n\n Location Manager updated!!!!!!!!! \n\n")
     
@@ -99,10 +102,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     print("\n\nLocation: ", location.coordinate, "\n\n")
     
-    let subset = findLinesInMapView()
+    //    let subset = findLinesInMapView() // Old method (loading all the data)
+    
+    callAPI(parkingType: .timed, mapRect: mapView.visibleMapRect)
+    
+    let subset = AllTimedParkingData
+    
     print("\n\nSubset in didUpdateLocations: \(subset.count)")
     
-    // Make sure to see if location is in SF and if not display a message
+    // Make sure to see if location is in SF and if not display a message --NEEDS TESTING
     guard subset.count > 0
       else {
         print("No Timed Parking Nearby")
@@ -115,7 +123,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     // MARK: - Find Nearest block
     // Find the nearest block among all of the nearest blocks...
-    let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+    
+    let currentBlock = findNearestBlock(data: subset, currentLocation: location)  // This is with the old method (all the data being loaded)
+    
     print("CURRENT DoW: \(currentBlock.DoW!)")
     print("DAYS: \(currentBlock.days)")
     print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
@@ -232,7 +242,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     super.viewDidLoad()
     
     longPress()
-    readJSON(from: "TimedParkingData.geojson")
+    //    readJSON(from: "TimedParkingData.geojson")
+    
     
   }
   
@@ -260,7 +271,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   // MARK: - Find Parking func
   func findParking() {
     
-    guard let location = locationManager.location else {
+    guard locationManager.location != nil else {
       print("No location!")
       return
     }
@@ -313,10 +324,87 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
+  // MARK: - Make an API call
+  func callAPI(parkingType: ruleType, mapRect: MKMapRect) {
+    
+    print("\n\nBegin loading parking data...\n\n")
+    
+    // Show progress bar
+    let progressBar = UILabel()
+    progressBar.text = "Loading..."
+    progressBar.textColor = UIColor.darkGray
+    progressBar.font = UIFont.boldSystemFont(ofSize: 18)
+    progressBar.sizeToFit()
+    self.mapView.addSubview(progressBar)
+    
+    //    DispatchQueue.global().async {
+    
+    let url = self.formURL(parkingType: parkingType, mapRect: mapRect)
+    
+    let headers = ["X-App-Token" : "ABbe1ilwKeO9XX4PVSSuSqqH6"]
+    
+    Alamofire.request(url, headers: headers).validate().responseJSON() { response in
+      debugPrint(response)
+      
+      switch response.result {
+      case .success:
+        
+        if let value = response.result.value {
+          
+          print(value)
+          let json = JSON(value)
+          
+          let allData = json.arrayValue
+          
+          print("\nWe got a response!\n\n", allData, "\n\n")
+          
+          let AllTimedParking = allData.map({ (entry: JSON) -> TimedParking in
+            return TimedParking(json: entry)
+          })
+          
+          print(AllTimedParking)
+          
+        } else {
+          print("\n\nSuccess but no data somehow!\n\n")
+        }
+      case .failure(let error):
+        print("\n\nWe got an error in the API call! Uh oh!!\n\n", error)
+      }
+    }
+    
+    //      DispatchQueue.main.async {
+    print("\n\nDone loading parking data...\n\n")
+    
+    // Hide progress
+    progressBar.removeFromSuperview()
+    
+    //Continue after the background thread to findParking()
+    self.findParking()
+    
+    //      }
+    //
+    //    }
+    
+    
+  }
+  
+  func formURL(parkingType: ruleType, mapRect: MKMapRect) -> String {
+    switch parkingType {
+    case .timed:
+      //      return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%20" + String(mapRect.origin.x) + "%2C%20" + String(mapRect.origin.y) + "%2C%20" + String(mapRect.origin.x + mapRect.size.width) + "%2C%20" + String(mapRect.origin.y + mapRect.size.height) + ")"
+      
+      return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%2037.774479%2C%20-122.420319%2C%2037.771975%2C%20-122.415174)"
+      
+    default:
+      return ""
+    }
+    
+  }
+  
   // MARK: - Read JSON
   func readJSON(from file: String) {
     
-    print("Begin loading parking data...")
+    print("\n\nBegin loading parking data...\n\n")
     
     // Show progress bar
     let progressBar = UILabel()
@@ -345,7 +433,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       })
       
       DispatchQueue.main.async {
-        print("Done loaing parking data...")
+        print("\n\nDone loading parking data...\n\n")
         
         // Hide progress
         progressBar.removeFromSuperview()
@@ -437,8 +525,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       }
       
     }
-    
-    return subset
     
     for location in AllTimedParkingData {
       if (location.line?.intersects(mapView.visibleMapRect))! {
@@ -555,78 +641,78 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
-
-
-// MARK: - Update rules
-func updateRules(location: TimedParking) {
   
   
-  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-  let date = Date(timeIntervalSinceNow: hourLimit)
-  
-  checkMoveByDatePassed(date: date, location: location)
-  
-  let formatter = DateFormatter()
-  formatter.timeStyle = .short
-  let hourBegin = Calendar.current.date(from: location.hoursBegin)
-  let hourEnd = Calendar.current.date(from: location.hoursEnd)
-  
-  let text = String(location.hourLimit)
-  
-  durationParkingLabel.text = "\(text) hr parking"
-  let start = String(describing: location.hoursBegin.hour!)
-  let end = String(location.hoursEnd.hour!)
-  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-  limit = location.hourLimit
-  
-  moveOutLabel.text = text2
-  
-  checkMoveByDatePassed(date: date, location: location)
-  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-  //    moveByTimingLabel.text = formatter.string(from: date)
-  moveByTimingLabel.text = "\(formatter.string(from: date))"
-  
-  
-}
-
-//// MARK: - Update rules
-//func updateRules(location: TimedParking) {
-//  
-//  let formatter = DateFormatter()
-//  formatter.timeStyle = .short
-//  print("\n\nHours Begin: ", location.hoursBegin, "\n\n")
-//  
-//  
-//  let hourBegin = Calendar.current.date(from: location.hoursBegin)
-//  let hourEnd = Calendar.current.date(from: location.hoursEnd)
-//  
-//  
-//  let text = String(location.hourLimit)
-//  durationParkingLabel.text = "\(text) hr parking"
-//  let start = String(describing: location.hoursBegin.hour!)
-//  let end = String(location.hoursEnd.hour!)
-//  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-//  limit = location.hourLimit
-//  print("LIMIT: \(limit)")
-//  moveOutLabel.text = text2
-//  
-//  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-//  let date = Date(timeIntervalSinceNow: hourLimit)
-//  print("FORMATTER : \(formatter.string(from: date))")
-//  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-//  //    moveByTimingLabel.text = formatter.string(from: date)
-//  moveByTimingLabel.text = "\(formatter.string(from: date))"
-//  
-//}
-
-func hourNightPM(hour: Int) -> String {
-  if hour > 12 {
-    return String(hour - 12)
-  } else {
-    return String(hour)
+  // MARK: - Update rules
+  func updateRules(location: TimedParking) {
+    
+    
+    let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+    let date = Date(timeIntervalSinceNow: hourLimit)
+    
+    checkMoveByDatePassed(date: date, location: location)
+    
+    let formatter = DateFormatter()
+    formatter.timeStyle = .short
+    let hourBegin = Calendar.current.date(from: location.hoursBegin)
+    let hourEnd = Calendar.current.date(from: location.hoursEnd)
+    
+    let text = String(location.hourLimit)
+    
+    durationParkingLabel.text = "\(text) hr parking"
+    let start = String(describing: location.hoursBegin.hour!)
+    let end = String(location.hoursEnd.hour!)
+    let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+    limit = location.hourLimit
+    
+    moveOutLabel.text = text2
+    
+    checkMoveByDatePassed(date: date, location: location)
+    //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+    //    moveByTimingLabel.text = formatter.string(from: date)
+    moveByTimingLabel.text = "\(formatter.string(from: date))"
+    
+    
   }
-}
-
+  
+  //// MARK: - Update rules
+  //func updateRules(location: TimedParking) {
+  //
+  //  let formatter = DateFormatter()
+  //  formatter.timeStyle = .short
+  //  print("\n\nHours Begin: ", location.hoursBegin, "\n\n")
+  //
+  //
+  //  let hourBegin = Calendar.current.date(from: location.hoursBegin)
+  //  let hourEnd = Calendar.current.date(from: location.hoursEnd)
+  //
+  //
+  //  let text = String(location.hourLimit)
+  //  durationParkingLabel.text = "\(text) hr parking"
+  //  let start = String(describing: location.hoursBegin.hour!)
+  //  let end = String(location.hoursEnd.hour!)
+  //  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+  //  limit = location.hourLimit
+  //  print("LIMIT: \(limit)")
+  //  moveOutLabel.text = text2
+  //
+  //  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+  //  let date = Date(timeIntervalSinceNow: hourLimit)
+  //  print("FORMATTER : \(formatter.string(from: date))")
+  //  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+  //  //    moveByTimingLabel.text = formatter.string(from: date)
+  //  moveByTimingLabel.text = "\(formatter.string(from: date))"
+  //
+  //}
+  
+  func hourNightPM(hour: Int) -> String {
+    if hour > 12 {
+      return String(hour - 12)
+    } else {
+      return String(hour)
+    }
+  }
+  
   func checkMoveByDatePassed(date: Date, location: TimedParking) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "hh:mm"
@@ -721,7 +807,7 @@ func hourNightPM(hour: Int) -> String {
     }
     
   }
-
+  
 }
 
 //// MARK: - Unique Values

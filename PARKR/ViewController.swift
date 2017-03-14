@@ -25,6 +25,16 @@ private extension MKPolyline {
   }
 }
 
+extension MKMapView {
+  func topLeftCoordinate() -> CLLocationCoordinate2D {
+    return convert(CGPoint.zero, toCoordinateFrom: self)
+  }
+  
+  func bottomRightCoordinate() -> CLLocationCoordinate2D {
+    return convert(CGPoint(x: frame.width, y: frame.height), toCoordinateFrom: self)
+  }
+}
+
 
 enum UniqueValuesType: Int {
   case daysOfWeek, hoursBegin, hoursEnd, timeLimit
@@ -109,82 +119,89 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       
       // Find all of the nearest blocks within a threshhold...
       
-      print("\n\nLocation: ", location.coordinate, "\n\n")
+//      print("\n\nLocation: ", location.coordinate, "\n\n")
       
       //    let subset = findLinesInMapView() // Old method (loading all the data)
       
       let newRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 70, 70)
       
-      
+//      print("\n\nHere is the region: ", newRegion)
       
       mapView.setRegion(newRegion, animated: true)
-      
-      
-      
-      callAPI(parkingType: .timed, mapRegion: newRegion)
-      
-      let subset = AllTimedParkingData
-      
-      print("\n\nSubset in didUpdateLocations: \(subset.count)")
-      
-      // Make sure to see if location is in SF and if not display a message --NEEDS TESTING
-      guard subset.count > 0
-        else {
-          print("No Timed Parking Nearby")
-          geocodingLabel.text = "No SF Data Nearby"
-          //        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
-          //        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-          //        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
-          return
-      }
-      
-      // MARK: - Find Nearest block
-      // Find the nearest block among all of the nearest blocks...
-      
-      let currentBlock = findNearestBlock(data: subset, currentLocation: location)  // This is with the old method (all the data being loaded)
-      
-      print("CURRENT DoW: \(currentBlock.DoW!)")
-      print("DAYS: \(currentBlock.days)")
-      print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
-      print("Hrs End: \(currentBlock.hoursEnd.hour)")
-      print("Hrs Limit: \(currentBlock.hourLimit)")
-      
-      // Create a composite rect of both the new coordinates and the selected block...
-      let coordRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (currentBlock.mapRect?.size)!)
-      let newRect = MKMapRectUnion(coordRect, currentBlock.mapRect!)
-      let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-      mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
-      
-      
-      
-      // Paint all these polylines as disabled
-      for line in subset {
-        
-        renderer = .inactive
-        mapView.add(line.line!)
-        
-      }
-      
-      // Paint the active line as active
-      renderer = .active
-      mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
-      renderer = .inactive
-      
-      // Update all of the rules and times...
-      updateRules(location: currentBlock)
-      
-      // Update the reverse geocoding...
-      
-      updateReverseGeoCoding(location: location)
-      
-      // Stop updating location and start updating signficant changes to location
-      locationManager.stopUpdatingLocation()
-      locationManager.startMonitoringSignificantLocationChanges()
       
       lastUpdated = Date()
       
     }
     
+  }
+  
+  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    
+    print("\n\nThe mapView Updated!\n\n")
+    
+    let location = locationManager.location
+    
+    let newRegion = MKCoordinateRegionForMapRect(mapView.visibleMapRect)
+    
+    callAPI(parkingType: .timed, mapRegion: newRegion)
+    
+    let subset = AllTimedParkingData
+    
+//    print("\n\nSubset in didUpdateLocations: \(subset.count)")
+    
+    // Make sure to see if location is in SF and if not display a message --NEEDS TESTING
+    guard subset.count > 0
+      else {
+        print("No Timed Parking Nearby")
+        geocodingLabel.text = "No SF Data Nearby"
+        //        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
+        //        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+        //        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
+        return
+    }
+    
+    // MARK: - Find Nearest block
+    // Find the nearest block among all of the nearest blocks...
+    
+    let currentBlock = findNearestBlock(data: subset, currentLocation: location!)  // This is with the old method (all the data being loaded)
+    
+    print("CURRENT DoW: \(currentBlock.DoW!)")
+    print("DAYS: \(currentBlock.days)")
+    print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
+    print("Hrs End: \(currentBlock.hoursEnd.hour)")
+    print("Hrs Limit: \(currentBlock.hourLimit)")
+    
+    // Create a composite rect of both the new coordinates and the selected block...
+    let coordRect = MKMapRect(origin: MKMapPointForCoordinate((location?.coordinate)!), size: (currentBlock.mapRect?.size)!)
+    let newRect = MKMapRectUnion(coordRect, currentBlock.mapRect!)
+    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
+    mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
+    
+    
+    
+    // Paint all these polylines as disabled
+    for line in subset {
+      
+      renderer = .inactive
+      mapView.add(line.line!)
+      
+    }
+    
+    // Paint the active line as active
+    renderer = .active
+    mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+    renderer = .inactive
+    
+    // Update all of the rules and times...
+    updateRules(location: currentBlock)
+    
+    // Update the reverse geocoding...
+    
+    updateReverseGeoCoding(location: location!)
+    
+    // Stop updating location and start updating signficant changes to location
+    locationManager.stopUpdatingLocation()
+    locationManager.startMonitoringSignificantLocationChanges()
   }
   
   //  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -376,35 +393,35 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let headers = ["X-App-Token" : "ABbe1ilwKeO9XX4PVSSuSqqH6"]
     
     Alamofire.request(url, headers: headers).validate(contentType: ["application/json"]).responseJSON() { response in
-      debugPrint(response)
-      print(response.request)  // original URL request
-      print(response.response) // HTTP URL response
-      print(response.data)     // server data
-      print(response.result)   // result of response serialization
+//      debugPrint(response)
+//      print(response.request)  // original URL request
+//      print(response.response) // HTTP URL response
+//      print(response.data)     // server data
+//      print(response.result)   // result of response serialization
       
       
       switch response.result {
       case .success:
         if let value = response.result.value {
           
-          print("\nHere is value: ", value)
+//          print("\nHere is value: ", value)
           let json = JSON(value)
-          print("\nHere is json: \n\n", json)
+//          print("\nHere is json: \n\n", json)
           
           let allData = json.arrayValue
           
-          print("\nWe got a response!\n\n", allData, "\n\n")
+//          print("\nWe got a response!\n\n", allData, "\n\n")
           
           let allTimedParking = allData.map({ (entry: JSON) -> TimedParking in
-            print("\n\nEntry: ", entry)
+//            print("\n\nEntry: ", entry)
             return TimedParking(json: entry)
           })
           
           AllTimedParkingData.append(contentsOf: allTimedParking)
           
-          print("\n\nResponse: ", response.data)
+//          print("\n\nResponse: ", response.data)
           
-          print("\n\nHere is suppose to be the data: ", allTimedParking)
+//          print("\n\nHere is suppose to be the data: ", allTimedParking)
           
           
         } else {
@@ -423,7 +440,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     //    progressBar.removeFromSuperview()
     
     //Continue after the background thread to findParking()
-    self.findParking()
+//    self.findParking()
     
     //      }
     //
@@ -441,7 +458,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       let long = mapRegion.center.longitude
       let spanLat = mapRegion.span.latitudeDelta
       let spanLong = mapRegion.span.longitudeDelta
-      let spanConstant = CLLocationDegrees(0.003)
+      let spanConstant = CLLocationDegrees(0.005)
+      
       
       return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%20" + String(lat) + "%2C%20" + String(long) + "%2C%20" + String(lat + spanConstant) + "%2C%20" + String(long + spanConstant) + ")"
       
@@ -513,19 +531,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     let file = FileHandle(forWritingAtPath: filePath)
     
-    print(file ?? "default for file")
+//    print(file ?? "default for file")
     
     if file != nil {
       // Set the data we want to write
       
       let data1 = AllTimedParkingData[0]
       var test = [TimedParking]()
-      print(test)
+//      print(test)
       test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
       
       let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
       
-      print(data!)
+//      print(data!)
       
       // Append to the end of the file
       file?.seekToEndOfFile()
@@ -776,7 +794,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let minute = componentMinute.minute
     let hour = componentHour.hour
     
-    print("****** HOUR: \(minute.minute!)")
+//    print("****** HOUR: \(minute.minute!)")
   }
   
   //    // MARK: - Update rules

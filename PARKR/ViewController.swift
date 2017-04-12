@@ -257,7 +257,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
   }
   
-  // MARK: - Find Parking func
+  // MARK: - Find Parking function
   func findParking() {
     
     guard let location = locationManager.location else {
@@ -352,7 +352,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         self.findParking()
         
-        //self.outputDataToFile()
         
       }
       
@@ -555,78 +554,78 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
   }
   
-
-
-// MARK: - Update rules
-func updateRules(location: TimedParking) {
   
   
-  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-  let date = Date(timeIntervalSinceNow: hourLimit)
-  
-  checkMoveByDatePassed(date: date, location: location)
-  
-  let formatter = DateFormatter()
-  formatter.timeStyle = .short
-  let hourBegin = Calendar.current.date(from: location.hoursBegin)
-  let hourEnd = Calendar.current.date(from: location.hoursEnd)
-  
-  let text = String(location.hourLimit)
-  
-  durationParkingLabel.text = "\(text) hr parking"
-  let start = String(describing: location.hoursBegin.hour!)
-  let end = String(location.hoursEnd.hour!)
-  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-  limit = location.hourLimit
-  
-  moveOutLabel.text = text2
-  
-  checkMoveByDatePassed(date: date, location: location)
-  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-  //    moveByTimingLabel.text = formatter.string(from: date)
-  moveByTimingLabel.text = "\(formatter.string(from: date))"
-  
-  
-}
-
-//// MARK: - Update rules
-//func updateRules(location: TimedParking) {
-//  
-//  let formatter = DateFormatter()
-//  formatter.timeStyle = .short
-//  print("\n\nHours Begin: ", location.hoursBegin, "\n\n")
-//  
-//  
-//  let hourBegin = Calendar.current.date(from: location.hoursBegin)
-//  let hourEnd = Calendar.current.date(from: location.hoursEnd)
-//  
-//  
-//  let text = String(location.hourLimit)
-//  durationParkingLabel.text = "\(text) hr parking"
-//  let start = String(describing: location.hoursBegin.hour!)
-//  let end = String(location.hoursEnd.hour!)
-//  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-//  limit = location.hourLimit
-//  print("LIMIT: \(limit)")
-//  moveOutLabel.text = text2
-//  
-//  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-//  let date = Date(timeIntervalSinceNow: hourLimit)
-//  print("FORMATTER : \(formatter.string(from: date))")
-//  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-//  //    moveByTimingLabel.text = formatter.string(from: date)
-//  moveByTimingLabel.text = "\(formatter.string(from: date))"
-//  
-//}
-
-func hourNightPM(hour: Int) -> String {
-  if hour > 12 {
-    return String(hour - 12)
-  } else {
-    return String(hour)
+  // MARK: - Update rules
+  func updateRules(location: TimedParking) {
+    
+    
+    let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+    let date = Date(timeIntervalSinceNow: hourLimit)
+    
+    checkMoveByDatePassed(date: date, location: location)
+    
+    let formatter = DateFormatter()
+    formatter.timeStyle = .short
+    let hourBegin = Calendar.current.date(from: location.hoursBegin)
+    let hourEnd = Calendar.current.date(from: location.hoursEnd)
+    
+    let text = String(location.hourLimit)
+    
+    durationParkingLabel.text = "\(text) hr parking"
+    let start = String(describing: location.hoursBegin.hour!)
+    let end = String(location.hoursEnd.hour!)
+    let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+    limit = location.hourLimit
+    
+    moveOutLabel.text = text2
+    
+    checkMoveByDatePassed(date: date, location: location)
+    //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+    //    moveByTimingLabel.text = formatter.string(from: date)
+    moveByTimingLabel.text = "\(formatter.string(from: date))"
+    
+    
   }
-}
-
+  
+  //// MARK: - Update rules
+  //func updateRules(location: TimedParking) {
+  //
+  //  let formatter = DateFormatter()
+  //  formatter.timeStyle = .short
+  //  print("\n\nHours Begin: ", location.hoursBegin, "\n\n")
+  //
+  //
+  //  let hourBegin = Calendar.current.date(from: location.hoursBegin)
+  //  let hourEnd = Calendar.current.date(from: location.hoursEnd)
+  //
+  //
+  //  let text = String(location.hourLimit)
+  //  durationParkingLabel.text = "\(text) hr parking"
+  //  let start = String(describing: location.hoursBegin.hour!)
+  //  let end = String(location.hoursEnd.hour!)
+  //  let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+  //  limit = location.hourLimit
+  //  print("LIMIT: \(limit)")
+  //  moveOutLabel.text = text2
+  //
+  //  let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+  //  let date = Date(timeIntervalSinceNow: hourLimit)
+  //  print("FORMATTER : \(formatter.string(from: date))")
+  //  //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+  //  //    moveByTimingLabel.text = formatter.string(from: date)
+  //  moveByTimingLabel.text = "\(formatter.string(from: date))"
+  //
+  //}
+  
+  func hourNightPM(hour: Int) -> String {
+    if hour > 12 {
+      return String(hour - 12)
+    } else {
+      return String(hour)
+    }
+  }
+  
   func checkMoveByDatePassed(date: Date, location: TimedParking) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "hh:mm"
@@ -638,91 +637,83 @@ func hourNightPM(hour: Int) -> String {
     let minute = componentMinute.minute
     let hour = componentHour.hour
     
-<<<<<<< Updated upstream
-    print("****** HOUR: \(minute.minute!)")
-=======
-    // MARK: - Update rules
-    func updateRules(location: TimedParking) {
-        
-        
-        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-        let date = Date(timeIntervalSinceNow: hourLimit)
-        
-        let checkLocation = checkMoveByDatePassed(date: date, location: location)
-        
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-//        let hourBegin = Calendar.current.date(from: location.hoursBegin)
-//        let hourEnd = Calendar.current.date(from: location.hoursEnd)
-        
-        
-        let text = String(checkLocation.hourLimit)
-        
-        durationParkingLabel.text = "\(text) hr parking"
-        let start = String(describing: checkLocation.hoursBegin.hour!)
-        let end = String(checkLocation.hoursEnd.hour!)
-        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-        limit = checkLocation.hourLimit
-       
-        moveOutLabel.text = text2
-        
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.hour, .minute], from: date)
-        print("DATE*******: \(date)")
-       
-        //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-        //    moveByTimingLabel.text = formatter.string(from: date)
-        moveByTimingLabel.text = "\(components.hour!): \(components.minute!)"
-        
-    }
->>>>>>> Stashed changes
     
-    // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
-    
-<<<<<<< Updated upstream
-    if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
-      location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
-=======
-    func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm"
-        
-        let calendar = Calendar.current
-        let componentMinute = calendar.component(.minute, from: date)
-        let componentHour = calendar.component(.hour, from: date)
-        
-        let minute = componentMinute.minute
-        let hour = componentHour.hour
-        
-        
-        // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
-        print("HOUR: \(hour.hour!)")
-        print("LOCATION Hrs end \(location.hoursEnd.hour!)")
-        
-        print("MINUTE: \(minute.minute!)")
-        print("LOCATION min end \(location.hoursEnd.minute!)")
-        
-        if hour.hour! >= location.hoursEnd.hour! && minute.minute! > location.hoursEnd.minute! {
-            location.hourLimit = hour.hour! - location.hoursBegin.hour!
-            return location
-        } else {
-            return location
-        }
-        
->>>>>>> Stashed changes
-    }
-    
+    //    // MARK: - Update rules
+    //    func updateRules(location: TimedParking) {
+    //
+    //
+    //        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+    //        let date = Date(timeIntervalSinceNow: hourLimit)
+    //
+    //        let checkLocation = checkMoveByDatePassed(date: date, location: location)
+    //
+    //        let formatter = DateFormatter()
+    //        formatter.timeStyle = .short
+    ////        let hourBegin = Calendar.current.date(from: location.hoursBegin)
+    ////        let hourEnd = Calendar.current.date(from: location.hoursEnd)
+    //
+    //
+    //        let text = String(checkLocation.hourLimit)
+    //
+    //        durationParkingLabel.text = "\(text) hr parking"
+    //        let start = String(describing: checkLocation.hoursBegin.hour!)
+    //        let end = String(checkLocation.hoursEnd.hour!)
+    //        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+    //        limit = checkLocation.hourLimit
+    //
+    //        moveOutLabel.text = text2
+    //
+    //        let calendar = Calendar.current
+    //        let components = calendar.dateComponents([.hour, .minute], from: date)
+    //        print("DATE*******: \(date)")
+    //
+    //        //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+    //        //    moveByTimingLabel.text = formatter.string(from: date)
+    //        moveByTimingLabel.text = "\(components.hour!): \(components.minute!)"
+    //
+    //    }
+    //
+    //    // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+    //
+    //
+    //    if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
+    //      location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
   }
   
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == "moveTimerSegue" {
-      let timerView: TimerViewController = segue.destination as! TimerViewController
-      timerView.viewControllerInstance = self
-    }
-    
-  }
-
+  
+  
 }
+
+func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
+  let dateFormatter = DateFormatter()
+  dateFormatter.dateFormat = "hh:mm"
+  
+  let calendar = Calendar.current
+  let componentMinute = calendar.component(.minute, from: date)
+  let componentHour = calendar.component(.hour, from: date)
+  
+  let minute = componentMinute.minute
+  let hour = componentHour.hour
+  
+  
+  // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+  print("HOUR: \(hour.hour!)")
+  print("LOCATION Hrs end \(location.hoursEnd.hour!)")
+  
+  print("MINUTE: \(minute.minute!)")
+  print("LOCATION min end \(location.hoursEnd.minute!)")
+  
+  if hour.hour! >= location.hoursEnd.hour! && minute.minute! > location.hoursEnd.minute! {
+    location.hourLimit = hour.hour! - location.hoursBegin.hour!
+    return location
+  } else {
+    return location
+  }
+  
+}
+
+
+
 
 //// MARK: - Unique Values
 //func getUniqueValues (theData: [TimedParking]) -> [String] {

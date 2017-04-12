@@ -95,6 +95,7 @@
 				9618A7A91DDE829800A86F7D /* AppDelegate.swift */,
 				9618A7AB1DDE829800A86F7D /* ViewController.swift */,
 				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
+				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
 				967432991DED6961000F3ABB /* Coordinates.swift */,
 				96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */,
 				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
@@ -105,7 +106,6 @@
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
 				965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */,
 				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
-				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
 			);
 			path = PARKR;
 			sourceTree = "<group>";

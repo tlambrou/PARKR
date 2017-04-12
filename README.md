@@ -1,8 +1,6 @@
 ![parkr](https://cloud.githubusercontent.com/assets/17153572/22235898/1c7f4bce-e1b7-11e6-8c8b-720791bf1884.png)
 
-```
- https://kaka21garuda.github.io/PARKR-LandingPage/
-```
+ [https://www.tryparkr.com](https://www.tryparkr.com)
 
 ## Table of Contents
   * [App Design](#app-design)

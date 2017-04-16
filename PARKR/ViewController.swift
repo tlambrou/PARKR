@@ -276,7 +276,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     mapView.showsPointsOfInterest = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
-    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+    mapView.setUserTrackingMode(MKUserTrackingMode.followWithHeading, animated: true)
     
   }
   
@@ -711,8 +711,6 @@ func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
   }
   
 }
-
-
 
 
 //// MARK: - Unique Values

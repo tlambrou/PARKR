@@ -89,7 +89,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   
   enum modeTypes { case automatic, manual }
   
-  var mode: modeTypes = .automatic
+  var mode: modeTypes = .automatic {
+    didSet {
+      switch mode {
+      case .automatic: break
+        // Make the map center on the user's location
+      // Turn off the autolocation button
+      case .manual: break
+        // Unpeg the map from centering on the user's location
+        // Turn on the autolocation button
+      }
+    }
+  }
   
   var lastUpdated = Date(timeIntervalSinceNow: -20)
   var currentUpdated = Date(timeIntervalSinceNow: -20)
@@ -98,39 +109,49 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   // MARK: - Location Manager Function
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     
-
+    // Create time upon entering for comparison
     currentUpdated = Date()
     
-    if currentUpdated.timeIntervalSince(lastUpdated) > 10 {
+    // Check to see if in Automatic mode
+    if mode == .automatic {
       
-      updateIndex += 1
-      
-      print("\n\n Location Manager updated!!!!!!!!! \n\n")
-      
-      // TODO: If automatic mode...
-      //    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
-      
-      // Make sure location is not nil
-      guard let location = locations.first else {
-        print("No location!")
-        return
+      // Check to see if the time since the last update was greater than threshold
+      if currentUpdated.timeIntervalSince(lastUpdated) > 0.5 {
+        
+        // Create a counter of how many updates have been done
+        updateIndex += 1
+        
+        print("\n\n Location Manager updated!!!!!!!!! \(updateIndex)\n\n")
+        
+        // TODO: If automatic mode...
+        //    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+        
+        // Make sure location is not nil
+        guard let location = locations.last else {
+          print("No location!")
+          return
+        }
+        
+        mapView.setUserTrackingMode(MKUserTrackingMode.followWithHeading, animated: true)
+        
+        // Find all of the nearest blocks within a threshhold...
+        
+        //      print("\n\nLocation: ", location.coordinate, "\n\n")
+        
+        //    let subset = findLinesInMapView() // Old method (loading all the data)
+        
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+        
+        //      let newRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 70, 70)
+        
+        //      print("\n\nHere is the region: ", newRegion)
+        
+        mapView.setRegion(region, animated: true)
+        
+        lastUpdated = Date()
+        
       }
-      
-      
-      // Find all of the nearest blocks within a threshhold...
-      
-//      print("\n\nLocation: ", location.coordinate, "\n\n")
-      
-      //    let subset = findLinesInMapView() // Old method (loading all the data)
-      
-      let newRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 70, 70)
-      
-//      print("\n\nHere is the region: ", newRegion)
-      
-      mapView.setRegion(newRegion, animated: true)
-      
-      lastUpdated = Date()
-      
     }
     
   }
@@ -147,7 +168,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     let subset = AllTimedParkingData
     
-//    print("\n\nSubset in didUpdateLocations: \(subset.count)")
+    //    print("\n\nSubset in didUpdateLocations: \(subset.count)")
     
     // Make sure to see if location is in SF and if not display a message --NEEDS TESTING
     guard subset.count > 0
@@ -160,24 +181,34 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return
     }
     
-    // MARK: - Find Nearest block
+    // MARK: - Find Nearest block called
     // Find the nearest block among all of the nearest blocks...
     
     let currentBlock = findNearestBlock(data: subset, currentLocation: location!)  // This is with the old method (all the data being loaded)
     
-    print("CURRENT DoW: \(currentBlock.DoW!)")
-    print("DAYS: \(currentBlock.days)")
-    print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
-    print("Hrs End: \(currentBlock.hoursEnd.hour)")
-    print("Hrs Limit: \(currentBlock.hourLimit)")
+    // MARK: - Detect if User is out of range
+    // Create a circle around the current location to see if the closest data intersects with the circle
+    let radius = CLLocationDistance(24)
+    let circle = MKCircle(center: (location?.coordinate)!, radius: radius)
+    let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
     
-    // Create a composite rect of both the new coordinates and the selected block...
-    let coordRect = MKMapRect(origin: MKMapPointForCoordinate((location?.coordinate)!), size: (currentBlock.mapRect?.size)!)
-    let newRect = MKMapRectUnion(coordRect, currentBlock.mapRect!)
-    let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-    mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: false)
-    
-    
+    // If the current block is within 24 meters of the user's locatio
+    if intersecting {
+      
+      print("CURRENT DoW: \(currentBlock.DoW!)")
+      print("DAYS: \(currentBlock.days)")
+      print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
+      print("Hrs End: \(currentBlock.hoursEnd.hour)")
+      print("Hrs Limit: \(currentBlock.hourLimit)")
+      
+      // Update the reverse geocoding...
+      updateReverseGeoCoding(location: location!)
+      
+    // Otherwise if street is not within the threshold of the 24 meters
+    } else {
+      print("No Parking Data for this street")
+      geocodingLabel.text = "No Data On This Street"
+    }
     
     // Paint all these polylines as disabled
     for line in subset {
@@ -194,10 +225,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     // Update all of the rules and times...
     updateRules(location: currentBlock)
-    
-    // Update the reverse geocoding...
-    
-    updateReverseGeoCoding(location: location!)
     
     // Stop updating location and start updating signficant changes to location
     locationManager.stopUpdatingLocation()
@@ -280,15 +307,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    findParking()
-    let sfCenter = CLLocationCoordinate2D(latitude: 37.756940, longitude: -122.444338)
-    
-    let sfRegion = MKCoordinateRegionMakeWithDistance(sfCenter, 13800, 13800)
-    
-    mapView.setRegion(sfRegion, animated: false)
-    
-    
-    //    longPress()
+    initializeMapView()
+    longPress()
     //    readJSON(from: "TimedParkingData.geojson")
     
     
@@ -305,36 +325,49 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     if gestureRecognizer.state != .began {
       return
     } else {
-      touchPoint = gestureRecognizer.location(in: self.mapView)
-      touchPointCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+      //      touchPoint = gestureRecognizer.location(in: self.mapView)
+      //      touchPointCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+      let center = self.mapView.center
       // create an annotation
-      annotation.coordinate = touchPointCoordinate
-      self.mapView.addAnnotation(annotation)
+      //      annotation.coordinate = touchPointCoordinate
+      //      self.mapView.addAnnotation(annotation)
       
       
     }
   }
   
   // MARK: - Find Parking func
-  func findParking() {
+  func initializeMapView() {
     
-    guard locationManager.location != nil else {
+    
+    // Set the delegate
+    locationManager.delegate = self
+    
+    locationManager.startUpdatingLocation()
+    
+    guard let location = locationManager.location else {
       print("No location!")
       return
     }
     
-    locationManager.startUpdatingLocation()
+    //    let sfCenter = CLLocationCoordinate2D(latitude: 37.756940, longitude: -122.444338)
+    //
+    //    let sfRegion = MKCoordinateRegionMakeWithDistance(sfCenter, 13800, 13800)
+    //
+    let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+    let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+    mapView.setRegion(region, animated: false)
     
-    // Set the delegate
-    locationManager.delegate = self
     
     // Initialize the MapView
     mapView.delegate = self
     mapView.showsCompass = true
     mapView.showsPointsOfInterest = true
+    mapView.isPitchEnabled = true
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
-    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+    mapView.setUserTrackingMode(MKUserTrackingMode.followWithHeading, animated: true)
+    
     
   }
   
@@ -393,35 +426,35 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let headers = ["X-App-Token" : "ABbe1ilwKeO9XX4PVSSuSqqH6"]
     
     Alamofire.request(url, headers: headers).validate(contentType: ["application/json"]).responseJSON() { response in
-//      debugPrint(response)
-//      print(response.request)  // original URL request
-//      print(response.response) // HTTP URL response
-//      print(response.data)     // server data
-//      print(response.result)   // result of response serialization
+      //      debugPrint(response)
+      //      print(response.request)  // original URL request
+      //      print(response.response) // HTTP URL response
+      //      print(response.data)     // server data
+      //      print(response.result)   // result of response serialization
       
       
       switch response.result {
       case .success:
         if let value = response.result.value {
           
-//          print("\nHere is value: ", value)
+          //          print("\nHere is value: ", value)
           let json = JSON(value)
-//          print("\nHere is json: \n\n", json)
+          //          print("\nHere is json: \n\n", json)
           
           let allData = json.arrayValue
           
-//          print("\nWe got a response!\n\n", allData, "\n\n")
+          //          print("\nWe got a response!\n\n", allData, "\n\n")
           
           let allTimedParking = allData.map({ (entry: JSON) -> TimedParking in
-//            print("\n\nEntry: ", entry)
+            //            print("\n\nEntry: ", entry)
             return TimedParking(json: entry)
           })
           
           AllTimedParkingData.append(contentsOf: allTimedParking)
           
-//          print("\n\nResponse: ", response.data)
+          //          print("\n\nResponse: ", response.data)
           
-//          print("\n\nHere is suppose to be the data: ", allTimedParking)
+          //          print("\n\nHere is suppose to be the data: ", allTimedParking)
           
           
         } else {
@@ -440,7 +473,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     //    progressBar.removeFromSuperview()
     
     //Continue after the background thread to findParking()
-//    self.findParking()
+    //    self.findParking()
     
     //      }
     //
@@ -453,7 +486,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     switch parkingType {
     case .timed:
       
-//      let regionCoord  = MKCoordinateRegionForMapRect(mapRect)
+      //      let regionCoord  = MKCoordinateRegionForMapRect(mapRect)
       let lat = mapRegion.center.latitude
       let long = mapRegion.center.longitude
       let spanLat = mapRegion.span.latitudeDelta
@@ -508,7 +541,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Hide progress
         progressBar.removeFromSuperview()
         
-        self.findParking()
+        self.initializeMapView()
         
         //self.outputDataToFile()
         
@@ -531,19 +564,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     let file = FileHandle(forWritingAtPath: filePath)
     
-//    print(file ?? "default for file")
+    //    print(file ?? "default for file")
     
     if file != nil {
       // Set the data we want to write
       
       let data1 = AllTimedParkingData[0]
       var test = [TimedParking]()
-//      print(test)
+      //      print(test)
       test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
       
       let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
       
-//      print(data!)
+      //      print(data!)
       
       // Append to the end of the file
       file?.seekToEndOfFile()
@@ -794,7 +827,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let minute = componentMinute.minute
     let hour = componentHour.hour
     
-//    print("****** HOUR: \(minute.minute!)")
+    //    print("****** HOUR: \(minute.minute!)")
   }
   
   //    // MARK: - Update rules

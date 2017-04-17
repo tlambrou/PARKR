@@ -197,8 +197,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       
       print("CURRENT DoW: \(currentBlock.DoW!)")
       print("DAYS: \(currentBlock.days)")
-      print("Hrs Begin: \(currentBlock.hoursBegin.hour)")
-      print("Hrs End: \(currentBlock.hoursEnd.hour)")
+      print("Hrs Begin: \(String(describing: currentBlock.hoursBegin.hour))")
+      print("Hrs End: \(String(describing: currentBlock.hoursEnd.hour))")
       print("Hrs Limit: \(currentBlock.hourLimit)")
       
       // Update the reverse geocoding...
@@ -467,7 +467,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     //      DispatchQueue.main.async {
-    print("\n\nDone loading parking data...\n\n")
+    print("\n\nDone loading parking data...\(AllTimedParkingData.count)\n\n")
     
     // Hide progress
     //    progressBar.removeFromSuperview()
@@ -491,7 +491,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       let long = mapRegion.center.longitude
       let spanLat = mapRegion.span.latitudeDelta
       let spanLong = mapRegion.span.longitudeDelta
-      let spanConstant = CLLocationDegrees(0.005)
+      let spanConstant = CLLocationDegrees(0.001)
       
       
       return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%20" + String(lat) + "%2C%20" + String(long) + "%2C%20" + String(lat + spanConstant) + "%2C%20" + String(long + spanConstant) + ")"
@@ -536,7 +536,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       })
       
       DispatchQueue.main.async {
-        print("\n\nDone loading parking data...\n\n")
+        print("\n\nDone loading parking data... \(AllTimedParkingData.count)\n\n")
         
         // Hide progress
         progressBar.removeFromSuperview()

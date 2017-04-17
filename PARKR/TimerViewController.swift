@@ -95,7 +95,7 @@ class TimerViewController: UIViewController {
             if success {
                 print("notification access granted")
             } else {
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             }
         }
     }

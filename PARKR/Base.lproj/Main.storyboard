@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<<<<<<< HEAD
     <device id="retina5_5" orientation="portrait">
+=======
+    <device id="retina4_7" orientation="portrait">
+>>>>>>> api-updating
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -22,8 +26,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+<<<<<<< HEAD
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Ote-pW-8zA">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+=======
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Ote-pW-8zA">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+>>>>>>> api-updating
                             </imageView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="tho-He-8Sh">
                                 <rect key="frame" x="0.0" y="152" width="414" height="512"/>

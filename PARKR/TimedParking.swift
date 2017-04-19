@@ -49,7 +49,7 @@ class TimedParking {
     
     
     print(json)
-    let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
+    let number:Double? = Double(json["hours_begin"].intValue) / 100
     let timeBegin = (number!)
     //    print(timeBegin)
     let hourBegin = floor(timeBegin)
@@ -70,8 +70,8 @@ class TimedParking {
     
     
     //    print(minuteBegin)
-    let number2: Double? = Double(json["properties"]["hours_end"].intValue) / 100
-    print("NUMBER2: \(number2!)")
+    let number2: Double? = Double(json["hours_end"].intValue) / 100
+//    print("NUMBER2: \(number2!)")
     let timeEnd = number2 ?? 0
     let hourEnd = floor(timeEnd)
     
@@ -85,7 +85,7 @@ class TimedParking {
     }
     
     
-    self.days = json["properties"]["days"].stringValue
+    self.days = json["days"].stringValue
     
     switch days {
     case "M-F":
@@ -102,12 +102,12 @@ class TimedParking {
     
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
-    self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
-    self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
+    self.hourLimit = Int(json["hour_limit"].stringValue) ?? 0
+    self.id = Int(json["object_id"].stringValue) ?? 999999
     
-    print("Hrs Begin \(self.hoursBegin)")
-    print("Hrs End \(self.hoursEnd)")
-    print("Hrs Limit \(self.hourLimit)")
+//    print("Hrs Begin \(self.hoursBegin)")
+//    print("Hrs End \(self.hoursEnd)")
+//    print("Hrs Limit \(self.hourLimit)")
     //    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
     //      let coord = Coordinates(json: json)
     //      return coord
@@ -115,7 +115,7 @@ class TimedParking {
     
     
     
-    self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
+    self.geometry = json["geom"]["coordinates"].arrayValue.map { json in
       let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)
       return coord
     }
@@ -125,13 +125,13 @@ class TimedParking {
       return location
     }
     
-    //    print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
+//        print(coordinates, separator: "\n\n\n", terminator: "\n\n-----------\n")
     
     self.line = MKPolyline(coordinates: coordinates, count: coordinates.count)
     
     self.mapRect = self.line?.boundingMapRect
     
-    //    print(self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
+//        print("Number of points", self.line!.pointCount, separator: "\n\n\n", terminator: "\n\n-----------\n\n")
     
     if geometry.count > 1 {
       let secondLat = self.geometry[1].latitude
@@ -143,12 +143,12 @@ class TimedParking {
       self.midPoint = CLLocation(latitude: lat, longitude: long)
     }
     
-    //    print("COORDS")
-    //    for i in self.geom {
-    //      print(i.latitude)
-    //      print(i.longitude)
-    //      print("\n\n")
-    //    }
+//        print("COORDS")
+//        for i in self.geometry {
+//          print(i.latitude)
+//          print(i.longitude)
+//          print("\n\n")
+//        }
     
     //    self.name = json["im:name"]["label"].stringValue
     //    self.rightsOwner = json["rights"]["label"].stringValue

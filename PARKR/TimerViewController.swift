@@ -83,7 +83,7 @@ class TimerViewController: UIViewController {
         self.configureNotification()
         
         tenMinuteSwitch.setOn(false, animated: true)
-        fifteenMinuteSwitch.setOn(false, animated: true)
+        fifteenMinuteSwitch.setOn(true, animated: true)
         thirtyMinuteSwitch.setOn(false, animated: true)
         // Do any additional setup after loading the view.
     }
@@ -95,7 +95,7 @@ class TimerViewController: UIViewController {
             if success {
                 print("notification access granted")
             } else {
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             }
         }
     }
@@ -104,8 +104,9 @@ class TimerViewController: UIViewController {
         let notif = UNMutableNotificationContent()
         
         notif.title = "PARKR"
-        notif.subtitle = "Don't get a ticket or towed!!!"
-        notif.body = "Move your car soon to avoid getting a ticket!! :)"
+        notif.subtitle = "Don't forget to move your vehicle!!!"
+        notif.body = "Move your vehicle soon to avoid getting a ticket!! 🚘 🎫 👮"
+        notif.sound = UNNotificationSound.default()
         
         let notificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: "parkerNotification", content: notif, trigger: notificationTrigger)

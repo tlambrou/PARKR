@@ -94,6 +94,7 @@
 			children = (
 				9618A7A91DDE829800A86F7D /* AppDelegate.swift */,
 				9618A7AB1DDE829800A86F7D /* ViewController.swift */,
+				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
 				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
 				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
 				967432991DED6961000F3ABB /* Coordinates.swift */,

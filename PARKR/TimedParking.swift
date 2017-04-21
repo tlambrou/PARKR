@@ -49,7 +49,7 @@ class TimedParking {
     
     
     print(json)
-    let number:Double? = Double(json["hours_begin"].intValue) / 100
+    let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
     let timeBegin = (number!)
     //    print(timeBegin)
     let hourBegin = floor(timeBegin)
@@ -70,7 +70,7 @@ class TimedParking {
     
     
     //    print(minuteBegin)
-    let number2: Double? = Double(json["hours_end"].intValue) / 100
+    let number2: Double? = Double(json["properties"]["hours_end"].intValue) / 100
 //    print("NUMBER2: \(number2!)")
     let timeEnd = number2 ?? 0
     let hourEnd = floor(timeEnd)
@@ -85,7 +85,7 @@ class TimedParking {
     }
     
     
-    self.days = json["days"].stringValue
+    self.days = json["properties"]["days"].stringValue
     
     switch days {
     case "M-F":
@@ -102,8 +102,8 @@ class TimedParking {
     
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
-    self.hourLimit = Int(json["hour_limit"].stringValue) ?? 0
-    self.id = Int(json["object_id"].stringValue) ?? 999999
+    self.hourLimit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
+    self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
     
 //    print("Hrs Begin \(self.hoursBegin)")
 //    print("Hrs End \(self.hoursEnd)")
@@ -113,12 +113,15 @@ class TimedParking {
     //      return coord
     //    }
     
-    
-    
-    self.geometry = json["geom"]["coordinates"].arrayValue.map { json in
+    self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
       let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)
       return coord
     }
+//    
+//    self.geometry = json["properties"]["geometry"]["coordinates"].arrayValue.map { json in
+//      let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)
+//      return coord
+//    }
     
     let coordinates: [CLLocationCoordinate2D] = self.geometry.map {
       location in

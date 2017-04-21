@@ -11,7 +11,7 @@ import UserNotifications
 
 class TimerViewController: UIViewController {
     
-    var viewControllerInstance: ViewController!
+    var viewControllerInstance: MapViewController!
     
     var timer = Timer()
     var counter = 0

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9618A7A91DDE829800A86F7D /* AppDelegate.swift */; };
-		9618A7AC1DDE829800A86F7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9618A7AB1DDE829800A86F7D /* ViewController.swift */; };
+		9618A7AC1DDE829800A86F7D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9618A7AB1DDE829800A86F7D /* MapViewController.swift */; };
 		9618A7AF1DDE829800A86F7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7AD1DDE829800A86F7D /* Main.storyboard */; };
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
 		9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */; };
@@ -25,7 +25,7 @@
 		912691BB98FE905640C19DBF /* Pods_PARKR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PARKR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9618A7A61DDE829800A86F7D /* PARKR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PARKR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9618A7A91DDE829800A86F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9618A7AB1DDE829800A86F7D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9618A7AB1DDE829800A86F7D /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9618A7AE1DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9618A7B01DDE829800A86F7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9618A7B31DDE829800A86F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -93,21 +93,61 @@
 			isa = PBXGroup;
 			children = (
 				9618A7A91DDE829800A86F7D /* AppDelegate.swift */,
-				9618A7AB1DDE829800A86F7D /* ViewController.swift */,
-				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
-				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
-				967432991DED6961000F3ABB /* Coordinates.swift */,
-				96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */,
-				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
+				969E77421EA9803E00157847 /* Controllers */,
+				969E77431EA9805000157847 /* Models */,
+				969E77441EA9807D00157847 /* Storyboards */,
+				969E77451EA9809600157847 /* Helpers */,
+				969E77461EA980A700157847 /* Data */,
 				9618A7B01DDE829800A86F7D /* Assets.xcassets */,
-				9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */,
 				9618A7B51DDE829800A86F7D /* Info.plist */,
 				965158141DF7BFD800623FEB /* Extra */,
+			);
+			path = PARKR;
+			sourceTree = "<group>";
+		};
+		969E77421EA9803E00157847 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9618A7AB1DDE829800A86F7D /* MapViewController.swift */,
+				C6476F551E2709C500F15EFC /* TimerViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		969E77431EA9805000157847 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
+				967432991DED6961000F3ABB /* Coordinates.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		969E77441EA9807D00157847 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				9618A7AD1DDE829800A86F7D /* Main.storyboard */,
+				9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		969E77451EA9809600157847 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		969E77461EA980A700157847 /* Data */ = {
+			isa = PBXGroup;
+			children = (
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
 				965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */,
 				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
 			);
-			path = PARKR;
+			name = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,7 +278,7 @@
 			files = (
 				96EDCAD11E25BDEA00B06ED3 /* DateUtilities.swift in Sources */,
 				967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */,
-				9618A7AC1DDE829800A86F7D /* ViewController.swift in Sources */,
+				9618A7AC1DDE829800A86F7D /* MapViewController.swift in Sources */,
 				9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */,
 				C6476F561E2709C500F15EFC /* TimerViewController.swift in Sources */,
 				9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */,

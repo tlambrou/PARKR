@@ -119,6 +119,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       // Check to see if the time since the last update was greater than threshold
       if currentUpdated.timeIntervalSince(lastUpdated) > 2 {
         
+        
+        
         // Check to see if the data has loaded yet...
         if loading == true {
           
@@ -144,7 +146,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
           //            let subset = findLinesInMapView() // Old method (loading all the data)
           
           let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-          let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: CLLocationDegrees(0.000001), longitudeDelta: CLLocationDegrees(0.000001)))
+          let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(CLLocationDegrees(0.00001), CLLocationDegrees(0.00001)))
+          
           
           //      let newRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 70, 70)
           
@@ -168,7 +171,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //      initializeMapView()
     //    }
     
-    
     let location = locationManager.location
     
     //    let newRegion = MKCoordinateRegionForMapRect(mapView.visibleMapRect)
@@ -184,7 +186,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       guard subset.count > 0
         else {
           print("No Timed Parking Nearby")
-          geocodingLabel.text = "No SF Data Nearby"
+          geocodingLabel.text = "No Data On This Street"
           
           return
       }
@@ -202,16 +204,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       
       // If the current block is within 24 meters of the user's locatio
       if intersecting {
-        
-        print("CURRENT DoW: \(currentBlock.DoW!)")
-        print("DAYS: \(currentBlock.days)")
-        print("Hrs Begin: \(String(describing: currentBlock.hoursBegin.hour))")
-        print("Hrs End: \(String(describing: currentBlock.hoursEnd.hour))")
-        print("Hrs Limit: \(currentBlock.hourLimit)")
-        
         // Update the reverse geocoding...
         updateReverseGeoCoding(location: location!)
-        
         // Otherwise if street is not within the threshold of the 24 meters
       } else {
         print("No Parking Data for this street")

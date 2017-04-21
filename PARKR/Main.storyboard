@@ -22,31 +22,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pk7-lv-ib8" userLabel="LoadingView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="Launch" translatesAutoresizingMaskIntoConstraints="NO" id="OVo-Z1-WIN">
-                                        <rect key="frame" x="-20" y="-35" width="414" height="736"/>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
-                                        <rect key="frame" x="115" y="320.5" width="145" height="26.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="145" id="56X-Wi-TnQ"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="OVo-Z1-WIN" firstAttribute="centerY" secondItem="Pk7-lv-ib8" secondAttribute="centerY" id="FO9-gj-E7B"/>
-                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerX" secondItem="OVo-Z1-WIN" secondAttribute="centerX" id="Gfm-mm-nZf"/>
-                                    <constraint firstItem="OVo-Z1-WIN" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="QQL-MK-CsB"/>
-                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="VKa-eb-nRN"/>
-                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerY" secondItem="Pk7-lv-ib8" secondAttribute="centerY" id="oGe-x0-hCU"/>
-                                </constraints>
-                            </view>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Ote-pW-8zA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
@@ -132,6 +107,31 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pk7-lv-ib8" userLabel="LoadingView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="Launch" translatesAutoresizingMaskIntoConstraints="NO" id="OVo-Z1-WIN">
+                                        <rect key="frame" x="-20" y="-35" width="414" height="736"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
+                                        <rect key="frame" x="115" y="320.5" width="145" height="26.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="145" id="56X-Wi-TnQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="OVo-Z1-WIN" firstAttribute="centerY" secondItem="Pk7-lv-ib8" secondAttribute="centerY" id="FO9-gj-E7B"/>
+                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerX" secondItem="OVo-Z1-WIN" secondAttribute="centerX" id="Gfm-mm-nZf"/>
+                                    <constraint firstItem="OVo-Z1-WIN" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="QQL-MK-CsB"/>
+                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="VKa-eb-nRN"/>
+                                    <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerY" secondItem="Pk7-lv-ib8" secondAttribute="centerY" id="oGe-x0-hCU"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>

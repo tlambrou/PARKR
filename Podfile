@@ -8,5 +8,6 @@ target 'PARKR' do
   # Pods for PARKR
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'GEOSwift'
 
 end

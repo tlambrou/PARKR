@@ -1,15 +1,23 @@
 PODS:
   - Alamofire (4.0.1)
+  - geos (3.5.0)
+  - GEOSwift (0.5.1):
+    - GEOSwift/Core (= 0.5.1)
+  - GEOSwift/Core (0.5.1):
+    - geos (= 3.5.0)
   - SwiftyJSON (3.1.1)
 
 DEPENDENCIES:
   - Alamofire
+  - GEOSwift
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  geos: e96c6ca3f3ce02d20feaa8d90d4af383e11e7198
+  GEOSwift: 7a3e070ee189ea27d3bcb6ba5244bf69d4f953aa
   SwiftyJSON: f0be2e604f83e8405a624e9f891898bf6ed4e019
 
-PODFILE CHECKSUM: 2f0bae2a228b1ab455a8a172b56e19f4b1d766b8
+PODFILE CHECKSUM: 2430e998efac5b50690b619ab56003b38d777a05
 
-COCOAPODS: 1.1.0.rc.2
+COCOAPODS: 1.2.0

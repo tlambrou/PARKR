@@ -682,6 +682,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
           if ((u < 0.00001) || (u > 1)) {
             ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
             iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
+          
             if ix > iy {
               return CLLocationDistance(abs(iy))
             } else {
@@ -692,7 +693,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             iy = y1 + u * (y2 - y1)
             return CLLocationDistance(abs(lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)))
           }
-          
         }
         
         let distance = distanceCurrentLocToSegment(p: currentLocation, p1: p1, p2: p2)
@@ -701,14 +701,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
           closest = location
           closestDistance = distance
         }
-        
-        
       }
-      
     }
-    
     return closest!
-    
   }
   
   
@@ -871,9 +866,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
       let timerView: TimerViewController = segue.destination as! TimerViewController
       timerView.viewControllerInstance = self
     }
-    
   }
-  
 }
 
 

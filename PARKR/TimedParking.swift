@@ -11,12 +11,9 @@ import SwiftyJSON
 import UIKit
 import MapKit
 
-enum daysOfTheWeek {
-  case mondayThruFriday, mondayThruSaturday, mondayThruSunday
-}
 
 class TimedParking {
-  var DoW: daysOfTheWeek?
+  var DoW: DayRange?
   var days: String
   var hoursBegin: DateComponents
   var hoursEnd: DateComponents

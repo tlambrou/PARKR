@@ -20,8 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UNUserNotificationCenter.current().delegate = self
         
-        
-        
         return true
     }
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960690051EAC294C00C265AE /* ParkingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960690041EAC294C00C265AE /* ParkingInfo.swift */; };
 		9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9618A7A91DDE829800A86F7D /* AppDelegate.swift */; };
 		9618A7AC1DDE829800A86F7D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9618A7AB1DDE829800A86F7D /* MapViewController.swift */; };
 		9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9618A7B01DDE829800A86F7D /* Assets.xcassets */; };
@@ -23,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		912691BB98FE905640C19DBF /* Pods_PARKR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PARKR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		960690031EAC223B00C265AE /* BackendJSONSample.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackendJSONSample.geojson; sourceTree = "<group>"; };
+		960690041EAC294C00C265AE /* ParkingInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingInfo.swift; sourceTree = "<group>"; };
 		9618A7A61DDE829800A86F7D /* PARKR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PARKR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9618A7A91DDE829800A86F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9618A7AB1DDE829800A86F7D /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +122,7 @@
 			children = (
 				967BBD5B1DECC32100B8DC2B /* TimedParking.swift */,
 				967432991DED6961000F3ABB /* Coordinates.swift */,
+				960690041EAC294C00C265AE /* ParkingInfo.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -146,6 +150,7 @@
 				96A685621DE5188500EE0865 /* TimedParkingData.geojson */,
 				965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */,
 				965BE2CB1E1340D300189EB1 /* SampleData.geojson */,
+				960690031EAC223B00C265AE /* BackendJSONSample.geojson */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 				9618A7AA1DDE829800A86F7D /* AppDelegate.swift in Sources */,
 				C6476F561E2709C500F15EFC /* TimerViewController.swift in Sources */,
 				9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */,
+				960690051EAC294C00C265AE /* ParkingInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

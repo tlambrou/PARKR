@@ -14,8 +14,8 @@ import Alamofire
 import SwiftyJSON
 import Darwin
 
+// MARK: Extensions
 // Convenience init for creating Polyline
-
 private extension MKPolyline {
   convenience init(coordinates coords: Array<CLLocationCoordinate2D>) {
     let unsafeCoordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.allocate(capacity: coords.count)
@@ -26,6 +26,7 @@ private extension MKPolyline {
 }
 
 extension MKMapView {
+  
   func topLeftCoordinate() -> CLLocationCoordinate2D {
     return convert(CGPoint.zero, toCoordinateFrom: self)
   }
@@ -35,21 +36,19 @@ extension MKMapView {
   }
 }
 
-enum UniqueValuesType: Int {
-  case daysOfWeek, hoursBegin, hoursEnd, timeLimit
-}
+// MARK: Enum Declarations
+enum uniqueValuesType: Int { case daysOfWeek, hoursBegin, hoursEnd, timeLimit }
+enum modeTypes { case automatic, manual }
+enum ruleType { case timed, metered, towAway, streetCleaning, permit }
+enum renderTypes { case active, inactive }
 
 // Global variable for all timed parking data
 var AllTimedParkingData = [TimedParking]()
 
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
   
-  var limit: Int = 0
-  var touchPoint: CGPoint!
-  var touchPointCoordinate: CLLocationCoordinate2D!
-  var annotation = MKPointAnnotation()
-  
-  // MARK: - IBOutlets
+  // MARK: - IBOutlet Declarations
+  @IBOutlet weak var LoadingView: UIView!
   @IBOutlet weak var moveByTimingLabel: UILabel!
   // This label located down right corner
   @IBOutlet weak var moveOutLabel: UILabel!
@@ -62,20 +61,29 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   @IBAction func parkHereAction(_ sender: UIButton) {
     self.performSegue(withIdentifier: "moveTimerSegue", sender: nil)
   }
-  @IBOutlet weak var LoadingView: UIView!
   
+  // MARK: - Var Declarations
+  var limit: Int = 0
+  var touchPoint: CGPoint!
+  var touchPointCoordinate: CLLocationCoordinate2D!
+  var annotation = MKPointAnnotation()
   var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
-  enum ruleType { case timed, metered, towAway, streetCleaning, permit }
-  enum renderTypes { case active, inactive }
   var renderer: renderTypes = .active
+  var locationLastUpdated = Date(timeIntervalSinceNow: -20)
+  var locationCurrentUpdated = Date(timeIntervalSinceNow: -20)
+  var locationUpdateIndex = 0
   var loading: Bool = true
+  var mode: modeTypes = .automatic
+  
   // This variable represents the active parking displayed in the view at any point
-  var selectedParking: TimedParking? {
+  // MARK: Active Parking
+  var activeParking: ParkingInfo? {
     didSet {
-      if selectedParking == nil {
+      if activeParking?.activeStreet == nil {
         // Update the labels
         // Park Here button becomes disabled
+        parkHereButton.adjustsImageWhenDisabled = true
         parkHereButton.isUserInteractionEnabled = false
       } else {
         //Update the labels
@@ -85,154 +93,131 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       }
     }
   }
-  enum modeTypes { case automatic, manual }
-  var mode: modeTypes = .automatic {
-    didSet {
-      switch mode {
-      case .automatic: break
-        // Make the map center on the user's location
-      // Turn off the autolocation button
-      case .manual: break
-        // Unpeg the map from centering on the user's location
-        // Turn on the autolocation button
-      }
-    }
-  }
   
-  var lastUpdated = Date(timeIntervalSinceNow: -20)
-  var currentUpdated = Date(timeIntervalSinceNow: -20)
-  var updateIndex = 0
-  
-  func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-    initializeMapView()
-  }
   
   // MARK: - Location Manager Function
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     
-    // Create time upon entering for comparison
-    currentUpdated = Date()
-    
-    // Check to see whether in manual or automatic mode
-    switch mode {
-    case .automatic:
-      // Check to see if the time since the last update was greater than threshold
-      if currentUpdated.timeIntervalSince(lastUpdated) > 2 {
-        
-        
-        
-        // Check to see if the data has loaded yet...
-        if loading == true {
-          
-          print("Did update location called!")
-          
-          // Create a counter of how many updates have been done
-          updateIndex += 1
-          
-          print("\n\n Location Manager updated!!!!!!!!! \(updateIndex)\n\n")
-          
-          // Make sure location is not nil
-          guard let location = locations.last else {
-            print("No location!")
-            return
-          }
-          
-          mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
-          
-          // Find all of the nearest blocks within a threshhold...
-          
-          //      print("\n\nLocation: ", location.coordinate, "\n\n")
-          
-          //            let subset = findLinesInMapView() // Old method (loading all the data)
-          
-          let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-          let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(CLLocationDegrees(0.00001), CLLocationDegrees(0.00001)))
-          
-          
-          //      let newRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 70, 70)
-          
-          //        print("\n\n ************ Here is the region: ", region)
-          
-          mapView.setRegion(region, animated: false)
-        }
-        
-      }
-    case .manual: break
-      
-    }
-    lastUpdated = Date()
   }
-  
   
   func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
     
-    print("\n\nThe mapView Updated! \nLoading is \(loading)\nHere is the camera height: \(mapView.camera.altitude)\n\n")
-    //    if loading == true{
-    //      initializeMapView()
-    //    }
+  }
+  
+  func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
     
-    let location = locationManager.location
+    // Create a counter of how many updates have been done
+    locationUpdateIndex += 1
     
-    //    let newRegion = MKCoordinateRegionForMapRect(mapView.visibleMapRect)
+    // Create time upon entering for comparison
+    locationCurrentUpdated = Date()
     
-    //    callAPI(parkingType: .timed, mapRegion: newRegion)
+    print("\n\nmapView did Update user location: \(locationUpdateIndex)\nMode: \(mode)\nLoading? - \(loading)\n\n")
     
+    // If the data is done loading...
     if loading == false {
-      let subset = findLinesInMapView()
       
-      print("\n\nSubset in didUpdateLocations: \(subset.count)")
-      
-      // Make sure to see if location is in SF and if not display a message --NEEDS TESTING
-      guard subset.count > 0
-        else {
-          print("No Timed Parking Nearby")
-          geocodingLabel.text = "No Data On This Street"
-          
-          return
-      }
-      
-      // MARK: - Find Nearest block called
-      // Find the nearest block among all of the nearest blocks...
-      
-      let currentBlock = findNearestBlock(data: subset, currentLocation: location!)  // This is with the old method (all the data being loaded)
-      
-      // MARK: - Detect if User is out of range
-      // Create a circle around the current location to see if the closest data intersects with the circle
-      let radius = CLLocationDistance(24)
-      let circle = MKCircle(center: (location?.coordinate)!, radius: radius)
-      let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
-      
-      // If the current block is within 24 meters of the user's locatio
-      if intersecting {
-        // Update the reverse geocoding...
-        updateReverseGeoCoding(location: location!)
-        // Otherwise if street is not within the threshold of the 24 meters
-      } else {
-        print("No Parking Data for this street")
-        geocodingLabel.text = "No Data On This Street"
-      }
-      
-      // Paint all these polylines as disabled
-      for line in subset {
-        
-        renderer = .inactive
-        mapView.add(line.line!)
-        
-      }
-      
-      // Paint the active line as active
-      renderer = .active
-      mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
-      renderer = .inactive
-      
-      // Update all of the rules and times...
-      updateRules(location: currentBlock)
+      // Call the main update function
+      updateFromLocationChange()
       
     }
     
-    // Stop updating location and start updating signficant changes to location
-    //    locationManager.stopUpdatingLocation()
-    //    locationManager.startMonitoringSignificantLocationChanges()
+    // Grab the time upon leaving the last update call
+    locationLastUpdated = Date()
+  }
+  
+  // MARK: Update From Location Method
+  func updateFromLocationChange() {
+    
+    // Make sure location is not nil
+    guard let location = locationManager.location else{
+      print("\n\nNo location in the updateFromLocationChange function!!\n\n")
+      return
+    }
+    
+    // Check to see whether in manual or automatic mode
+    switch mode {
+      
+    // If in automatic mode...
+    case .automatic:
+      
+      // Check to see if the time since the last update was greater than threshold
+      if locationCurrentUpdated.timeIntervalSince(locationLastUpdated) > TimeInterval(2.0) {
+        
+        print("Did update location called!")
+        print("\n\n Location Manager updated!!!!!!!!! \(locationUpdateIndex)\n\n")
+        
+        // Create a variable for centering the map on the user's current location
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        
+        // Set the mapView's center
+        self.mapView.setCenter(center, animated: true)
+        print("\n\nThe mapView Center Updated! \nLoading is \(loading)\nHere is the camera height: \(mapView.camera.altitude)\n\n")
+        
+        // Initialize the the subset
+        let subset = findLinesInMapView()
+        
+        print("\n\nSubset in didUpdateLocations: \(subset.count)")
+        
+        // Make sure to see if location is in SF and if not display a message
+        guard subset.count > 0
+          else {
+            print("No Timed Parking Nearby")
+            geocodingLabel.text = "No Data On This Street"
+            return
+        }
+        
+        // Find the nearest block among all of the nearest blocks...
+        let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+        
+        // Detect if User is out of range
+        // Create a circle around the current location to see if the closest data intersects with the circle
+        let radius = CLLocationDistance(24)
+        let circle = MKCircle(center: (location.coordinate), radius: radius)
+        let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
+        
+        // If the current block is within 24 meters of the user's locatio
+        if intersecting {
+          // Update the reverse geocoding...
+          updateReverseGeoCoding(location: location)
+          // Otherwise if street is not within the threshold of the 24 meters
+        } else {
+          print("No Parking Data for this street")
+          geocodingLabel.text = "No Data On This Street"
+        }
+        
+        // Paint all these polylines as disabled
+        for line in subset {
+          
+          renderer = .inactive
+          self.mapView.add(line.line!)
+          
+        }
+        
+        // Paint the active line as active
+        renderer = .active
+        self.mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
+        renderer = .inactive
+        
+        // Update all of the rules and times...
+        updateRules(location: currentBlock)
+        
+        
+        
+      }
+      
+    // If in manual mode...
+    case .manual:
+      
+      break
+      
+    }
+  }
+  
+  func updateCenter() {
+    
+    
+    
   }
   
   //  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -343,25 +328,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   // MARK: - Find Parking func
   func initializeMapView() {
     
-    
-    // Set the delegate
-    locationManager.delegate = self
-    
-    locationManager.startUpdatingLocation()
-    
-    //    guard let location = locationManager.location else {
-    //      print("No location!")
-    //      return
-    //    }
-    //
-    //    let sfCenter = CLLocationCoordinate2D(latitude: 37.756940, longitude: -122.444338)
-    //
-    //    let sfRegion = MKCoordinateRegionMakeWithDistance(sfCenter, 13800, 13800)
-    //
-    //    let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-    //    let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.0001, longitudeDelta: 0.0001))
-    //    mapView.setRegion(region, animated: false)
-    
+    print("\n\nInitialized MapView called\n\n")
     
     // Initialize the MapView
     mapView.delegate = self
@@ -369,12 +336,32 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     mapView.showsPointsOfInterest = true
     mapView.isPitchEnabled = false
     mapView.showsUserLocation = true
-    mapView.showsBuildings = false
+    mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+
+    // Set the delegate
+    locationManager.delegate = self
     
+    // Start updating the user's location
+    locationManager.startUpdatingLocation()
+    
+    // Make sure there is a user location and if not center the map on SF
+    guard let location = locationManager.location else {
+      print("No location")
+      let cityCenter = CLLocationCoordinate2DMake(CLLocationDegrees(37.756940), CLLocationDegrees(-122.444338))
+      let region = MKCoordinateRegionMakeWithDistance(cityCenter, 1350, 1350)
+      mapView.setRegion(region, animated: false)
+      return
+    }
+    
+    // Initialize the mapView's region with center at current location
+    let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
+    let region = MKCoordinateRegionMakeWithDistance(center, 60, 60)
+    mapView.setRegion(region, animated: false)
     
   }
   
+  // Method that updates the Reverse GeoCoding Text
   func updateReverseGeoCoding(location: CLLocation) {
     // Update geocoding label with address based on location
     CLGeocoder().reverseGeocodeLocation(location) { (placemark, error) in
@@ -413,16 +400,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     print("\n\nBegin loading parking data...\n\n")
     
-    // Show progress bar
-    //    let progressBar = UILabel()
-    //    progressBar.text = "Loading..."
-    //    progressBar.textColor = UIColor.darkGray
-    //    progressBar.font = UIFont.boldSystemFont(ofSize: 18)
-    //    progressBar.sizeToFit()
-    //    self.mapView.addSubview(progressBar)
-    
-    //    DispatchQueue.global().async {
-    
     let url = self.formURL(parkingType: parkingType, mapRegion: mapRegion)
     
     //    print(url)
@@ -435,7 +412,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       //      print(response.response) // HTTP URL response
       //      print(response.data)     // server data
       //      print(response.result)   // result of response serialization
-      
       
       switch response.result {
       case .success:
@@ -456,11 +432,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
           
           AllTimedParkingData.append(contentsOf: allTimedParking)
           
-          //          print("\n\nResponse: ", response.data)
-          
-          //          print("\n\nHere is suppose to be the data: ", allTimedParking)
-          
-          
         } else {
           print("\n\nSuccess but no data somehow!\n\n")
         }
@@ -469,38 +440,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
       }
     }
-    
-    //      DispatchQueue.main.async {
-    print("\n\nDone loading parking data...\(AllTimedParkingData.count)\n\n")
-    
-    // Hide progress
-    //    progressBar.removeFromSuperview()
-    
-    //Continue after the background thread to findParking()
-    //    self.findParking()
-    
-    //      }
-    //
-    //    }
-    
-    
   }
   
+  // Function that forms API URL for call
   func formURL(parkingType: ruleType, mapRegion: MKCoordinateRegion) -> String {
     switch parkingType {
+    // For Timed Parking...
     case .timed:
       
-      //      let regionCoord  = MKCoordinateRegionForMapRect(mapRect)
       let lat = mapRegion.center.latitude
       let long = mapRegion.center.longitude
-      let spanLat = mapRegion.span.latitudeDelta
-      let spanLong = mapRegion.span.longitudeDelta
       let spanConstant = CLLocationDegrees(0.001)
       
-      
+      // Return formed URL
       return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%20" + String(lat) + "%2C%20" + String(long) + "%2C%20" + String(lat + spanConstant) + "%2C%20" + String(long + spanConstant) + ")"
-      
-      //      return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%2037.774479%2C%20-122.420319%2C%2037.771975%2C%20-122.415174)"
       
     default:
       return ""
@@ -545,77 +498,40 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Hide progress
         progressBar.removeFromSuperview()
         
-        self.initializeMapView()
+        //        self.initializeMapView()
         
         self.loading = false
+        
+        guard let location = self.locationManager.location else {
+          print("No location")
+          return
+        }
+        
+        let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
+        let region = MKCoordinateRegionMakeWithDistance(center, 60, 60)
+        
+        self.mapView.setRegion(region, animated: false)
+        
         self.LoadingView.isHidden = true
         
-        //self.outputDataToFile()
-        
       }
-      
-      //  print("\n\n\nUNIQUE VALUES FOR DOW\n\n\n", getUniqueValues(theData: AllTimedParkingData), "\n\n\n\n")
-      
     }
-    
-    //  let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
-    //  print(json)
-    
-  }
-  
-  func outputDataToFile() {
-    
-    let fileName = "Output.swift"
-    
-    let filePath = "/Users/Tassos/Desktop/Academics/Make School/Product Academy/PD - Cities/PARKR/PARKR" + fileName
-    
-    let file = FileHandle(forWritingAtPath: filePath)
-    
-    //    print(file ?? "default for file")
-    
-    if file != nil {
-      // Set the data we want to write
-      
-      let data1 = AllTimedParkingData[0]
-      var test = [TimedParking]()
-      //      print(test)
-      test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
-      
-      let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-      
-      //      print(data!)
-      
-      // Append to the end of the file
-      file?.seekToEndOfFile()
-      
-      // Write it to the file
-      file?.write(data!)
-      
-      // Close the file
-      file?.closeFile()
-    }
-    else {
-      print("Ooops! Something went wrong!")
-    }
-    
-    
   }
   
   // MARK: - Nearest Line
   func findLinesInMapView() -> [TimedParking] {
     
     var subset = [TimedParking]()
-    print(AllTimedParkingData[10].line?.coordinate)
+    print(AllTimedParkingData[10].line?.coordinate as Any)
     for location in AllTimedParkingData {
       if (location.line?.intersects(mapView.visibleMapRect))! {
         subset.append(location)
-        print("ID: ", location.id)
       }
     }
     return subset
   }
   
-  
+  // Find Nearby lines to location
   func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
     
     var subset = [TimedParking]()
@@ -645,24 +561,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     return subset
   }
   
-  //  func queryForCurrentBoundingMap (mapRect: MKMapRect) -> String {
-  //
-  //
-  //
-  //  }
-  
-  
-  
-  
-  // MARK: Nearest Block function
-  
+  // MARK: Find Nearest Block function
   func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
     
     var closest: TimedParking?
     var closestDistance: CLLocationDistance = CLLocationDistance(99999999)
     
+    // Iterate through all the data
     for location in data {
       
+      // As long as there is more than one point in the line string...
       if location.geometry.count > 1 {
         
         // Create point coordinates for location in the data
@@ -671,88 +579,74 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let y2 = location.geometry[1].latitude
         let y1 = location.geometry[0].latitude
         
-        // Calculate the change in x and y
-        let dx = x2 - x1
-        let dy = y2 - y1
-        
-        // Calculate the slope
-        let slope = dx / dy
-        
         // Convert points to CLLocation
         let p1 = CLLocation(latitude: y1, longitude: x1)
-        
         let p2 = CLLocation(latitude: y2, longitude: x2)
         
-        // Distance between point locations
-        let segDist = p1.distance(from: p2)
-        
-        // Determine closest distance between a point and a line defined by 2 points
-        func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
-          
-          // Create point coordinates for longitude & latitude
-          let x1 = p1.coordinate.longitude
-          let x2 = p2.coordinate.longitude
-          let y1 = p1.coordinate.latitude
-          let y2 = p2.coordinate.latitude
-          
-          var ix: Double = 0
-          var iy: Double = 0
-          
-          // Function to find magnitude of line segment
-          func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
-            return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
-          }
-          
-          let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
-          
-          // Accounting for a line magnitude threshold that is neglibly zero
-          if lineMag < 0.00000001 {
-            print("short segment")
-            return CLLocationDistance(abs(9999))
-          }
-          
-          // Create point coordinates for non-line point for comparison
-          let px = p.coordinate.longitude
-          let py = p.coordinate.latitude
-          
-          // Find distance "u"
-          var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
-          u = u / (lineMag * lineMag)
-          
-          // Distance calculation
-          if ((u < 0.00001) || (u > 1)) {
-            ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
-            iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
-            if ix > iy {
-              return CLLocationDistance(abs(iy))
-            } else {
-              return CLLocationDistance(abs(ix))
-            }
-          } else {
-            ix = x1 + u * (x2 - x1)
-            iy = y1 + u * (y2 - y1)
-            return CLLocationDistance(abs(lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)))
-          }
-          
-        }
-        
+        // Distance of Current Location to Segment Call
         let distance = distanceCurrentLocToSegment(p: currentLocation, p1: p1, p2: p2)
+        
         // Closest distance comparison
         if distance < closestDistance {
           closest = location
           closestDistance = distance
         }
-        
-        
       }
-      
     }
     
-    selectedParking = closest
+    // Update the Active Parking Variable - Will trigger didSet
+    activeParking?.activeStreet = closest
     
     return closest!
   }
   
+  // Determine closest distance between a point and a line defined by 2 points
+  func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
+    
+    // Create point coordinates for longitude & latitude
+    let x1 = p1.coordinate.longitude
+    let x2 = p2.coordinate.longitude
+    let y1 = p1.coordinate.latitude
+    let y2 = p2.coordinate.latitude
+    var ix: Double = 0
+    var iy: Double = 0
+    
+    let lineMag = lineMagnitude(x1: x1, y1: y1, x2: x2, y2: y2)
+    
+    // Accounting for a line magnitude threshold that is neglibly zero
+    if lineMag < 0.00000001 {
+      print("short segment")
+      return CLLocationDistance(abs(9999))
+    }
+    
+    // Create point coordinates for non-line point for comparison
+    let px = p.coordinate.longitude
+    let py = p.coordinate.latitude
+    
+    // Find distance "u"
+    var u = (((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)))
+    u = u / (lineMag * lineMag)
+    
+    // Distance calculation
+    if ((u < 0.00001) || (u > 1)) {
+      ix = lineMagnitude(x1: px, y1: py, x2: x1, y2: y1)
+      iy = lineMagnitude(x1: px, y1: py, x2: x2, y2: y2)
+      if ix > iy {
+        return CLLocationDistance(abs(iy))
+      } else {
+        return CLLocationDistance(abs(ix))
+      }
+    } else {
+      ix = x1 + u * (x2 - x1)
+      iy = y1 + u * (y2 - y1)
+      return CLLocationDistance(abs(lineMagnitude(x1: px, y1: py, x2: ix, y2: iy)))
+    }
+  }
+  
+  // Function to find magnitude of line segment
+  func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
+    return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
+  }
   
   
   // MARK: - Update rules
@@ -763,7 +657,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     let formatter1 = DateFormatter()
     print(formatter1.string(from: location.hoursBegin.fromNow))
-
+    
     // Get the day of the week for the current date
     let nowDay = getDayOfWeek(date: now)
     
@@ -782,8 +676,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     let formatter = DateFormatter()
     formatter.timeStyle = .short
-//    let hourBegin = Calendar.current.date(from: location.hoursBegin)
-//    let hourEnd = Calendar.current.date(from: location.hoursEnd)
+    //    let hourBegin = Calendar.current.date(from: location.hoursBegin)
+    //    let hourEnd = Calendar.current.date(from: location.hoursEnd)
     
     let text = String(location.hourLimit)
     
@@ -802,7 +696,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
   }
-
+  
   
   //// MARK: - Update rules
   //func updateRules(location: TimedParking) {
@@ -845,13 +739,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   func checkMoveByDatePassed(date: Date, location: TimedParking) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "hh:mm"
+//    
+//    let calendar = Calendar.current
+//    let componentMinute = calendar.component(.minute, from: date)
+//    let componentHour = calendar.component(.hour, from: date)
     
-    let calendar = Calendar.current
-    let componentMinute = calendar.component(.minute, from: date)
-    let componentHour = calendar.component(.hour, from: date)
-    
-    let minute = componentMinute.minute
-    let hour = componentHour.hour
+//    let minute = componentMinute.minute
+//    let hour = componentHour.hour
     
     //    print("****** HOUR: \(minute.minute!)")
   }

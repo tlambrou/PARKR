@@ -113,7 +113,7 @@ class TimerViewController: UIViewController {
         
         UNUserNotificationCenter.current().add(request) { (error) in
             if error != nil {
-                print(error)
+                print(error as Any)
                 completion(false)
             } else {
                 completion(true)

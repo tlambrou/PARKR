@@ -185,7 +185,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = SsosSoft;
 				TargetAttributes = {
 					9618A7A51DDE829800A86F7D = {

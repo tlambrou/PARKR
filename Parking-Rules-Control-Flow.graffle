@@ -46,7 +46,7 @@
 	<key>Creator</key>
 	<string>Tassos Lambrou</string>
 	<key>DisplayScale</key>
-	<string>1 0/72 in = 1 0/72 in</string>
+	<string>1 0/72 in = 1.0000 in</string>
 	<key>FileType</key>
 	<string>flat</string>
 	<key>GraphDocumentVersion</key>
@@ -731,7 +731,7 @@ Can Park till Next-day Start +hourlimit}</string>
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
 \f0\fs24 \cf0 \expnd0\expndtw0\kerning0
-No}</string>
+Yes}</string>
 				<key>VerticalPad</key>
 				<integer>0</integer>
 			</dict>
@@ -771,7 +771,7 @@ No}</string>
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
 \f0\fs24 \cf0 \expnd0\expndtw0\kerning0
-Yes}</string>
+No}</string>
 				<key>VerticalPad</key>
 				<integer>0</integer>
 			</dict>
@@ -1202,7 +1202,7 @@ Rules Update Logic}</string>
 			<key>Points</key>
 			<array>
 				<string>{388.20828, 227.87845}</string>
-				<string>{476.85828, 346.07846}</string>
+				<string>{476.85831, 346.07846}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1325,8 +1325,8 @@ Rules Update Logic}</string>
 			<integer>1221</integer>
 			<key>Points</key>
 			<array>
-				<string>{497.12225, 391.97403}</string>
-				<string>{535.94446, 680.98303}</string>
+				<string>{497.12225, 391.97406}</string>
+				<string>{535.94446, 680.98297}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1799,7 +1799,7 @@ Rules Update Logic}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2017-04-21 04:40:40 +0000</string>
+	<string>2017-04-23 12:27:03 +0000</string>
 	<key>Modifier</key>
 	<string>Tassos Lambrou</string>
 	<key>NotesVisible</key>

@@ -63,7 +63,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   }
   
   // MARK: - Var Declarations
-  var limit: Int = 0
   var touchPoint: CGPoint!
   var touchPointCoordinate: CLLocationCoordinate2D!
   var annotation = MKPointAnnotation()
@@ -80,13 +79,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   // MARK: Active Parking
   var activeParking: ParkingInfo? {
     didSet {
+      
+      print("didSet in activeParking called")
+      
+      // Update the labels
+      self.moveByTimingLabel.text = activeParking?.moveByText
+      self.durationParkingLabel.text = activeParking?.timedParkingRule
+      self.moveOutLabel.text = activeParking?.timedParkingTimes
+      
       if activeParking?.activeStreet == nil {
-        // Update the labels
+        
         // Park Here button becomes disabled
         parkHereButton.adjustsImageWhenDisabled = true
         parkHereButton.isUserInteractionEnabled = false
+        
       } else {
-        //Update the labels
+        
         // Park Here button becomes enabled
         parkHereButton.isUserInteractionEnabled = true
         
@@ -129,6 +137,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   // MARK: Update From Location Method
   func updateFromLocationChange() {
     
+    print("updateFromLocationChange Called | Last called \(locationCurrentUpdated.timeIntervalSince(locationLastUpdated))")
+
+    
     // Make sure location is not nil
     guard let location = locationManager.location else{
       print("\n\nNo location in the updateFromLocationChange function!!\n\n")
@@ -155,7 +166,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         print("\n\nThe mapView Center Updated! \nLoading is \(loading)\nHere is the camera height: \(mapView.camera.altitude)\n\n")
         
         // Initialize the the subset
-        let subset = findLinesInMapView()
+        let subset = findSubsetForMapView()
         
         print("\n\nSubset in didUpdateLocations: \(subset.count)")
         
@@ -169,6 +180,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // Find the nearest block among all of the nearest blocks...
         let currentBlock = findNearestBlock(data: subset, currentLocation: location)
+        
+        print(activeParking?.moveByText as Any, activeParking?.timedParkingRule as Any, activeParking?.timedParkingTimes as Any, activeParking?.activeStreet as Any, separator: " ______ ", terminator: " | ")
         
         // Detect if User is out of range
         // Create a circle around the current location to see if the closest data intersects with the circle
@@ -199,10 +212,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
         renderer = .inactive
         
-        // Update all of the rules and times...
-        updateRules(location: currentBlock)
-        
-        
+//        // Update all of the rules and times...
+//        updateRules(location: currentBlock)
         
       }
       
@@ -356,7 +367,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Initialize the mapView's region with center at current location
     let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
-    let region = MKCoordinateRegionMakeWithDistance(center, 60, 60)
+    let region = MKCoordinateRegionMakeWithDistance(center, 160, 160)
     mapView.setRegion(region, animated: false)
     
   }
@@ -495,34 +506,33 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       DispatchQueue.main.async {
         print("\n\nDone loading parking data... \(AllTimedParkingData.count)\n\n")
         
-        // Hide progress
-        progressBar.removeFromSuperview()
-        
-        //        self.initializeMapView()
-        
+        // Finished loading
         self.loading = false
         
-        guard let location = self.locationManager.location else {
-          print("No location")
-          return
-        }
+        // Create time upon entering for comparison
+        self.locationCurrentUpdated = Date()
         
-        let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
-        let region = MKCoordinateRegionMakeWithDistance(center, 60, 60)
+        // Call update on Parking from Location Update
+        print("About to call updateFromLocationChange")
+        self.updateFromLocationChange()
         
-        self.mapView.setRegion(region, animated: false)
+        // Make Park Here button interactable and enabled
+        self.parkHereButton.isEnabled = true
+        self.parkHereButton.isUserInteractionEnabled = true
         
+        // Hide Loading View and progress bar
         self.LoadingView.isHidden = true
+        progressBar.removeFromSuperview()
         
       }
     }
   }
   
   // MARK: - Nearest Line
-  func findLinesInMapView() -> [TimedParking] {
+  func findSubsetForMapView() -> [TimedParking] {
     
     var subset = [TimedParking]()
-    print(AllTimedParkingData[10].line?.coordinate as Any)
+//    print(AllTimedParkingData[10].line?.coordinate as Any)
     for location in AllTimedParkingData {
       if (location.line?.intersects(mapView.visibleMapRect))! {
         subset.append(location)
@@ -532,7 +542,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   }
   
   // Find Nearby lines to location
-  func findNearbyLines(currentLocation: CLLocation) -> [TimedParking] {
+  func findSubset(currentLocation: CLLocation) -> [TimedParking] {
     
     var subset = [TimedParking]()
     
@@ -564,6 +574,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   // MARK: Find Nearest Block function
   func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
     
+    print("\n\nFindNearestBlock Called")
+    
     var closest: TimedParking?
     var closestDistance: CLLocationDistance = CLLocationDistance(99999999)
     
@@ -594,8 +606,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       }
     }
     
-    // Update the Active Parking Variable - Will trigger didSet
-    activeParking?.activeStreet = closest
+    print("Hrs Begin \(String(describing: closest?.hoursBegin))")
+    print("Hrs End \(String(describing: closest?.hoursEnd))")
+    print("Hrs Limit \(String(describing: closest?.hourLimit))")
+    
+    // Update the Active Parking Variable - Should trigger didSet in activeParking
+    guard ((activeParking = ParkingInfo(activeStreet: closest!)) != nil) else{
+      print("Closest failed to set activeParking.activeStreet for some reason")
+      return closest!
+    }
+    
+    print(String(describing: activeParking?.activeStreet?.limit), String(describing: closest?.limit))
     
     return closest!
   }
@@ -685,7 +706,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let start = String(describing: location.hoursBegin.hour!)
     let end = String(location.hoursEnd.hour!)
     let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-    limit = location.hourLimit
     
     moveOutLabel.text = text2
     
@@ -727,14 +747,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   //  moveByTimingLabel.text = "\(formatter.string(from: date))"
   //
   //}
-  
-  func hourNightPM(hour: Int) -> String {
-    if hour > 12 {
-      return String(hour - 12)
-    } else {
-      return String(hour)
-    }
-  }
   
   func checkMoveByDatePassed(date: Date, location: TimedParking) {
     let dateFormatter = DateFormatter()

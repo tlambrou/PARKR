@@ -8,14 +8,13 @@
 
 import Foundation
 
-enum Day {
-  case sunday, monday, tuesday, wednesday, thursday, friday, saturday
+enum Day: Int {
+  case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
 }
 
 enum DayRange {
   case mondayThruFriday, mondayThruSaturday, mondayThruSunday
 }
-
 
 func getDayOfWeek(date: Date) -> Day {
   let myCalendar = Calendar(identifier: .gregorian)
@@ -150,6 +149,14 @@ func isDayInDayRange(day: Day, range: DayRange) -> Bool {
     case.saturday:
       return true
     }
+  }
+}
+
+func hourNightPM(hour: Int) -> String {
+  if hour > 12 {
+    return String(hour - 12)
+  } else {
+    return String(hour)
   }
 }
 

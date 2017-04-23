@@ -76,7 +76,7 @@ class TimerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        counter = viewControllerInstance.limit * 3600
+        counter = (viewControllerInstance.activeParking?.activeStreet?.limit)! * 3600
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         

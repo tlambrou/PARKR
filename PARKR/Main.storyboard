@@ -112,11 +112,8 @@
                                     <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="Launch" translatesAutoresizingMaskIntoConstraints="NO" id="OVo-Z1-WIN">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
-                                        <rect key="frame" x="135" y="355" width="145" height="26.333333333333314"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="145" id="56X-Wi-TnQ"/>
-                                        </constraints>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading San Francisco Data..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
+                                        <rect key="frame" x="61.666666666666657" y="355" width="292" height="26.333333333333314"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -167,6 +164,7 @@
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="leading" secondItem="FiW-1X-eQJ" secondAttribute="leading" id="v9H-y2-Ru8"/>
                         </constraints>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="LoadingView" destination="Pk7-lv-ib8" id="gVO-z8-r80"/>
                         <outlet property="durationParkingLabel" destination="XVU-vK-Blc" id="qLe-ER-zJd"/>
@@ -470,6 +468,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xUt-mz-cNz"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="fifteenMinuteSwitch" destination="xFL-Nu-NUw" id="ZDj-oR-ZkM"/>
                         <outlet property="hoursLabel" destination="U6k-YY-Dfv" id="idD-dL-uLg"/>

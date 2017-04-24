@@ -155,20 +155,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       // Check to see if the time since the last update was greater than threshold
       if locationCurrentUpdated.timeIntervalSince(locationLastUpdated) > TimeInterval(2.0) {
         
-        print("Did update location called!")
-        print("\n\n Location Manager updated!!!!!!!!! \(locationUpdateIndex)\n\n")
-        
         // Create a variable for centering the map on the user's current location
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         
         // Set the mapView's center
         self.mapView.setCenter(center, animated: true)
-        print("\n\nThe mapView Center Updated! \nLoading is \(loading)\nHere is the camera height: \(mapView.camera.altitude)\n\n")
+        self.mapView.camera.altitude = 300
         
         // Initialize the the subset
         let subset = findSubsetForMapView()
-        
-        print("\n\nSubset in didUpdateLocations: \(subset.count)")
         
         // Make sure to see if location is in SF and if not display a message
         guard subset.count > 0
@@ -225,48 +220,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
   }
   
-  func updateCenter() {
-    
-    
-    
-  }
-  
-  //  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-  //    if animated == true && animating == false {
-  //      animating = true
-  
-  //    locationManager.startUpdatingLocation()
-  //
-  //    // Set the delegate
-  //    locationManager.delegate = self
-  //
-  //    // Initialize the MapView
-  //    mapView.delegate = self
-  //    mapView.showsCompass = true
-  //    mapView.showsPointsOfInterest = true
-  //    mapView.showsUserLocation = true
-  //    mapView.showsBuildings = true
-  ////    mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
-  //    //    let subset = findLinesInMapView()
-  //    //
-  //    //    print("\n\nSubset in FindParking: \(subset.count)")
-  //    //
-  //    //    guard subset.count > 0
-  //    //      else {
-  //    //        print("Not in San Francisco!")
-  //    //        geocodingLabel.text = "Oops! Not in San Francisco!"
-  //    //        let newRect = MKMapRect(origin: MKMapPointForCoordinate(location.coordinate), size: (AllTimedParkingData[0].mapRect?.size)!)
-  //    //        let edge = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
-  //    //        mapView.setVisibleMapRect(newRect, edgePadding: edge, animated: true)
-  //    //        return
-  //    //    }
-  //    //  }
-  //    //
-  //    //  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-  //    //    if animated == true && animating == true {
-  //    //      animating = false
-  //    //    }
-  //    //  }
   
   private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     
@@ -343,6 +296,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Initialize the MapView
     mapView.delegate = self
+    mapView.isScrollEnabled = false
+    mapView.isZoomEnabled = false
     mapView.showsCompass = true
     mapView.showsPointsOfInterest = true
     mapView.isPitchEnabled = false
@@ -455,6 +410,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       }
     }
   }
+  
   
   // Function that forms API URL for call
   func formURL(parkingType: ruleType, mapRegion: MKCoordinateRegion) -> String {

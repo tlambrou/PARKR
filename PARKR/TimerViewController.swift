@@ -9,7 +9,9 @@
 import UIKit
 import UserNotifications
 
-class TimerViewController: UIViewController {
+let notificationDelegate = PARKRNotificationDelegate()
+
+class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
   
   var viewControllerInstance: MapViewController!
   
@@ -28,39 +30,51 @@ class TimerViewController: UIViewController {
   @IBAction func tenMinuteAction(_ sender: UISwitch) {
     if sender.isOn {
       tenMinuteSwitch.setOn(true, animated: true)
-      scheduleNotification(timeInterval: 6600, completion: { (success) in
+      scheduleNotification(minutes: 10, type: "10-minutes",  completion: { (success) in
         if success {
           print("successfully scheduled notification")
         } else {
           print("Error scheduling notification")
         }
       })
+    } else if sender.isOn == false {
+      tenMinuteSwitch.setOn(false, animated: true)
+      UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["10-minutes"])
+      
     }
   }
   
   @IBAction func fifteenMinuteAction(_ sender: UISwitch) {
     if sender.isOn {
       fifteenMinuteSwitch.setOn(true, animated: true)
-      scheduleNotification(timeInterval: 6300, completion: { (success) in
+      scheduleNotification(minutes: 15, type: "15-minutes", completion: { (success) in
         if success {
           print("successfully scheduled notification")
         } else {
           print("Error scheduling notification")
         }
       })
+    } else if sender.isOn == false {
+      tenMinuteSwitch.setOn(false, animated: true)
+      UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["15-minutes"])
+      
     }
   }
   @IBAction func thirtyMinuteAction(_ sender: UISwitch) {
     if sender.isOn {
       thirtyMinuteSwitch.setOn(true, animated: true)
       
-      scheduleNotification(timeInterval: 4, completion: { (success) in
+      scheduleNotification(minutes: 30, type: "30-minutes",  completion: { (success) in
         if success {
           print("successfully scheduled notification")
         } else {
           print("Error scheduling notification")
         }
       })
+    } else if sender.isOn == false {
+      tenMinuteSwitch.setOn(false, animated: true)
+      UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["30-minutes"])
+      
     }
   }
   
@@ -77,10 +91,15 @@ class TimerViewController: UIViewController {
     // TODO: Stop the timer
     timer.invalidate()
     
+    viewControllerInstance.locationManager.startUpdatingLocation()
+    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
     self.dismiss(animated: true, completion: nil)
   }
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    viewControllerInstance.locationManager.stopUpdatingLocation()
     
     moveByTimeLabel.text = viewControllerInstance.activeParking?.moveByText
     
@@ -91,6 +110,15 @@ class TimerViewController: UIViewController {
     self.configureNotification()
     
     tenMinuteSwitch.setOn(false, animated: true)
+    
+    // Schedule a 15 minute notification by default
+    scheduleNotification(minutes: 15, type: "15-minutes", completion: { (success) in
+      if success {
+        print("successfully scheduled notification")
+      } else {
+        print("Error scheduling notification")
+      }
+    })
     fifteenMinuteSwitch.setOn(true, animated: true)
     thirtyMinuteSwitch.setOn(false, animated: true)
     // Do any additional setup after loading the view.
@@ -108,18 +136,29 @@ class TimerViewController: UIViewController {
     }
   }
   
-  func scheduleNotification(timeInterval: TimeInterval, completion: @escaping (_ Success: Bool) -> ()) {
+  func scheduleNotification(minutes: Int, type: String, completion: @escaping (_ Success: Bool) -> ()) {
     let notif = UNMutableNotificationContent()
+    let center = UNUserNotificationCenter.current()
+    
+    let snoozeAction = UNNotificationAction(identifier: "Snooze",
+                                            title: "Snooze", options: [])
+    let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
+                                            title: "Delete", options: [.destructive])
     
     notif.title = "PARKR"
-    notif.subtitle = "Don't forget to move your vehicle!!!"
-    notif.body = "Move your vehicle soon to avoid getting a ticket!! 🚘 🎫 👮"
+    notif.subtitle = "Your parking expires in " + type + "!!!"
+    notif.body = "Move your vehicle soon to avoid getting a ticket or towed!! 🚘 🎫 👮"
     notif.sound = UNNotificationSound.init(named: "flowerdove-alert.caf")
     
-    let notificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
-    let request = UNNotificationRequest(identifier: "parkerNotification", content: notif, trigger: notificationTrigger)
+    let timeInterval = TimeInterval(minutes * 60)
+    var newComponents = viewControllerInstance.activeParking?.moveByComponent
+    newComponents?.minute = (newComponents?.minute)! - minutes
     
-    UNUserNotificationCenter.current().add(request) { (error) in
+    let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: newComponents!,
+                                                            repeats: false)
+    let request = UNNotificationRequest(identifier: type, content: notif, trigger: notificationTrigger)
+    
+    center.add(request) { (error) in
       if error != nil {
         print(error as Any)
         completion(false)
@@ -129,5 +168,31 @@ class TimerViewController: UIViewController {
     }
   }
   
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              willPresent notification: UNNotification,
+                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // Play sound and show alert to the user
+    completionHandler([.alert,.sound])
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              didReceive response: UNNotificationResponse,
+                              withCompletionHandler completionHandler: @escaping () -> Void) {
+    
+    // Determine the user action
+    switch response.actionIdentifier {
+    case UNNotificationDismissActionIdentifier:
+      print("Dismiss Action")
+    case UNNotificationDefaultActionIdentifier:
+      print("Default")
+    case "Snooze":
+      print("Snooze")
+    case "Delete":
+      print("Delete")
+    default:
+      print("Unknown action")
+    }
+    completionHandler()
+  }
   
 }

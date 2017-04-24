@@ -96,9 +96,9 @@ class TimedParking {
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
     self.limit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
-    print("\nHour Limit (Primative): ", self.limit)
+//    print("\nHour Limit (Primative): ", self.limit)
     self.hourLimit = TimeInterval(self.limit * 3600)
-    print("\nHour Limit (Interval): ", self.hourLimit)
+//    print("\nHour Limit (Interval): ", self.hourLimit)
     self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
     
 //    print("Hrs Begin \(self.hoursBegin)")

@@ -15,6 +15,8 @@
 		965158151DF7BFD800623FEB /* Extra in Resources */ = {isa = PBXBuildFile; fileRef = 965158141DF7BFD800623FEB /* Extra */; };
 		9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967432991DED6961000F3ABB /* Coordinates.swift */; };
 		967BBD5C1DECC32100B8DC2B /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
+		967E185B1EADCFCB0041621F /* pup-alert.caf in Resources */ = {isa = PBXBuildFile; fileRef = 967E185A1EADCFCB0041621F /* pup-alert.caf */; };
+		967E185D1EADE1940041621F /* flowerdove-alert.caf in Resources */ = {isa = PBXBuildFile; fileRef = 967E185C1EADE1940041621F /* flowerdove-alert.caf */; };
 		96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* TimedParkingData.geojson */; };
 		96BCA3291EA9B54F00E195A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96BCA3281EA9B54F00E195A8 /* Main.storyboard */; };
 		96EDCAD11E25BDEA00B06ED3 /* DateUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */; };
@@ -37,6 +39,8 @@
 		965BE2CC1E160A6300189EB1 /* SimplifiedTimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimplifiedTimedParkingData.geojson; sourceTree = "<group>"; };
 		967432991DED6961000F3ABB /* Coordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		967BBD5B1DECC32100B8DC2B /* TimedParking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimedParking.swift; sourceTree = "<group>"; };
+		967E185A1EADCFCB0041621F /* pup-alert.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pup-alert.caf"; sourceTree = "<group>"; };
+		967E185C1EADE1940041621F /* flowerdove-alert.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "flowerdove-alert.caf"; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* TimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimedParkingData.geojson; sourceTree = "<group>"; };
 		96BCA3281EA9B54F00E195A8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		96EDCAD01E25BDEA00B06ED3 /* DateUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateUtilities.swift; sourceTree = "<group>"; };
@@ -102,10 +106,20 @@
 				969E77441EA9807D00157847 /* Storyboards */,
 				969E77461EA980A700157847 /* Data */,
 				9618A7B01DDE829800A86F7D /* Assets.xcassets */,
+				967E18591EADCFAA0041621F /* Sounds */,
 				9618A7B51DDE829800A86F7D /* Info.plist */,
 				965158141DF7BFD800623FEB /* Extra */,
 			);
 			path = PARKR;
+			sourceTree = "<group>";
+		};
+		967E18591EADCFAA0041621F /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				967E185C1EADE1940041621F /* flowerdove-alert.caf */,
+				967E185A1EADCFCB0041621F /* pup-alert.caf */,
+			);
+			name = Sounds;
 			sourceTree = "<group>";
 		};
 		969E77421EA9803E00157847 /* Controllers */ = {
@@ -219,9 +233,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */,
+				967E185B1EADCFCB0041621F /* pup-alert.caf in Resources */,
 				9618A7B11DDE829800A86F7D /* Assets.xcassets in Resources */,
 				96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */,
 				965158151DF7BFD800623FEB /* Extra in Resources */,
+				967E185D1EADE1940041621F /* flowerdove-alert.caf in Resources */,
 				96BCA3291EA9B54F00E195A8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

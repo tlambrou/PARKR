@@ -371,7 +371,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Initialize the mapView's region with center at current location
     let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
     let region = MKCoordinateRegionMakeWithDistance(center, 160, 160)
-    mapView.setRegion(region, animated: false)
+    mapView.setRegion(region, animated: true)
     
   }
   
@@ -488,6 +488,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     progressBar.sizeToFit()
     self.mapView.addSubview(progressBar)
     
+    // Create a background thread
     DispatchQueue.global().async {
       
       // Get the filename and remove the extension
@@ -496,18 +497,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       // Get the path to the file
       let path = Bundle.main.path(forResource: fileComponents[0], ofType: fileComponents[1])
       
+      // Read file as text
       let text = try! String(contentsOfFile: path!) // read as string
       
+      // Serialization
       let json = try! JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: []) as? [String: Any]
       
+      // Deserialize as JSON
       let json2 = JSON(json!)
       
+      // Begin parsing JSON
       let allData = json2["features"].arrayValue
       
+      // Map each JSON entry to a model objects
       AllTimedParkingData = allData.map({ (entry: JSON) -> TimedParking in
         return TimedParking(json: entry)
       })
       
+      // Return from asyncrhonous data import
       DispatchQueue.main.async {
         print("\n\nDone loading parking data... \(AllTimedParkingData.count)\n\n")
         
@@ -515,7 +522,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.loading = false
         
         // Create time upon entering for comparison
-        self.locationCurrentUpdated = Date()
+        self.locationCurrentUpdated = Calendar.current.date(byAdding: .second, value: -20, to: Date())!
         
         // Call update on Parking from Location Update
         print("About to call updateFromLocationChange")

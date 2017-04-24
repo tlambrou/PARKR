@@ -55,7 +55,7 @@ class TimedParking {
   
   init(json: JSON) {
     
-    print(json)
+//    print(json)
     let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
     let timeBegin = (number!)
     //    print(timeBegin)

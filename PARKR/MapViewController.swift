@@ -356,6 +356,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Start updating the user's location
     locationManager.startUpdatingLocation()
     
+    // Edit the my location annotation
+    mapView.userLocation.title = "You are here"
+    
     // Make sure there is a user location and if not center the map on SF
     guard let location = locationManager.location else {
       print("No location")
@@ -395,10 +398,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let polylineRenderer = MKPolylineRenderer(overlay: overlay)
     switch renderer {
     case .active:
-      polylineRenderer.strokeColor = UIColor.green
+      polylineRenderer.strokeColor = #colorLiteral(red: 0, green: 0.902623508, blue: 0.7324799925, alpha: 1)
       polylineRenderer.lineWidth = 5
     case .inactive:
-      polylineRenderer.strokeColor = UIColor.purple
+      polylineRenderer.strokeColor = #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1)
       polylineRenderer.lineWidth = 3
     }
     
@@ -487,8 +490,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     DispatchQueue.global().async {
       
+      // Get the filename and remove the extension
       let fileComponents = file.components(separatedBy: ".")
       
+      // Get the path to the file
       let path = Bundle.main.path(forResource: fileComponents[0], ofType: fileComponents[1])
       
       let text = try! String(contentsOfFile: path!) // read as string

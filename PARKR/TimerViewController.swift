@@ -24,7 +24,7 @@ class TimerViewController: UIViewController {
 
     @IBAction func tenMinuteAction(_ sender: UISwitch) {
         if sender.isOn {
-            tenMinuteSwitch.setOn(true, animated: false)
+            tenMinuteSwitch.setOn(true, animated: true)
             scheduleNotification(timeInterval: 6600, completion: { (success) in
                 if success {
                     print("successfully scheduled notification")
@@ -37,7 +37,7 @@ class TimerViewController: UIViewController {
     
     @IBAction func fifteenMinuteAction(_ sender: UISwitch) {
         if sender.isOn {
-            fifteenMinuteSwitch.setOn(true, animated: false)
+            fifteenMinuteSwitch.setOn(true, animated: true)
             scheduleNotification(timeInterval: 6300, completion: { (success) in
                 if success {
                     print("successfully scheduled notification")
@@ -49,7 +49,8 @@ class TimerViewController: UIViewController {
     }
     @IBAction func thirtyMinuteAction(_ sender: UISwitch) {
         if sender.isOn {
-            thirtyMinuteSwitch.setOn(true, animated: false)
+            thirtyMinuteSwitch.setOn(true, animated: true)
+          
             scheduleNotification(timeInterval: 5400, completion: { (success) in
                 if success {
                     print("successfully scheduled notification")
@@ -76,7 +77,7 @@ class TimerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        counter = (viewControllerInstance.activeParking?.activeStreet?.limit)! * 3600
+        counter = (Int((viewControllerInstance.activeParking?.moveByTime?.timeIntervalSince(Date()))!))
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         

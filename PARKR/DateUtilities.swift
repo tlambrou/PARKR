@@ -8,6 +8,158 @@
 
 import Foundation
 
+enum Day: Int {
+  case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
+}
+
+enum DayRange {
+  case mondayThruFriday, mondayThruSaturday, mondayThruSunday
+}
+
+func getDayOfWeek(date: Date) -> Day {
+  let myCalendar = Calendar(identifier: .gregorian)
+  let weekDay = myCalendar.component(.weekday, from: date)
+  switch weekDay {
+  case 1:
+    return .sunday
+  case 2:
+    return .monday
+  case 3:
+    return .tuesday
+  case 4:
+    return .wednesday
+  case 5:
+    return .thursday
+  case 6:
+    return .friday
+  case 7:
+    return .saturday
+  default:
+    return .sunday
+  }
+}
+
+func isDayEndOfDayRange(day: Day, range: DayRange) -> Bool {
+  switch range {
+  case .mondayThruFriday:
+    switch day {
+    case .sunday:
+      return false
+    case .monday:
+      return false
+    case .tuesday:
+      return false
+    case .wednesday:
+      return false
+    case .thursday:
+      return false
+    case .friday:
+      return true
+    case.saturday:
+      return false
+    }
+  case .mondayThruSaturday:
+    switch day {
+    case .sunday:
+      return false
+    case .monday:
+      return false
+    case .tuesday:
+      return false
+    case .wednesday:
+      return false
+    case .thursday:
+      return false
+    case .friday:
+      return false
+    case.saturday:
+      return true
+    }
+  case .mondayThruSunday:
+    switch day {
+    case .sunday:
+      return true
+    case .monday:
+      return false
+    case .tuesday:
+      return false
+    case .wednesday:
+      return false
+    case .thursday:
+      return false
+    case .friday:
+      return false
+    case.saturday:
+      return false
+    }
+  }
+
+}
+
+func isDayInDayRange(day: Day, range: DayRange) -> Bool {
+  switch range {
+  case .mondayThruFriday:
+    switch day {
+    case .sunday:
+      return false
+    case .monday:
+      return true
+    case .tuesday:
+      return true
+    case .wednesday:
+      return true
+    case .thursday:
+      return true
+    case .friday:
+      return true
+    case.saturday:
+      return false
+    }
+  case .mondayThruSaturday:
+    switch day {
+    case .sunday:
+      return false
+    case .monday:
+      return true
+    case .tuesday:
+      return true
+    case .wednesday:
+      return true
+    case .thursday:
+      return true
+    case .friday:
+      return true
+    case.saturday:
+      return true
+    }
+  case .mondayThruSunday:
+    switch day {
+    case .sunday:
+      return true
+    case .monday:
+      return true
+    case .tuesday:
+      return true
+    case .wednesday:
+      return true
+    case .thursday:
+      return true
+    case .friday:
+      return true
+    case.saturday:
+      return true
+    }
+  }
+}
+
+func hourNightPM(hour: Int) -> String {
+  if hour > 12 {
+    return String(hour - 12)
+  } else {
+    return String(hour)
+  }
+}
+
 func +(_ lhs: DateComponents, _ rhs: DateComponents) -> DateComponents {
   return combineComponents(lhs, rhs)
 }

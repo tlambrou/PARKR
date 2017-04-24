@@ -11,16 +11,25 @@ import SwiftyJSON
 import UIKit
 import MapKit
 
-enum daysOfTheWeek {
-  case mondayThruFriday, mondayThruSaturday, mondayThruSunday
-}
 
 class TimedParking {
-  var DoW: daysOfTheWeek?
+  var DoW: DayRange?
   var days: String
   var hoursBegin: DateComponents
   var hoursEnd: DateComponents
-  var hourLimit: Int
+  var limit: Int {
+    didSet {
+      hourLimit = TimeInterval(limit * 3600)
+    }
+  }
+  var hourLimit: TimeInterval{
+    didSet {
+      let newLimit = Int(hourLimit) / 3600
+      if limit != newLimit {
+        limit = newLimit
+      }
+    }
+  }
   var id: Int
   var midPoint: CLLocation?
   var geometry: [CLLocationCoordinate2D] {
@@ -46,10 +55,8 @@ class TimedParking {
   
   init(json: JSON) {
     
-    
-    
-    print(json)
-    let number:Double? = Double(json["hours_begin"].intValue) / 100
+//    print(json)
+    let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
     let timeBegin = (number!)
     //    print(timeBegin)
     let hourBegin = floor(timeBegin)
@@ -61,21 +68,10 @@ class TimedParking {
     } else {
       minuteBegin = Int((timeBegin.truncatingRemainder(dividingBy: hourBegin))*100)
     }
-    
-    //    let string:string = "cheese"
-    //    if string.length == 4{
-    //      var output
-    //      for
-    //    }
-    
-    
-    //    print(minuteBegin)
-    let number2: Double? = Double(json["hours_end"].intValue) / 100
-//    print("NUMBER2: \(number2!)")
+
+    let number2: Double? = Double(json["properties"]["hours_end"].intValue) / 100
     let timeEnd = number2 ?? 0
     let hourEnd = floor(timeEnd)
-    
-
     
     var minuteEnd: Int
     if hourEnd == 0 {
@@ -84,8 +80,7 @@ class TimedParking {
       minuteEnd = Int((timeEnd.truncatingRemainder(dividingBy: hourEnd))*100)
     }
     
-    
-    self.days = json["days"].stringValue
+    self.days = json["properties"]["days"].stringValue
     
     switch days {
     case "M-F":
@@ -96,14 +91,15 @@ class TimedParking {
       DoW = .mondayThruSunday
     default:
       print("DOW nil")
-
     }
-    
     
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
-    self.hourLimit = Int(json["hour_limit"].stringValue) ?? 0
-    self.id = Int(json["object_id"].stringValue) ?? 999999
+    self.limit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
+//    print("\nHour Limit (Primative): ", self.limit)
+    self.hourLimit = TimeInterval(self.limit * 3600)
+//    print("\nHour Limit (Interval): ", self.hourLimit)
+    self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
     
 //    print("Hrs Begin \(self.hoursBegin)")
 //    print("Hrs End \(self.hoursEnd)")
@@ -113,9 +109,7 @@ class TimedParking {
     //      return coord
     //    }
     
-    
-    
-    self.geometry = json["geom"]["coordinates"].arrayValue.map { json in
+    self.geometry = json["geometry"]["coordinates"].arrayValue.map { json in
       let coord = CLLocationCoordinate2D(latitude:CLLocationDegrees(String(describing: json.arrayValue[1]))!, longitude: CLLocationDegrees(String(describing: json.arrayValue[0]))!)
       return coord
     }
@@ -143,19 +137,7 @@ class TimedParking {
       self.midPoint = CLLocation(latitude: lat, longitude: long)
     }
     
-//        print("COORDS")
-//        for i in self.geometry {
-//          print(i.latitude)
-//          print(i.longitude)
-//          print("\n\n")
-//        }
     
-    //    self.name = json["im:name"]["label"].stringValue
-    //    self.rightsOwner = json["rights"]["label"].stringValue
-    //    self.price = Double(json["im:price"]["attributes"]["amount"].stringValue) ?? 0
-    //    self.link = json["link"][0]["attributes"]["href"].stringValue
-    //    self.image = json["im:image"][2]["label"].stringValue
-    //    self.releaseDate = json["im:releaseDate"]["attributes"]["label"].stringValue
   }
   
   init(days: String, hoursBegin: DateComponents, hoursEnd: DateComponents, hourLimit: Int, id: Int, geometry: [CLLocationCoordinate2D]) {
@@ -163,7 +145,9 @@ class TimedParking {
     self.days = days
     self.hoursBegin = hoursBegin
     self.hoursEnd = hoursEnd
-    self.hourLimit = hourLimit
+    self.limit = hourLimit
+    self.hourLimit = TimeInterval(self.limit * 3600)
+
     self.id = id
     self.geometry = geometry
     

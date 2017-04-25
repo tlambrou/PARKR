@@ -17,7 +17,7 @@ class ParkingInfo {
       guard (activeStreet != nil) else {
         // TODO: Remove any active timer
         // Update all the string values
-        moveByText = "_ _:_ _ _ _"
+        moveByText = "_ _ : _ _ _ _"
         timedParkingRule = "   "
         timedParkingTimes = "   "
         return
@@ -70,8 +70,8 @@ class ParkingInfo {
 
   }
   
-  @objc func updateMoveBy() {
-    
+  func updateMoveBy() {
+    print("updateMoveBy called")
     // Get the user's calendar
     let calendar = Calendar.current
     
@@ -85,8 +85,6 @@ class ParkingInfo {
     todayComp.minute? += 1
     todayComp.second = 0
     
-    // Start the timer for future updating
-    self.timer = Timer(fireAt: calendar.date(from: todayComp)!, interval: TimeInterval(60), target: self, selector: #selector(updateMoveBy), userInfo: nil, repeats: true)
     
     // Create a date formatter
     let formatter = DateFormatter()
@@ -99,7 +97,7 @@ class ParkingInfo {
     
     // See if today's DoW is in the parking
     if isDayInDayRange(day: todayDay, range: (self.activeStreet?.DoW)!){
-      
+      print("isDayInDayRange properly called")
       // The start of today
       let midnightThisMorning = calendar.startOfDay(for: today)
       
@@ -128,23 +126,28 @@ class ParkingInfo {
         
       // If HoursBegin < Today < HoursEndSoft
       } else if today > todayHoursBegin! && today < todayHoursEndSoft! {
-        
+        print(#line)
         // Set moveby to park till today + HourLimit
         let time = today.addingTimeInterval((self.activeStreet?.hourLimit)!)
         setMoveByValues(date: time)
 
         // If HoursEndSoft < Today < HoursEnd
       } else if today > todayHoursEndSoft! && today < todayHoursEnd! {
-        
+        print(#line)
+
         // Is the current DoW the last in the rules day range?
         if isDayEndOfDayRange(day: todayDay, range: (self.activeStreet?.DoW)!) == true {
-          
+          print(#line)
+
+          print("\n\nModel updates in the correct conditional tree!\n\n")
           // Set moveby to park to monday at HoursBegin
           let component = DateComponents(hour: self.activeStreet?.self.hoursBegin.hour, minute: activeStreet?.hoursBegin.minute, weekday: 2)
           let time = calendar.nextDate(after: today, matching: component, matchingPolicy: .nextTime)
           setMoveByValues(date: time!)
           
         } else {
+          print(#line)
+
           
           // Set moveby to park till tomorrow at HoursBegin
           self.moveByDate = getDayOfWeek(date: today)
@@ -154,17 +157,20 @@ class ParkingInfo {
           
         }
       } else if today > todayHoursEnd! && today < midnightTonight! {
-        
+        print(#line)
+
         // Is the current DoW the last in the rules day range?
         if isDayEndOfDayRange(day: todayDay, range: (self.activeStreet?.DoW)!) == true {
-          
+          print(#line)
+
           // Set the moveBy... values to monday hours begin plus hour limit
           let component = DateComponents(hour: (self.activeStreet?.hoursBegin.hour)! + (self.activeStreet?.limit)!, minute: self.activeStreet?.hoursBegin.minute, weekday: 2)
           let time = calendar.nextDate(after: today, matching: component, matchingPolicy: .nextTime)
           setMoveByValues(date: time!)
           
         } else {
-          
+          print(#line)
+
           // Set moveby to park till tomorrow at HoursBeginSoft
           let time = calendar.date(byAdding: .day, value: 1, to: todayHoursBeginSoft!)
           setMoveByValues(date: time!)
@@ -200,5 +206,9 @@ class ParkingInfo {
     self.moveByComponent = calendar.dateComponents(in: calendar.timeZone, from: date)
     self.moveByText = formatter.string(from: self.moveByTime!)
     
+  }
+  
+  private func testFunc() -> Bool{
+    return true
   }
 }

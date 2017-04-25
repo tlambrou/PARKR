@@ -16,8 +16,9 @@ class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
   var viewControllerInstance: MapViewController!
   
   var timer = Timer()
+  var parkingRule: ParkingInfo?
   var counter = 0
-  
+
   @IBOutlet weak var tenMinuteSwitch: UISwitch!
   @IBOutlet weak var fifteenMinuteSwitch: UISwitch!
   @IBOutlet weak var thirtyMinuteSwitch: UISwitch!
@@ -77,16 +78,7 @@ class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
       
     }
   }
-  
-  func updateTimer () {
-    counter -= 1
-    let hours = Int(counter) / 3600
-    let minutes = Int(counter) / 60 % 60
-    let seconds = Int(counter) % 60
-    hoursLabel.text = String(format: "%02i",hours)
-    minutesLabel.text = String(format: "%02i",minutes)
-    secondsLabel.text = String(format: "%02i",seconds)
-  }
+ 
   @IBAction func stopAction(_ sender: UIButton) {
     // TODO: Stop the timer
     timer.invalidate()
@@ -96,6 +88,27 @@ class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
 
     self.dismiss(animated: true, completion: nil)
   }
+  
+  
+  func updateTimer () {
+//    counter -= 1
+    let calendar = Calendar.current
+    let f = DateFormatter()
+    f.timeStyle = .short
+    let interval = parkingRule?.moveByTime?.timeIntervalSinceNow
+    let hours = Int(interval!) / 3600
+    let minutes = Int(interval!) / 60 % 60
+    let seconds = Int(interval!) % 60
+    
+    if hours < 0 || minutes < 0 || seconds < 0 {
+      hoursLabel.text = String(format: "%02i",abs(hours) * -1)
+    } else {
+      hoursLabel.text = String(format: "%02i",abs(hours))
+    }
+    minutesLabel.text = String(format: "%02i",abs(minutes))
+    secondsLabel.text = String(format: "%02i",abs(seconds))
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -140,10 +153,10 @@ class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
     let notif = UNMutableNotificationContent()
     let center = UNUserNotificationCenter.current()
     
-    let snoozeAction = UNNotificationAction(identifier: "Snooze",
-                                            title: "Snooze", options: [])
-    let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
-                                            title: "Delete", options: [.destructive])
+//    let snoozeAction = UNNotificationAction(identifier: "Snooze",
+//                                            title: "Snooze", options: [])
+//    let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
+//                                            title: "Delete", options: [.destructive])
     
     notif.title = "PARKR"
     notif.subtitle = "Your parking expires in " + type + "!!!"

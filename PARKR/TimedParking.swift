@@ -81,6 +81,7 @@ class TimedParking {
     }
     
     self.days = json["properties"]["days"].stringValue
+//    print("Days Value: ", json["properties"]["days"])
     
     switch days {
     case "M-F":
@@ -89,21 +90,38 @@ class TimedParking {
       DoW = .mondayThruSaturday
     case "M-Su":
       DoW = .mondayThruSunday
+    case "M-S":
+      DoW = .mondayThruSunday
+    case "M_F":
+      DoW = .mondayThruFriday
     default:
-      print("DOW nil")
+      DoW = .mondayThruSunday
     }
     
     self.hoursBegin = DateComponents(hour: Int(hourBegin), minute: minuteBegin)
     self.hoursEnd = DateComponents(hour: Int(hourEnd), minute: minuteEnd)
-    self.limit = Int(json["properties"]["hour_limit"].stringValue) ?? 0
+    let limitTemp = json["properties"]["hour_limit"].stringValue
+//    print("JSON for HourLimit", json["properties"]["hour_limit"])
+    // If hoursLimit is 0 set it to 72 hours
+    if limitTemp == "0" || limitTemp == "null" || limitTemp == "" {
+      self.limit = 72
+    } else {
+      if limitTemp != nil {
+        self.limit = Int(Double(limitTemp)!)
+      } else {
+        self.limit = 0
+      }
+    }
+//    print("Here is the final value", self.limit)
+    
 //    print("\nHour Limit (Primative): ", self.limit)
     self.hourLimit = TimeInterval(self.limit * 3600)
 //    print("\nHour Limit (Interval): ", self.hourLimit)
     self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
     
-//    print("Hrs Begin \(self.hoursBegin)")
-//    print("Hrs End \(self.hoursEnd)")
-//    print("Hrs Limit \(self.hourLimit)")
+    print("Hrs Begin \(self.hoursBegin)")
+    print("Hrs End \(self.hoursEnd)")
+    print("Hrs Limit \(self.hourLimit)")
     //    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
     //      let coord = Coordinates(json: json)
     //      return coord

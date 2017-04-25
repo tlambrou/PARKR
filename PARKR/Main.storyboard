@@ -29,7 +29,7 @@
                                 <rect key="frame" x="0.0" y="581" width="414" height="83"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." lineBreakMode="tailTruncation" numberOfLines="2" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UT4-us-api">
-                                        <rect key="frame" x="153.66666666666669" y="9.6666666666666288" width="107.00000000000006" height="64"/>
+                                        <rect key="frame" x="154" y="10" width="107" height="64"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="64" id="Pvj-mm-U5i"/>
                                         </constraints>
@@ -113,11 +113,14 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading San Francisco Data..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
-                                        <rect key="frame" x="61.666666666666657" y="355" width="292" height="26.333333333333314"/>
+                                        <rect key="frame" x="61" y="355" width="292" height="26.333333333333314"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-BV-ZyF">
+                                        <rect key="frame" x="189" y="411.33333333333331" width="37" height="37"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -126,6 +129,7 @@
                                     <constraint firstItem="OVo-Z1-WIN" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="QQL-MK-CsB"/>
                                     <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerX" secondItem="Pk7-lv-ib8" secondAttribute="centerX" id="VKa-eb-nRN"/>
                                     <constraint firstItem="OVo-Z1-WIN" firstAttribute="top" secondItem="Pk7-lv-ib8" secondAttribute="top" id="b8m-cY-okn"/>
+                                    <constraint firstItem="urZ-BV-ZyF" firstAttribute="top" secondItem="Iyk-GO-NOn" secondAttribute="bottom" constant="30" id="gGM-4O-uHL"/>
                                     <constraint firstItem="Iyk-GO-NOn" firstAttribute="centerY" secondItem="Pk7-lv-ib8" secondAttribute="centerY" id="oGe-x0-hCU"/>
                                     <constraint firstAttribute="bottom" secondItem="OVo-Z1-WIN" secondAttribute="bottom" id="q6Z-VN-oR1"/>
                                     <constraint firstAttribute="trailing" secondItem="OVo-Z1-WIN" secondAttribute="trailing" id="xUX-GA-6sK"/>
@@ -140,6 +144,7 @@
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="4dQ-Jk-LRZ"/>
                             <constraint firstItem="tho-He-8Sh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5Xo-1J-FHJ"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="emb-oz-Ly8" secondAttribute="bottom" id="7sX-oq-qh3"/>
+                            <constraint firstItem="urZ-BV-ZyF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BA3-Do-is6"/>
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="trailing" secondItem="FiW-1X-eQJ" secondAttribute="trailing" id="Ckq-R7-ISe"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ote-pW-8zA" secondAttribute="bottom" id="DSp-Al-0Ho"/>
                             <constraint firstItem="Ote-pW-8zA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="EcC-sV-pAu"/>
@@ -169,6 +174,7 @@
                         <outlet property="LoadingView" destination="Pk7-lv-ib8" id="gVO-z8-r80"/>
                         <outlet property="durationParkingLabel" destination="XVU-vK-Blc" id="qLe-ER-zJd"/>
                         <outlet property="geocodingLabel" destination="UT4-us-api" id="Ix4-AP-9LF"/>
+                        <outlet property="loadingAnimation" destination="urZ-BV-ZyF" id="qc7-lm-dIM"/>
                         <outlet property="mapView" destination="tho-He-8Sh" id="uu9-KQ-hFn"/>
                         <outlet property="moveByTimingLabel" destination="sJm-K5-nXH" id="tzU-Pa-69V"/>
                         <outlet property="moveOutLabel" destination="fi5-vv-1Gm" id="eKA-ab-wGw"/>
@@ -305,22 +311,22 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="bottom" axis="vertical" distribution="fillEqually" spacing="22" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0zh-6s-37T" userLabel="moveByStackView">
-                                                <rect key="frame" x="52.333333333333343" y="94" width="308" height="260"/>
+                                                <rect key="frame" x="48.333333333333343" y="94" width="316.33333333333326" height="260"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move By" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CVX-a2-3Xm" userLabel="Move by">
-                                                        <rect key="frame" x="0.0" y="0.0" width="308" height="98"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="316.33333333333331" height="98"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                         <color key="textColor" red="0.88551928599999996" green="0.88551928599999996" blue="0.88551928599999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="____ @ _ _ : _ _ _ _" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rDc-HJ-Apg">
-                                                        <rect key="frame" x="0.0" y="76.666666666666686" width="308" height="98.333333333333314"/>
+                                                        <rect key="frame" x="0.0" y="76.666666666666686" width="316.33333333333331" height="98.333333333333314"/>
                                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="38"/>
                                                         <color key="textColor" red="0.0" green="1" blue="0.78422484140000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To Avoid Parking TIcket or Tow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WeG-E4-QwK" userLabel="Move by">
-                                                        <rect key="frame" x="0.0" y="162" width="308" height="98"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To Avoid Parking a Ticket or Tow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WeG-E4-QwK" userLabel="Move by">
+                                                        <rect key="frame" x="0.0" y="162" width="316.33333333333331" height="98"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                         <color key="textColor" red="0.88551928599999996" green="0.88551928599999996" blue="0.88551928599999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>

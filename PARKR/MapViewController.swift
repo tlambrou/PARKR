@@ -42,10 +42,14 @@ enum modeTypes { case automatic, manual }
 enum ruleType { case timed, metered, towAway, streetCleaning, permit }
 enum renderTypes { case active, inactive }
 
+let polyCoords = [CLLocationCoordinate2DMake(37.7068, -122.4281), CLLocationCoordinate2DMake(37.7068, -122.5048), CLLocationCoordinate2DMake(37.7835, -122.5158), CLLocationCoordinate2DMake(37.8108, -122.4062), CLLocationCoordinate2DMake(37.7287, -122.3569), CLLocationCoordinate2DMake(37.7068, -122.3898)]
+
+let sanFranciscoPolygon = MKPolygon(coordinates: polyCoords, count: polyCoords.count)
+
 // Global variable for all timed parking data
 var AllTimedParkingData = [TimedParking]()
 
-class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
   
   // MARK: - IBOutlet Declarations
   @IBOutlet weak var LoadingView: UIView!
@@ -61,18 +65,34 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   @IBAction func parkHereAction(_ sender: UIButton) {
     self.performSegue(withIdentifier: "moveTimerSegue", sender: nil)
   }
+  @IBOutlet weak var loadingAnimation: UIActivityIndicatorView!
+ 
   
   // MARK: - Var Declarations
   var touchPoint: CGPoint!
   var touchPointCoordinate: CLLocationCoordinate2D!
-  var annotation = MKPointAnnotation()
   var locationManager = CLLocationManager()
   let showAlert = UIAlertController()
   var renderer: renderTypes = .active
-  var locationLastUpdated = Date(timeIntervalSinceNow: -20)
-  var locationCurrentUpdated = Date(timeIntervalSinceNow: -20)
+  var locationLastUpdated = Date(timeIntervalSinceNow: -2)
+  var locationCurrentUpdated = Date(timeIntervalSinceNow: -2)
   var locationUpdateIndex = 0
-  var loading: Bool = true
+  var loading: Bool = true {
+    didSet {
+      
+      // Create time upon entering for comparison
+      self.locationCurrentUpdated = Calendar.current.date(byAdding: .second, value: -2, to: Date())!
+      
+      // Call update on Parking from Location Update
+      print("About to call updateFromLocationChange")
+      self.updateFromLocationChange()
+      
+      self.loadingAnimation.stopAnimating()
+      // Hide Loading View and progress bar
+      self.LoadingView.isHidden = true
+    }
+    
+  }
   var mode: modeTypes = .automatic
   
   // This variable represents the active parking displayed in the view at any point
@@ -82,45 +102,84 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       
       print("didSet in activeParking called")
       
-      // Update the labels
-      self.moveByTimingLabel.text = activeParking?.moveByText
-      self.durationParkingLabel.text = activeParking?.timedParkingRule
-      self.moveOutLabel.text = activeParking?.timedParkingTimes
-      
-      if activeParking?.activeStreet == nil {
+      if activeParking?.activeStreet?.hourLimit == nil || activeParking?.activeStreet?.hoursBegin == nil || activeParking?.activeStreet?.hoursEnd == nil || activeParking?.activeStreet == nil {
+        
+        self.durationParkingLabel.text = "No Timed Parking"
         
         // Park Here button becomes disabled
-        parkHereButton.adjustsImageWhenDisabled = true
+        parkHereButton.isEnabled = false
         parkHereButton.isUserInteractionEnabled = false
         
       } else {
         
-        // Park Here button becomes enabled
-        parkHereButton.isUserInteractionEnabled = true
+        // Make Park Here button interactable and enabled
+        self.parkHereButton.isEnabled = true
+        self.parkHereButton.isUserInteractionEnabled = true
+        
+        // Update the labels
+        self.moveByTimingLabel.text = activeParking?.moveByText
+        self.durationParkingLabel.text = activeParking?.timedParkingRule
+        self.moveOutLabel.text = activeParking?.timedParkingTimes
+        
+        // Paint the active line as active
+        renderer = .active
+        self.mapView.add((activeParking?.activeStreet?.line!)!, level: MKOverlayLevel.aboveLabels)
+        renderer = .inactive
+        
         
       }
     }
   }
-  
+  // MARK: Subset var declaration
+  var subset = [TimedParking]() {
+    willSet {
+      print("willSet in subset called")
+      mapView.removeOverlays(mapView.overlays)
+    }
+    didSet {
+      for (index, item) in subset.enumerated() {
+        if item.hourLimit == nil || item.hoursBegin == nil || item.hoursEnd == nil {
+          subset.remove(at: index)
+        }
+      }
+      print("didSet in subset called")
+      for line in subset {
+        renderer = .inactive
+        self.mapView.add(line.line!)
+      }
+      
+      let location = locationManager.location
+      
+      
+      // Find the nearest block among all of the nearest blocks...
+      let currentBlock = findNearestBlock(data: subset, currentLocation: location!)
+      
+      print(activeParking?.moveByText as Any, activeParking?.timedParkingRule as Any, activeParking?.timedParkingTimes as Any, activeParking?.activeStreet as Any, separator: " ______ ", terminator: " | ")
+      
+      // Detect if User is out of range
+      // Create a circle around the current location to see if the closest data intersects with the circle
+      let radius = CLLocationDistance(24)
+      let circle = MKCircle(center: (location?.coordinate)!, radius: radius)
+      let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
+      
+      // If the current block is within 24 meters of the user's locatio
+      if intersecting {
+        // Update the reverse geocoding...
+        updateReverseGeoCoding(location: location!)
+        // Otherwise if street is not within the threshold of the 24 meters
+      } else {
+        print("No Parking Data for this street")
+        geocodingLabel.text = "No Data On This Street"
+        activeParking?.activeStreet = nil
+      }
+      
+    }
+  }
   
   // MARK: - Location Manager Function
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     
-  }
-  
-  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-    
-  }
-  
-  func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-    
-    // Create a counter of how many updates have been done
-    locationUpdateIndex += 1
-    
-    // Create time upon entering for comparison
-    locationCurrentUpdated = Date()
-    
-    print("\n\nmapView did Update user location: \(locationUpdateIndex)\nMode: \(mode)\nLoading? - \(loading)\n\n")
+    locationManager.stopUpdatingLocation()
     
     // If the data is done loading...
     if loading == false {
@@ -130,15 +189,35 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       
     }
     
-    // Grab the time upon leaving the last update call
-    locationLastUpdated = Date()
+    locationManager.startUpdatingLocation()
+  }
+  
+  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    
+  }
+  
+  func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+    
+    print("\n\nmapView did Update user location: \(locationUpdateIndex)\nMode: \(mode)\nLoading? - \(loading)\n\n")
+    
+    
+    
+  }
+  
+  func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+    //    let trackingBarButton = MKUserTrackingBarButtonItem(mapView: mapView)
+    //    trackingBarButton.title = "Update your location"
   }
   
   // MARK: Update From Location Method
   func updateFromLocationChange() {
     
-    print("updateFromLocationChange Called | Last called \(locationCurrentUpdated.timeIntervalSince(locationLastUpdated))")
-
+    
+    // Create a counter of how many updates have been done
+    locationUpdateIndex += 1
+    
+    // Create time upon entering for comparison
+    locationCurrentUpdated = Date()
     
     // Make sure location is not nil
     guard let location = locationManager.location else{
@@ -152,9 +231,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // If in automatic mode...
     case .automatic:
       
+      
       // Check to see if the time since the last update was greater than threshold
       if locationCurrentUpdated.timeIntervalSince(locationLastUpdated) > TimeInterval(2.0) {
         
+        print("updateFromLocationChange Called | Last called \(locationCurrentUpdated.timeIntervalSince(locationLastUpdated))")
+        
+        // Update the center
         // Create a variable for centering the map on the user's current location
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         
@@ -162,54 +245,44 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.mapView.setCenter(center, animated: true)
         self.mapView.camera.altitude = 300
         
-        // Initialize the the subset
-        let subset = findSubsetForMapView()
+        // Grab the time view was last updated
+        locationLastUpdated = Date()
         
-        // Make sure to see if location is in SF and if not display a message
-        guard subset.count > 0
-          else {
-            print("No Timed Parking Nearby")
-            geocodingLabel.text = "No Data On This Street"
-            return
-        }
-        
-        // Find the nearest block among all of the nearest blocks...
-        let currentBlock = findNearestBlock(data: subset, currentLocation: location)
-        
-        print(activeParking?.moveByText as Any, activeParking?.timedParkingRule as Any, activeParking?.timedParkingTimes as Any, activeParking?.activeStreet as Any, separator: " ______ ", terminator: " | ")
-        
-        // Detect if User is out of range
-        // Create a circle around the current location to see if the closest data intersects with the circle
-        let radius = CLLocationDistance(24)
-        let circle = MKCircle(center: (location.coordinate), radius: radius)
-        let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
-        
-        // If the current block is within 24 meters of the user's locatio
-        if intersecting {
-          // Update the reverse geocoding...
-          updateReverseGeoCoding(location: location)
-          // Otherwise if street is not within the threshold of the 24 meters
+        // If so check to see if nil because not in SF
+        if sanFranciscoPolygon.intersects(mapView.visibleMapRect){
+          
+          // Initialize the the subset
+          subset = findSubsetForMapView()
+          // Make sure to see if location is in SF and if not display a message
+          guard subset.count > 0
+            else {
+              print("No Timed Parking Nearby")
+              geocodingLabel.text = "No Data On This Street"
+              return}
+          // If not then collect first subset and draw the lines
         } else {
-          print("No Parking Data for this street")
-          geocodingLabel.text = "No Data On This Street"
-        }
-        
-        // Paint all these polylines as disabled
-        for line in subset {
-          
-          renderer = .inactive
-          self.mapView.add(line.line!)
+          self.showAlert.title = "You are not in San Francisco!"
+          self.showAlert.message = "Unfortunately PARKR is only available for drivers in San Francisco"
           
         }
         
-        // Paint the active line as active
-        renderer = .active
-        self.mapView.add(currentBlock.line!, level: MKOverlayLevel.aboveLabels)
-        renderer = .inactive
         
-//        // Update all of the rules and times...
-//        updateRules(location: currentBlock)
         
+        
+        
+        
+        // Then collect the closest and draw it as well
+        
+        // Check if the last subset check was larger than threshold distance delta
+        
+        // If so, get a new subset and redraw the views
+        
+        // Calculate the closest
+
+        
+  
+        
+       
       }
       
     // If in manual mode...
@@ -218,6 +291,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       break
       
     }
+    
   }
   
   
@@ -260,11 +334,36 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    initializeMapView()
-    //    longPress()
+    
+    // Load the data
     readJSON(from: "TimedParkingData.geojson")
     
+    // Initialize the MapView
+    initializeMapView()
     
+    // Add pan gesture to detect when the map moves
+    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.didDragMap(_:)))
+    
+    // Make your class the delegate of the pan gesture
+    panGesture.delegate = self
+    
+    // Add the gesture to the mapView
+    mapView.addGestureRecognizer(panGesture)
+    
+  }
+  
+  // Protocol method so gesture recognizer will work with the existing MKMapView gestures
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
+  
+  // Will be called by the selector in pan gesture
+  func didDragMap(_ sender: UIGestureRecognizer) {
+    if sender.state == .ended {
+      
+      print("user did drag")
+      
+    }
   }
   
   func longPress() {
@@ -289,7 +388,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
   }
   
-
+  
   // MARK: - Find Parking func
   func initializeMapView() {
     
@@ -305,7 +404,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
-
+    
     // Set the delegate
     locationManager.delegate = self
     
@@ -475,23 +574,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       DispatchQueue.main.async {
         print("\n\nDone loading parking data... \(AllTimedParkingData.count)\n\n")
         
-        // Finished loading
+        // Finished loading - should trigger didSet
         self.loading = false
-        
-        // Create time upon entering for comparison
-        self.locationCurrentUpdated = Calendar.current.date(byAdding: .second, value: -20, to: Date())!
-        
-
-        // Call update on Parking from Location Update
-        print("About to call updateFromLocationChange")
-        self.updateFromLocationChange()
-        
-        // Make Park Here button interactable and enabled
-        self.parkHereButton.isEnabled = true
-        self.parkHereButton.isUserInteractionEnabled = true
-        
-        // Hide Loading View and progress bar
-        self.LoadingView.isHidden = true
         progressBar.removeFromSuperview()
         
       }
@@ -502,7 +586,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   func findSubsetForMapView() -> [TimedParking] {
     
     var subset = [TimedParking]()
-//    print(AllTimedParkingData[10].line?.coordinate as Any)
+    //    print(AllTimedParkingData[10].line?.coordinate as Any)
     for location in AllTimedParkingData {
       if (location.line?.intersects(mapView.visibleMapRect))! {
         subset.append(location)
@@ -581,10 +665,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     print("Hrs Limit \(String(describing: closest?.hourLimit))")
     
     // Update the Active Parking Variable - Should trigger didSet in activeParking
-    guard ((activeParking = ParkingInfo(activeStreet: closest!)) != nil) else{
-      print("Closest failed to set activeParking.activeStreet for some reason")
-      return closest!
-    }
+    activeParking = ParkingInfo(activeStreet: closest!)
+    //    guard ((activeParking = ParkingInfo(activeStreet: closest!)) != nil) else{
+    //      print("Closest failed to set activeParking.activeStreet for some reason")
+    //      return closest!
+    //    }
     
     print(String(describing: activeParking?.activeStreet?.limit), String(describing: closest?.limit))
     
@@ -634,12 +719,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
   }
   
-
+  
   // Function to find magnitude of line segment
   func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
     return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
   }
-
+  
   // MARK: - Update rules
   func updateRules(location: TimedParking) {
     
@@ -663,7 +748,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
     let date = Date(timeIntervalSinceNow: hourLimit)
     
-    checkMoveByDatePassed(date: date, location: location)
+    //    checkMoveByDatePassed(date: date, location: location)
     
     let formatter = DateFormatter()
     formatter.timeStyle = .short
@@ -679,7 +764,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     moveOutLabel.text = text2
     
-    checkMoveByDatePassed(date: date, location: location)
     //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
     //    moveByTimingLabel.text = formatter.string(from: date)
     moveByTimingLabel.text = "\(formatter.string(from: date))"
@@ -718,90 +802,91 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   //
   //}
   
-  func checkMoveByDatePassed(date: Date, location: TimedParking) {
+  //  func checkMoveByDatePassed(date: Date, location: TimedParking) {
+  //    let dateFormatter = DateFormatter()
+  //    dateFormatter.dateFormat = "hh:mm"
+  //
+  //    let calendar = Calendar.current
+  //    let componentMinute = calendar.component(.minute, from: date)
+  //    let componentHour = calendar.component(.hour, from: date)
+  
+  //    let minute = componentMinute.minute
+  //    let hour = componentHour.hour
+  
+  
+  //    // MARK: - Update rules
+  //    func updateRules(location: TimedParking) {
+  //
+  //
+  //        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
+  //        let date = Date(timeIntervalSinceNow: hourLimit)
+  //
+  //        let checkLocation = checkMoveByDatePassed(date: date, location: location)
+  //
+  //        let formatter = DateFormatter()
+  //        formatter.timeStyle = .short
+  ////        let hourBegin = Calendar.current.date(from: location.hoursBegin)
+  ////        let hourEnd = Calendar.current.date(from: location.hoursEnd)
+  //
+  //
+  //        let text = String(checkLocation.hourLimit)
+  //
+  //        durationParkingLabel.text = "\(text) hr parking"
+  //        let start = String(describing: checkLocation.hoursBegin.hour!)
+  //        let end = String(checkLocation.hoursEnd.hour!)
+  //        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
+  //        limit = checkLocation.hourLimit
+  //
+  //        moveOutLabel.text = text2
+  //
+  //        let calendar = Calendar.current
+  //        let components = calendar.dateComponents([.hour, .minute], from: date)
+  //        print("DATE*******: \(date)")
+  //
+  //        //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
+  //        //    moveByTimingLabel.text = formatter.string(from: date)
+  //        moveByTimingLabel.text = "\(components.hour!): \(components.minute!)"
+  //
+  //    }
+  //
+  //    // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+  //
+  //
+  //    if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
+  //      location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
+  //  }
+  //
+  
+  
+  
+  
+  func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "hh:mm"
-//    
-//    let calendar = Calendar.current
-//    let componentMinute = calendar.component(.minute, from: date)
-//    let componentHour = calendar.component(.hour, from: date)
     
-//    let minute = componentMinute.minute
-//    let hour = componentHour.hour
+    let calendar = Calendar.current
+    let componentMinute = calendar.component(.minute, from: date)
+    let componentHour = calendar.component(.hour, from: date)
+    
+    let minute = componentMinute.minute
+    let hour = componentHour.hour
     
     
-    //    // MARK: - Update rules
-    //    func updateRules(location: TimedParking) {
-    //
-    //
-    //        let hourLimit = TimeInterval(Double(location.hourLimit * 60 * 60))
-    //        let date = Date(timeIntervalSinceNow: hourLimit)
-    //
-    //        let checkLocation = checkMoveByDatePassed(date: date, location: location)
-    //
-    //        let formatter = DateFormatter()
-    //        formatter.timeStyle = .short
-    ////        let hourBegin = Calendar.current.date(from: location.hoursBegin)
-    ////        let hourEnd = Calendar.current.date(from: location.hoursEnd)
-    //
-    //
-    //        let text = String(checkLocation.hourLimit)
-    //
-    //        durationParkingLabel.text = "\(text) hr parking"
-    //        let start = String(describing: checkLocation.hoursBegin.hour!)
-    //        let end = String(checkLocation.hoursEnd.hour!)
-    //        let text2 = "\(start)am - \(hourNightPM(hour: Int(end)!))pm"
-    //        limit = checkLocation.hourLimit
-    //
-    //        moveOutLabel.text = text2
-    //
-    //        let calendar = Calendar.current
-    //        let components = calendar.dateComponents([.hour, .minute], from: date)
-    //        print("DATE*******: \(date)")
-    //
-    //        //    let component = Calendar.current.dateComponents(in: Calendar.current.timeZone, from: date)
-    //        //    moveByTimingLabel.text = formatter.string(from: date)
-    //        moveByTimingLabel.text = "\(components.hour!): \(components.minute!)"
-    //
-    //    }
-    //
-    //    // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
-    //
-    //
-    //    if hour.hour! > location.hoursEnd.hour! && hour.minute! > location.hoursEnd.minute! {
-    //      location.hourLimit = location.hoursEnd.hour! - location.hoursBegin.hour!
-  }
-  
-  
-  
-}
-
-func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
-  let dateFormatter = DateFormatter()
-  dateFormatter.dateFormat = "hh:mm"
-  
-  let calendar = Calendar.current
-  let componentMinute = calendar.component(.minute, from: date)
-  let componentHour = calendar.component(.hour, from: date)
-  
-  let minute = componentMinute.minute
-  let hour = componentHour.hour
-  
-  
-  // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
-  print("HOUR: \(hour.hour!)")
-  print("LOCATION Hrs end \(location.hoursEnd.hour!)")
-  
-  print("MINUTE: \(minute.minute!)")
-  print("LOCATION min end \(location.hoursEnd.minute!)")
-  
-  if hour.hour! >= location.hoursEnd.hour! && minute.minute! > location.hoursEnd.minute! {
-    location.hourLimit = hour.hour! - location.hoursBegin.hour!
-    return location
-  } else {
-    return location
-
-    //    print("****** HOUR: \(minute.minute!)")
+    // if moveby hour > endlimit.hour && moveby minute > endlimit.minute: hour begin am else return regular
+    print("HOUR: \(hour.hour!)")
+    print("LOCATION Hrs end \(location.hoursEnd.hour!)")
+    
+    print("MINUTE: \(minute.minute!)")
+    print("LOCATION min end \(location.hoursEnd.minute!)")
+    
+    if hour.hour! >= location.hoursEnd.hour! && minute.minute! > location.hoursEnd.minute! {
+      location.limit = hour.hour! - location.hoursBegin.hour!
+      return location
+    } else {
+      return location
+      
+      //    print("****** HOUR: \(minute.minute!)")
+    }
   }
   
   //    // MARK: - Update rules
@@ -873,45 +958,87 @@ func checkMoveByDatePassed(date: Date, location: TimedParking) -> TimedParking {
   //
   //  }
   
+  
+  
+  
+  //// MARK: - Unique Values
+  //func getUniqueValues (theData: [TimedParking]) -> [String] {
+  //
+  //    // Find which type was requested
+  //
+  //    //  switch type {
+  //    //
+  //    //  case .daysOfWeek:
+  //
+  //    var uniqueValues = [theData[0].days]
+  //
+  //    for block in theData {
+  //
+  //        var test: Bool = false
+  //
+  //        for value in uniqueValues {
+  //
+  //            if block.days == value {
+  //
+  //                test = true
+  //
+  //            }
+  //        }
+  //        if test == false {
+  //            uniqueValues.append(block.days)
+  //        }
+  //    }
+  //
+  //    return uniqueValues
+  //
+  //}
+  
+  
+  func outputDataToFile() {
+    
+    let fileName = "Output.swift"
+    
+    let filePath = "/Users/Tassos/Desktop/Academics/Make School/Product Academy/PD - Cities/PARKR/PARKR" + fileName
+    
+    let file = FileHandle(forWritingAtPath: filePath)
+    
+    //    print(file ?? "default for file")
+    
+    if file != nil {
+      // Set the data we want to write
+      
+      let data1 = AllTimedParkingData[0]
+      var test = [TimedParking]()
+      //      print(test)
+      test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
+      
+      let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+      
+      //      print(data!)
+      
+      // Append to the end of the file
+      file?.seekToEndOfFile()
+      
+      // Write it to the file
+      file?.write(data!)
+      
+      // Close the file
+      file?.closeFile()
+    }
+    else {
+      print("Ooops! Something went wrong!")
+    }
+    
+    
+  }
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "moveTimerSegue" {
       let timerView: TimerViewController = segue.destination as! TimerViewController
       timerView.viewControllerInstance = self
+      try timerView.parkingRule = activeParking!
     }
     
   }
   
 }
-
-
-//// MARK: - Unique Values
-//func getUniqueValues (theData: [TimedParking]) -> [String] {
-//
-//    // Find which type was requested
-//
-//    //  switch type {
-//    //
-//    //  case .daysOfWeek:
-//
-//    var uniqueValues = [theData[0].days]
-//
-//    for block in theData {
-//
-//        var test: Bool = false
-//
-//        for value in uniqueValues {
-//
-//            if block.days == value {
-//
-//                test = true
-//
-//            }
-//        }
-//        if test == false {
-//            uniqueValues.append(block.days)
-//        }
-//    }
-//
-//    return uniqueValues
-//
-//}

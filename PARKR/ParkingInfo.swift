@@ -109,14 +109,27 @@ class ParkingInfo {
       
       // The time today the rule hours end
       let todayHoursEnd = calendar.date(bySettingHour: (self.activeStreet?.hoursEnd.hour)!, minute: (self.activeStreet?.hoursEnd.minute)!, second: 0, of: today)
+//      print("Day of today! ", todayComp.day)
+//      todayComp.hour = activeStreet?.hoursEnd.hour
+//      todayComp.minute = activeStreet?.hoursEnd.minute
+//      todayComp.second = 0
+//      print("Day of today after! ", todayComp)
+//      let todayHoursEnd = calendar.date(from: todayComp)
       
+      print("Interval: ", (-1 * (self.activeStreet?.hourLimit)!))
       // This is the end time minus the hour limit
-      let todayHoursEndSoft = todayHoursEnd?.addingTimeInterval(-(self.activeStreet?.hourLimit)!)
+      let todayHoursEndSoft = todayHoursEnd?.addingTimeInterval(-1 * (self.activeStreet?.hourLimit)!)
+//      let hourLimitComponent = DateComponents(hour: activeStreet?.limit)
+//      print("Today's Hours End: ", todayHoursEnd)
+//      let todayHoursEndSoft = (todayHoursEnd)! - hourLimitComponent
+//      print("hoursEndSoft: ", (todayHoursEndSoft) as Any)
       
       // The end of today
       let midnightTonight = calendar.date(byAdding: DateComponents(day: 1), to: midnightThisMorning)
       
       // TODO: Is today's time in the rule times?
+      print(todayHoursEndSoft as Any)
+
       
       // If midnightMorning < Today < HoursBegin
       if today > midnightThisMorning && today < todayHoursBegin! {

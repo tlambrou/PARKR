@@ -500,7 +500,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Initialize the MapView
     mapView.delegate = self
     mapView.isScrollEnabled = true
-    mapView.isZoomEnabled = false
+    mapView.isZoomEnabled = true
     mapView.showsCompass = true
     mapView.showsPointsOfInterest = true
     mapView.isPitchEnabled = false

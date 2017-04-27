@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		246AFA0F1EB2966D00DE82EC /* MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AFA0E1EB2966D00DE82EC /* MKMapView.swift */; };
+		246AFA111EB296DD00DE82EC /* MKPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AFA101EB296DD00DE82EC /* MKPolyline.swift */; };
 		960690051EAC294C00C265AE /* ParkingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960690041EAC294C00C265AE /* ParkingInfo.swift */; };
 		960DC6D21EAF1B1400EF9BAA /* San_Francisco_Sights.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 960DC6D11EAF1B1400EF9BAA /* San_Francisco_Sights.gpx */; };
 		960DC6D61EAF277F00EF9BAA /* testpark.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 960DC6D51EAF277F00EF9BAA /* testpark.gpx */; };
@@ -79,6 +81,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		246AFA0E1EB2966D00DE82EC /* MKMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKMapView.swift; sourceTree = "<group>"; };
+		246AFA101EB296DD00DE82EC /* MKPolyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKPolyline.swift; sourceTree = "<group>"; };
 		912691BB98FE905640C19DBF /* Pods_PARKR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PARKR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		960690031EAC223B00C265AE /* BackendJSONSample.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackendJSONSample.geojson; sourceTree = "<group>"; };
 		960690041EAC294C00C265AE /* ParkingInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingInfo.swift; sourceTree = "<group>"; };
@@ -178,6 +182,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		246AFA0D1EB2965500DE82EC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				246AFA0E1EB2966D00DE82EC /* MKMapView.swift */,
+				246AFA101EB296DD00DE82EC /* MKPolyline.swift */,
+			);
+			name = Extensions;
+			path = Extentions;
+			sourceTree = "<group>";
+		};
 		4C5811E6C4270A5CC8876779 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +224,7 @@
 		9618A7A81DDE829800A86F7D /* PARKR */ = {
 			isa = PBXGroup;
 			children = (
+				246AFA0D1EB2965500DE82EC /* Extensions */,
 				967E185E1EADE7050041621F /* Delegates */,
 				969E77421EA9803E00157847 /* Controllers */,
 				969E77431EA9805000157847 /* Models */,
@@ -540,6 +555,7 @@
 				96D7A6E51EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallPulseRise.swift in Sources */,
 				96D7A6E91EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallScale.swift in Sources */,
 				96D7A6DE1EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallBeat.swift in Sources */,
+				246AFA111EB296DD00DE82EC /* MKPolyline.swift in Sources */,
 				96D7A6ED1EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallSpinFadeLoader.swift in Sources */,
 				96D7A6F61EAF0CAC00E94D09 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
 				96D7A6FF1EAF0CAC00E94D09 /* NVActivityIndicatorPresenter.swift in Sources */,
@@ -560,6 +576,7 @@
 				96D7A6F41EAF0CAC00E94D09 /* NVActivityIndicatorAnimationLineScaleParty.swift in Sources */,
 				96D7A6E11EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallClipRotatePulse.swift in Sources */,
 				C6476F561E2709C500F15EFC /* TimerViewController.swift in Sources */,
+				246AFA0F1EB2966D00DE82EC /* MKMapView.swift in Sources */,
 				96D7A6EF1EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallZigZag.swift in Sources */,
 				9674329A1DED6962000F3ABB /* Coordinates.swift in Sources */,
 				960690051EAC294C00C265AE /* ParkingInfo.swift in Sources */,

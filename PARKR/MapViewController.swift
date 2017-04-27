@@ -66,7 +66,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     self.performSegue(withIdentifier: "moveTimerSegue", sender: nil)
   }
   @IBOutlet weak var loadingAnimation: UIActivityIndicatorView!
- 
+  @IBOutlet weak var reticuleImage: UIImageView!
+  @IBOutlet weak var automaticModeButton: UIButton!
+  
   
   // MARK: - Var Declarations
   var touchPoint: CGPoint!
@@ -94,7 +96,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
   }
-  var mode: modeTypes = .automatic
+  var mode: modeTypes = .automatic {
+    didSet {
+      switch mode {
+      case .automatic:
+        print("Mode swtiched to automatic")
+        mapView.userTrackingMode = .follow
+        mapView.setUserTrackingMode(.follow, animated: true)
+        automaticModeButton.isEnabled = false
+        automaticModeButton.isHidden = true
+        reticuleImage.isHidden = true
+      case .manual:
+        print("Mode swtiched to manual")
+        mapView.userTrackingMode = .none
+        mapView.setUserTrackingMode(.none, animated: true)
+        automaticModeButton.isEnabled = true
+        automaticModeButton.isHidden = false
+        reticuleImage.isHidden = false
+      }
+    }
+  }
   
   // This variable represents the active parking displayed in the view at any point
   // MARK: Active Parking
@@ -156,24 +177,31 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.mapView.add(line.line!)
       }
       
-      let location = locationManager.location
+      var location: CLLocation
       
+      switch mode {
+      case .automatic:
+        location = CLLocation(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!)
+        
+      case .manual:
+        location = CLLocation(latitude: (mapView.centerCoordinate.latitude), longitude: (mapView.centerCoordinate.longitude))
+      }
       
       // Find the nearest block among all of the nearest blocks...
-      let currentBlock = findNearestBlock(data: subset, currentLocation: location!)
+      let currentBlock = findNearestBlock(data: subset, currentLocation: location)
       
       print(activeParking?.moveByText as Any, activeParking?.timedParkingRule as Any, activeParking?.timedParkingTimes as Any, activeParking?.activeStreet as Any, separator: " ______ ", terminator: " | ")
       
       // Detect if User is out of range
       // Create a circle around the current location to see if the closest data intersects with the circle
       let radius = CLLocationDistance(24)
-      let circle = MKCircle(center: (location?.coordinate)!, radius: radius)
+      let circle = MKCircle(center: (location.coordinate), radius: radius)
       let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
       
       // If the current block is within 24 meters of the user's locatio
       if intersecting {
         // Update the reverse geocoding...
-        updateReverseGeoCoding(location: location!)
+        updateReverseGeoCoding(location: location)
         // Otherwise if street is not within the threshold of the 24 meters
       } else {
         print("No Parking Data for this street")
@@ -201,7 +229,49 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   }
   
   func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-    
+    switch mode {
+    case .automatic:
+      break
+    case .manual:
+      
+      // Check to see if in San Francisco
+      // If so check to see if nil because not in SF
+      if sanFranciscoPolygon.intersects(mapView.visibleMapRect){
+        
+        // Initialize the new subset
+        subset = findSubsetForMapView()
+        // Make sure to see if location is in SF and if not display a message
+        guard subset.count > 0
+          else {
+            print("No Timed Parking Nearby")
+            geocodingLabel.text = "No Data On This Street"
+            return}
+        // If not then collect first subset and draw the lines
+      } else {
+        
+        activeParking?.activeStreet = nil
+        geocodingLabel.text = "Not in San Francisco"
+        
+        if notifiedOfSFOnly == false {
+          let alert = UIAlertController(title: "You are not in San Francisco!", message: "Unfortunately PARKR is only available for drivers in San Francisco", preferredStyle: .alert)
+          let action = UIAlertAction(title: "Okay", style: .default)
+          alert.addAction(action)
+          self.present(alert, animated: true)
+          notifiedOfSFOnly = true
+        }
+        
+      }
+
+      
+      
+      // Get a new subset
+      
+      // Find the closest
+      
+      // Render closest
+      
+      print("manual mode in regiondidchange animated")
+    }
   }
   
   func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
@@ -358,6 +428,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    automaticModeButton.addTarget(self, action:#selector(setModeToAutomatic), for: .touchUpInside)
+
     
     // Load the data
     readJSON(from: "TimedParkingData.geojson")
@@ -376,6 +448,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
   }
   
+  func setModeToAutomatic() {
+    
+    mode = .automatic
+    
+  }
+  
   // Protocol method so gesture recognizer will work with the existing MKMapView gestures
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     return true
@@ -386,6 +464,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     if sender.state == .ended {
       
       print("user did drag")
+      mode = .manual
       
     }
   }
@@ -420,7 +499,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Initialize the MapView
     mapView.delegate = self
-    mapView.isScrollEnabled = false
+    mapView.isScrollEnabled = true
     mapView.isZoomEnabled = false
     mapView.showsCompass = true
     mapView.showsPointsOfInterest = true
@@ -429,6 +508,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
     mapView.userTrackingMode = .follow
+    
     
     // Set the delegate
     locationManager.delegate = self

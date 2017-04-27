@@ -77,6 +77,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   var locationLastUpdated = Date(timeIntervalSinceNow: -2)
   var locationCurrentUpdated = Date(timeIntervalSinceNow: -2)
   var locationUpdateIndex = 0
+  var notifiedOfSFOnly: Bool = false
   var loading: Bool = true {
     didSet {
       
@@ -104,17 +105,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       
       if activeParking?.activeStreet?.hourLimit == nil || activeParking?.activeStreet?.hoursBegin == nil || activeParking?.activeStreet?.hoursEnd == nil || activeParking?.activeStreet == nil {
         
-        self.durationParkingLabel.text = "No Timed Parking"
+       
         
         // Park Here button becomes disabled
-        parkHereButton.isEnabled = false
-        parkHereButton.isUserInteractionEnabled = false
+        self.parkHereButton.adjustsImageWhenDisabled = true
+        self.parkHereButton.titleShadowColor(for: .disabled)
+        self.parkHereButton.isEnabled = false
+        self.parkHereButton.isUserInteractionEnabled = false
+        
+        self.moveByTimingLabel.text = "_ _ : _ _ _ _"
+        self.durationParkingLabel.text = "No Timed Parking"
+        self.moveOutLabel.text = "Nearby"
         
       } else {
         
         // Make Park Here button interactable and enabled
         self.parkHereButton.isEnabled = true
         self.parkHereButton.isUserInteractionEnabled = true
+        
         
         // Update the labels
         self.moveByTimingLabel.text = activeParking?.moveByText
@@ -200,8 +208,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     print("\n\nmapView did Update user location: \(locationUpdateIndex)\nMode: \(mode)\nLoading? - \(loading)\n\n")
     
-    
-    
   }
   
   func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
@@ -231,6 +237,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // If in automatic mode...
     case .automatic:
       
+      // Check to see if the time since the last update was greater than threshold
+      if locationCurrentUpdated.timeIntervalSince(locationLastUpdated) > TimeInterval(0.1) {
+        
+        // Create a variable for centering the map on the user's current location
+        let center = location.coordinate
+        
+        // Set the mapView's center
+        self.mapView.setCenter(center, animated: true)
+        self.mapView.camera.altitude = 300
+        
+      }
       
       // Check to see if the time since the last update was greater than threshold
       if locationCurrentUpdated.timeIntervalSince(locationLastUpdated) > TimeInterval(2.0) {
@@ -239,11 +256,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // Update the center
         // Create a variable for centering the map on the user's current location
-        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let center = location.coordinate
         
         // Set the mapView's center
         self.mapView.setCenter(center, animated: true)
         self.mapView.camera.altitude = 300
+        
         
         // Grab the time view was last updated
         locationLastUpdated = Date()
@@ -261,15 +279,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
               return}
           // If not then collect first subset and draw the lines
         } else {
-          self.showAlert.title = "You are not in San Francisco!"
-          self.showAlert.message = "Unfortunately PARKR is only available for drivers in San Francisco"
+          
+          activeParking?.activeStreet = nil
+          geocodingLabel.text = "Not in San Francisco"
+          
+          if notifiedOfSFOnly == false {
+            let alert = UIAlertController(title: "You are not in San Francisco!", message: "Unfortunately PARKR is only available for drivers in San Francisco", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Okay", style: .default)
+            alert.addAction(action)
+            self.present(alert, animated: true)
+            notifiedOfSFOnly = true
+          }
           
         }
-        
-        
-        
-        
-        
         
         // Then collect the closest and draw it as well
         
@@ -279,10 +301,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // Calculate the closest
 
-        
-  
-        
-       
       }
       
     // If in manual mode...
@@ -304,8 +322,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       print("Restricted")
     case .denied:
       print("Denied")
+        let alert = UIAlertController(title: "Location Permission Denied", message: "You have not given permssion for PARKR to get your phone's location.  Please change this by going to Settings -> Privacy -> Location Services -> PARKR SF, and set to \"Always\"", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Okay", style: .default)
+        alert.addAction(action)
+        self.present(alert, animated: true)
+        notifiedOfSFOnly = true
     case .authorizedAlways:
       print("AuthorizedAlways")
+      locationManager.startUpdatingLocation()
     case .authorizedWhenInUse:
       print("AuthorizedWhenInUse")
       locationManager.startUpdatingLocation()
@@ -404,6 +428,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     mapView.showsUserLocation = true
     mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+    mapView.userTrackingMode = .follow
     
     // Set the delegate
     locationManager.delegate = self

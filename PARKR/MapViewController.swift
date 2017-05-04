@@ -26,6 +26,9 @@ let sanFranciscoPolygon = MKPolygon(coordinates: polyCoords, count: polyCoords.c
 // Global variable for all timed parking data
 var AllTimedParkingData = [TimedParking]()
 
+
+// Cleanup
+// TODO: Move implementations to extensions
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
     
     // MARK: - IBOutlet Declarations
@@ -57,9 +60,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var locationCurrentUpdated = Date(timeIntervalSinceNow: -2)
     var locationUpdateIndex = 0
     var notifiedOfSFOnly: Bool = false
+    
+    //TODO: Extract didsets into functions
     var loading: Bool = true {
         didSet {
-            
             // Create time upon entering for comparison
             self.locationCurrentUpdated = Calendar.current.date(byAdding: .second, value: -2, to: Date())!
             
@@ -71,6 +75,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.LoadingView.isHidden = true
         }
     }
+    
     var mode: ModeTypes = .automatic {
         didSet {
             switch mode {
@@ -125,6 +130,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // MARK: Subset var declaration
+    // TODO: Extract into func drawLines(subset: [TimedParking])
     var subset = [TimedParking]() {
         willSet {
             mapView.removeOverlays(mapView.overlays)
@@ -169,7 +175,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 geocodingLabel.text = "No Data On This Street"
                 activeParking?.activeStreet = nil
             }
-            
         }
     }
     
@@ -195,6 +200,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.addGestureRecognizer(panGesture)
     }
     
+    // MARK: - Application View life Cycle
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        //When authorization status is not determined.
+        if CLLocationManager.authorizationStatus() == .notDetermined {
+            locationManager.requestAlwaysAuthorization()
+        } else if CLLocationManager.authorizationStatus() == .denied {
+            showAlert.message = "Location services were previously denied. Please enable location services for this app in settings."
+        } else if CLLocationManager.authorizationStatus() == .authorizedAlways {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
     // MARK: - Location Manager Function
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -213,6 +232,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         switch mode {
         case .automatic:
+            // Mid priority
+            // TODO: Try moving contents of location change to here. 
+            // There's a bug that needs to be fixed to make map frame changes less erratic
             break
         case .manual:
             // Check to see if in San Francisco
@@ -245,35 +267,29 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                     self.present(alert, animated: true)
                     notifiedOfSFOnly = true
                 }
-                
             }
-            // Get a new subset
-            
-            // Find the closest
-            
-            // Render closest
         }
     }
     
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {}
-    
-    func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-        //    let trackingBarButton = MKUserTrackingBarButtonItem(mapView: mapView)
-        //    trackingBarButton.title = "Update your location"
-    }
-    
+    // TODO: Rename
     // MARK: Update From Location Method
+    
+    /*
+     Check if it is valid for update
+     Update location
+     Get nearest rule
+     
+     */
     func updateFromLocationChange() {
         
-        
         // Create a counter of how many updates have been done
-        locationUpdateIndex += 1
+        self.locationUpdateIndex += 1
         
         // Create time upon entering for comparison
-        locationCurrentUpdated = Date()
+        self.locationCurrentUpdated = Date()
         
         // Make sure location is not nil
-        guard let location = locationManager.location else {return}
+        guard let location = self.locationManager.location else {return}
         
         // Check to see whether in manual or automatic mode
         switch mode {
@@ -305,14 +321,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 
                 // Grab the time view was last updated
-                locationLastUpdated = Date()
+                self.locationLastUpdated = Date()
                 
                 // If so check to see if nil because not in SF
                 if sanFranciscoPolygon.intersects(mapView.visibleMapRect){
                     
                     let lcoords = CGPoint(x: mapView.visibleMapRect.origin.x + mapView.visibleMapRect.size.width, y: mapView.visibleMapRect.origin.y + mapView.visibleMapRect.size.height)
 
-                    
                     // Initialize the the subset
                     ParkrAPIWrapper.getSubset(UCoords: CGPoint(x: mapView.visibleMapRect.origin.x, y: mapView.visibleMapRect.origin.y), LCoords: lcoords) { data in
                         self.subset = data
@@ -322,7 +337,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                             return
                         }
                     }
-                    // If not then collect first subset and draw the lines
+                // If not then collect first subset and draw the lines
                 } else {
                     
                     activeParking?.activeStreet = nil
@@ -336,14 +351,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                         notifiedOfSFOnly = true
                     }
                 }
-                
-                // Then collect the closest and draw it as well
-                
-                // Check if the last subset check was larger than threshold distance delta
-                
-                // If so, get a new subset and redraw the views
-                
-                // Calculate the closest
             }
             
         // If in manual mode...
@@ -379,22 +386,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         print("Failed to initialize GPS: ", error.description)
     }
     
-    // MARK: - Application View life Cycle
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
-        //When authorization status is not determined.
-        if CLLocationManager.authorizationStatus() == .notDetermined {
-            locationManager.requestAlwaysAuthorization()
-        } else if CLLocationManager.authorizationStatus() == .denied {
-            showAlert.message = "Location services were previously denied. Please enable location services for this app in settings."
-        } else if CLLocationManager.authorizationStatus() == .authorizedAlways {
-            locationManager.startUpdatingLocation()
-        }
-    }
-    
     func setModeToAutomatic() {
-        mode = .automatic
+        self.mode = .automatic
     }
     
     // Protocol method so gesture recognizer will work with the existing MKMapView gestures
@@ -409,58 +402,37 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    func longPress() {
-        let touch = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gestureRecognizer:)))
-        touch.minimumPressDuration = 0.1
-        self.mapView.addGestureRecognizer(touch)
-    }
-    
-    func handleLongPress(gestureRecognizer: UIGestureRecognizer) {
-        // function to initialize the touch point, and drop the annotation pin into the mapview
-        if gestureRecognizer.state != .began {
-            return
-        } else {
-            //      touchPoint = gestureRecognizer.location(in: self.mapView)
-            //      touchPointCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
-            //      let center = self.mapView.center
-            // create an annotation
-            //      annotation.coordinate = touchPointCoordinate
-            //      self.mapView.addAnnotation(annotation)
-        }
-    }
-    
-    
     // MARK: - Find Parking func
     func initializeMapView() {
         
         // Initialize the MapView
-        mapView.delegate = self
-        mapView.isScrollEnabled = true
-        mapView.isZoomEnabled = true
-        mapView.showsCompass = true
-        mapView.showsPointsOfInterest = true
-        mapView.isPitchEnabled = false
-        mapView.showsUserLocation = true
-        mapView.showsBuildings = true
-        mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
-        mapView.userTrackingMode = .follow
+        self.mapView.delegate = self
+        self.mapView.isScrollEnabled = true
+        self.mapView.isZoomEnabled = true
+        self.mapView.showsCompass = true
+        self.mapView.showsPointsOfInterest = true
+        self.mapView.isPitchEnabled = false
+        self.mapView.showsUserLocation = true
+        self.mapView.showsBuildings = true
+        self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+        self.mapView.userTrackingMode = .follow
         
         
         // Set the delegate
-        locationManager.delegate = self
+        self.locationManager.delegate = self
         
         // Start updating the user's location
-        locationManager.startUpdatingLocation()
+        self.locationManager.startUpdatingLocation()
         
         // Edit the my location annotation
-        mapView.userLocation.title = "You are here"
+        self.mapView.userLocation.title = "You are here"
         
         // Make sure there is a user location and if not center the map on SF
-        guard let location = locationManager.location else {
+        guard let location = self.locationManager.location else {
 
             let cityCenter = CLLocationCoordinate2DMake(CLLocationDegrees(37.756940), CLLocationDegrees(-122.444338))
             let region = MKCoordinateRegionMakeWithDistance(cityCenter, 1350, 1350)
-            mapView.setRegion(region, animated: false)
+            self.mapView.setRegion(region, animated: false)
             
             return
         }
@@ -468,10 +440,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Initialize the mapView's region with center at current location
         let center = CLLocationCoordinate2D(latitude: (location.coordinate.latitude), longitude: (location.coordinate.longitude))
         let region = MKCoordinateRegionMakeWithDistance(center, 160, 160)
-        mapView.setRegion(region, animated: true)
-        
+        self.mapView.setRegion(region, animated: true)
     }
     
+    
+    // TODO: Move to ViewModel
     // Method that updates the Reverse GeoCoding Text
     func updateReverseGeoCoding(location: CLLocation) {
         // Update geocoding label with address based on location
@@ -492,7 +465,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         // if MKOverlayPathRenderer
         let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        switch renderer {
+        
+        switch self.renderer {
         case .active:
             polylineRenderer.strokeColor = #colorLiteral(red: 0, green: 0.902623508, blue: 0.7324799925, alpha: 1)
             polylineRenderer.lineWidth = 5
@@ -502,25 +476,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
         return polylineRenderer
-        
-    }
-    
-    
-    // Function that forms API URL for call
-    func formURL(parkingType: RuleType, mapRegion: MKCoordinateRegion) -> String {
-        switch parkingType {
-        
-        // For Timed Parking...
-        case .timed:
-            let lat = mapRegion.center.latitude
-            let long = mapRegion.center.longitude
-            let spanConstant = CLLocationDegrees(0.001)
-            
-            // Return formed URL
-            return "https://data.sfgov.org/resource/2ehv-6arf.json?$where=within_box(geom%2C%20" + String(lat) + "%2C%20" + String(long) + "%2C%20" + String(lat + spanConstant) + "%2C%20" + String(long + spanConstant) + ")"
-        default:
-            return ""
-        }
         
     }
     
@@ -573,28 +528,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         return subset
     }
     
-    // Find Nearby lines to location
-    func findSubset(currentLocation: CLLocation) -> [TimedParking] {
-        
-        var subset = [TimedParking]()
-        
-        for location in AllTimedParkingData {
-            
-            let locationConvert = CLLocation.init(latitude: (location.line?.coordinate.latitude)!, longitude: (location.line?.coordinate.longitude)!)
-            
-            if location.line != nil && (locationConvert.distance(from: currentLocation) < CLLocationDistance(300)) {
-                subset.append(location)
-            }
-        }
-        
-        for location in AllTimedParkingData {
-            if (location.line?.intersects(mapView.visibleMapRect))! {
-                subset.append(location)
-            }
-        }
-        return subset
-    }
-    
+    // TODO: Extract to helpers file or something
     // MARK: Find Nearest Block function
     func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
         var closest: TimedParking?
@@ -628,15 +562,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
         // Update the Active Parking Variable - Should trigger didSet in activeParking
-        activeParking = ParkingInfo(activeStreet: closest!)
-        //    guard ((activeParking = ParkingInfo(activeStreet: closest!)) != nil) else{
-        //      print("Closest failed to set activeParking.activeStreet for some reason")
-        //      return closest!
-        //    }
+        self.activeParking = ParkingInfo(activeStreet: closest!)
         
         return closest!
     }
     
+    // TODO: Extract with the above
     // Determine closest distance between a point and a line defined by 2 points
     func distanceCurrentLocToSegment(p: CLLocation, p1: CLLocation, p2: CLLocation) -> CLLocationDistance {
         
@@ -679,12 +610,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    
+    // Mid priority
+    // TODO: Make an extension of point
     // Function to find magnitude of line segment
     func lineMagnitude (x1: Double, y1: Double, x2: Double, y2: Double) -> Double {
         return CLLocationDistance(abs(sqrt(pow((x2-x1), 2) + pow((y2-y1), 2))))
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "moveTimerSegue" {

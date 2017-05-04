@@ -54,13 +54,13 @@ class TimedParking {
     }
     
     init(json: JSON) {
-        let number:Double? = Double(json["properties"]["hours_begin"].intValue) / 100
+        let number: Double? = Double(json["properties"]["hours_begin"].intValue) / 100
         let timeBegin = (number!)
         
         let hourBegin = floor(timeBegin)
         
-        
         var minuteBegin: Int
+        
         if hourBegin == 0 {
             minuteBegin = 0
         } else {
@@ -72,6 +72,7 @@ class TimedParking {
         let hourEnd = floor(timeEnd)
         
         var minuteEnd: Int
+       
         if hourEnd == 0 {
             minuteEnd = 0
         } else {
@@ -79,7 +80,6 @@ class TimedParking {
         }
         
         self.days = json["properties"]["days"].stringValue
-        
         
         switch days {
         case "M-F":
@@ -114,9 +114,6 @@ class TimedParking {
         self.hourLimit = TimeInterval(self.limit * 3600)
         self.id = Int(json["properties"]["object_id"].stringValue) ?? 999999
         
-        print("Hrs Begin \(self.hoursBegin)")
-        print("Hrs End \(self.hoursEnd)")
-        print("Hrs Limit \(self.hourLimit)")
         //    self.geom = json["geometry"]["coordinates"].arrayValue.map { json in
         //      let coord = Coordinates(json: json)
         //      return coord

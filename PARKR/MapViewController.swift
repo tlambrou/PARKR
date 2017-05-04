@@ -70,7 +70,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             // Hide Loading View and progress bar
             self.LoadingView.isHidden = true
         }
-        
     }
     var mode: ModeTypes = .automatic {
         didSet {
@@ -176,11 +175,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.loading = false
         
         automaticModeButton.addTarget(self, action:#selector(setModeToAutomatic), for: .touchUpInside)
         
         // Load the data
-        readJSON(from: "TimedParkingData.geojson")
+//        readJSON(from: "TimedParkingData.geojson")
         
         // Initialize the MapView
         initializeMapView()
@@ -215,18 +215,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         case .automatic:
             break
         case .manual:
-            
             // Check to see if in San Francisco
             // If so check to see if nil because not in SF
-            if sanFranciscoPolygon.intersects(mapView.visibleMapRect){
+            if sanFranciscoPolygon.intersects(mapView.visibleMapRect) {
                 
                 // Initialize the new subset
-                subset = findSubsetForMapView()
-                // Make sure to see if location is in SF and if not display a message
-                guard subset.count > 0 else {
-                        geocodingLabel.text = "No Data On This Street"
+//                subset = findSubsetForMapView()
+                let lcoords = CGPoint(x: mapView.visibleMapRect.origin.x + mapView.visibleMapRect.size.width, y: mapView.visibleMapRect.origin.y + mapView.visibleMapRect.size.height)
+                
+                ParkrAPIWrapper.getSubset(UCoords: CGPoint(x: mapView.visibleMapRect.origin.x, y: mapView.visibleMapRect.origin.y), LCoords: lcoords) { data in
+                    self.subset = data
+                    // Make sure to see if location is in SF and if not display a message
+                    guard self.subset.count > 0 else {
+                        self.geocodingLabel.text = "No Data On This Street"
                         return
+                    }
                 }
+                
                 // If not then collect first subset and draw the lines
             } else {
                 
@@ -305,12 +310,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 // If so check to see if nil because not in SF
                 if sanFranciscoPolygon.intersects(mapView.visibleMapRect){
                     
+                    let lcoords = CGPoint(x: mapView.visibleMapRect.origin.x + mapView.visibleMapRect.size.width, y: mapView.visibleMapRect.origin.y + mapView.visibleMapRect.size.height)
+
+                    
                     // Initialize the the subset
-                    subset = findSubsetForMapView()
-                    // Make sure to see if location is in SF and if not display a message
-                    guard subset.count > 0 else {
-                        geocodingLabel.text = "No Data On This Street"
-                        return
+                    ParkrAPIWrapper.getSubset(UCoords: CGPoint(x: mapView.visibleMapRect.origin.x, y: mapView.visibleMapRect.origin.y), LCoords: lcoords) { data in
+                        self.subset = data
+                        // Make sure to see if location is in SF and if not display a message
+                        guard self.subset.count > 0 else {
+                            self.geocodingLabel.text = "No Data On This Street"
+                            return
+                        }
                     }
                     // If not then collect first subset and draw the lines
                 } else {
@@ -516,14 +526,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // MARK: - Read JSON
     func readJSON(from file: String) {
-        // Show progress bar
-        let progressBar = UILabel()
-        progressBar.text = "Loading..."
-        progressBar.textColor = UIColor.darkGray
-        progressBar.font = UIFont.boldSystemFont(ofSize: 18)
-        progressBar.sizeToFit()
-        self.mapView.addSubview(progressBar)
-        
         // Create a background thread
         DispatchQueue.global().async {
             
@@ -554,7 +556,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             DispatchQueue.main.async {
                 // Finished loading - should trigger didSet
                 self.loading = false
-                progressBar.removeFromSuperview()
             }
         }
     }

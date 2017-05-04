@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		246AFA0F1EB2966D00DE82EC /* MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AFA0E1EB2966D00DE82EC /* MKMapView.swift */; };
 		246AFA111EB296DD00DE82EC /* MKPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AFA101EB296DD00DE82EC /* MKPolyline.swift */; };
+		246AFA141EB2AEE000DE82EC /* ParkrAPIWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AFA131EB2AEE000DE82EC /* ParkrAPIWrapper.swift */; };
 		960690051EAC294C00C265AE /* ParkingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960690041EAC294C00C265AE /* ParkingInfo.swift */; };
 		960DC6D21EAF1B1400EF9BAA /* San_Francisco_Sights.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 960DC6D11EAF1B1400EF9BAA /* San_Francisco_Sights.gpx */; };
 		960DC6D61EAF277F00EF9BAA /* testpark.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 960DC6D51EAF277F00EF9BAA /* testpark.gpx */; };
@@ -83,6 +84,7 @@
 /* Begin PBXFileReference section */
 		246AFA0E1EB2966D00DE82EC /* MKMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKMapView.swift; sourceTree = "<group>"; };
 		246AFA101EB296DD00DE82EC /* MKPolyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKPolyline.swift; sourceTree = "<group>"; };
+		246AFA131EB2AEE000DE82EC /* ParkrAPIWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkrAPIWrapper.swift; sourceTree = "<group>"; };
 		912691BB98FE905640C19DBF /* Pods_PARKR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PARKR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		960690031EAC223B00C265AE /* BackendJSONSample.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackendJSONSample.geojson; sourceTree = "<group>"; };
 		960690041EAC294C00C265AE /* ParkingInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingInfo.swift; sourceTree = "<group>"; };
@@ -192,6 +194,14 @@
 			path = Extentions;
 			sourceTree = "<group>";
 		};
+		246AFA121EB2AEC300DE82EC /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				246AFA131EB2AEE000DE82EC /* ParkrAPIWrapper.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
 		4C5811E6C4270A5CC8876779 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +234,7 @@
 		9618A7A81DDE829800A86F7D /* PARKR */ = {
 			isa = PBXGroup;
 			children = (
+				246AFA121EB2AEC300DE82EC /* Networking */,
 				246AFA0D1EB2965500DE82EC /* Extensions */,
 				967E185E1EADE7050041621F /* Delegates */,
 				969E77421EA9803E00157847 /* Controllers */,
@@ -545,6 +556,7 @@
 				96D7A6E71EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallRotate.swift in Sources */,
 				96D7A6F71EAF0CAC00E94D09 /* NVActivityIndicatorAnimationLineSpinFadeLoader.swift in Sources */,
 				96D7A6E21EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallGridBeat.swift in Sources */,
+				246AFA141EB2AEE000DE82EC /* ParkrAPIWrapper.swift in Sources */,
 				96D7A6F21EAF0CAC00E94D09 /* NVActivityIndicatorAnimationCubeTransition.swift in Sources */,
 				96D7A6EC1EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallScaleRippleMultiple.swift in Sources */,
 				96D7A6EB1EAF0CAC00E94D09 /* NVActivityIndicatorAnimationBallScaleRipple.swift in Sources */,

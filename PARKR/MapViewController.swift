@@ -53,6 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   
   // MARK: - IBOutlet Declarations
   @IBOutlet weak var LoadingView: UIView!
+  @IBOutlet weak var agreementView: UIView!
   @IBOutlet weak var moveByTimingLabel: UILabel!
   // This label located down right corner
   @IBOutlet weak var moveOutLabel: UILabel!
@@ -69,6 +70,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   @IBOutlet weak var reticuleImage: UIImageView!
   @IBOutlet weak var automaticModeButton: UIButton!
   
+  @IBOutlet weak var agreeButton: UIButton!
   
   // MARK: - Var Declarations
   var touchPoint: CGPoint!
@@ -206,7 +208,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       } else {
         print("No Parking Data for this street")
         geocodingLabel.text = "No Data On This Street"
-        activeParking?.activeStreet = nil
+        activeParking?.activeStreet = nil //didset triggered
       }
       
     }
@@ -341,6 +343,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
           
           // Initialize the the subset
           subset = findSubsetForMapView()
+          
           // Make sure to see if location is in SF and if not display a message
           guard subset.count > 0
             else {
@@ -425,11 +428,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
   }
   
+  func agreedToTerms() {
+    // Save the user's acceptance of terms state
+    UserDefaults.standard.set(true, forKey: "agreedToTerms")
+    agreementView.isHidden = true
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // Detect if user already agreed to terms
+    let value = UserDefaults.standard.bool(forKey: "agreedToTerms")
+    
+    if value == true {
+      agreementView.isHidden = true
+    }
+    
+    agreeButton.addTarget(self, action: #selector(agreedToTerms), for: .touchUpInside)
+    
     automaticModeButton.addTarget(self, action:#selector(setModeToAutomatic), for: .touchUpInside)
-
+    
     
     // Load the data
     readJSON(from: "TimedParkingData.geojson")
@@ -469,29 +487,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
   }
   
-  func longPress() {
-    let touch = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gestureRecognizer:)))
-    touch.minimumPressDuration = 0.1
-    self.mapView.addGestureRecognizer(touch)
-  }
-  
-  func handleLongPress(gestureRecognizer: UIGestureRecognizer) {
-    // function to initialize the touch point, and drop the annotation pin into the mapview
-    if gestureRecognizer.state != .began {
-      return
-    } else {
-      //      touchPoint = gestureRecognizer.location(in: self.mapView)
-      //      touchPointCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
-      //      let center = self.mapView.center
-      // create an annotation
-      //      annotation.coordinate = touchPointCoordinate
-      //      self.mapView.addAnnotation(annotation)
-      
-      
-    }
-  }
-  
-  
   // MARK: - Find Parking func
   func initializeMapView() {
     
@@ -508,7 +503,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     mapView.showsBuildings = true
     mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
     mapView.userTrackingMode = .follow
-    
     
     // Set the delegate
     locationManager.delegate = self

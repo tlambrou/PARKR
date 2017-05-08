@@ -21,7 +21,7 @@
 		967E185D1EADE1940041621F /* flowerdove-alert.caf in Resources */ = {isa = PBXBuildFile; fileRef = 967E185C1EADE1940041621F /* flowerdove-alert.caf */; };
 		967E18601EADE7350041621F /* PARKRNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967E185F1EADE7350041621F /* PARKRNotificationDelegate.swift */; };
 		96A685631DE5188500EE0865 /* TimedParkingData.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 96A685621DE5188500EE0865 /* TimedParkingData.geojson */; };
-		96BCA3291EA9B54F00E195A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96BCA3281EA9B54F00E195A8 /* Main.storyboard */; };
+		96C4CD3D1EC105E80004274E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C4CD3B1EC105E80004274E /* Main.storyboard */; };
 		96D7A4931EAED85500E94D09 /* PARKRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D7A4921EAED85500E94D09 /* PARKRTests.swift */; };
 		96D7A49A1EAEDA1000E94D09 /* ParkingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960690041EAC294C00C265AE /* ParkingInfo.swift */; };
 		96D7A49C1EAEDA6B00E94D09 /* TimedParking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BBD5B1DECC32100B8DC2B /* TimedParking.swift */; };
@@ -99,7 +99,7 @@
 		967E185C1EADE1940041621F /* flowerdove-alert.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "flowerdove-alert.caf"; sourceTree = "<group>"; };
 		967E185F1EADE7350041621F /* PARKRNotificationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PARKRNotificationDelegate.swift; sourceTree = "<group>"; };
 		96A685621DE5188500EE0865 /* TimedParkingData.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimedParkingData.geojson; sourceTree = "<group>"; };
-		96BCA3281EA9B54F00E195A8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		96C4CD3C1EC105E80004274E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96D7A4901EAED85500E94D09 /* PARKRTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PARKRTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D7A4921EAED85500E94D09 /* PARKRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PARKRTests.swift; sourceTree = "<group>"; };
 		96D7A4941EAED85500E94D09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -265,7 +265,7 @@
 		969E77441EA9807D00157847 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				96BCA3281EA9B54F00E195A8 /* Main.storyboard */,
+				96C4CD3B1EC105E80004274E /* Main.storyboard */,
 				9618A7B21DDE829800A86F7D /* LaunchScreen.storyboard */,
 			);
 			name = Storyboards;
@@ -445,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96D7A6FD1EAF0CAC00E94D09 /* Info.plist in Resources */,
+				96C4CD3D1EC105E80004274E /* Main.storyboard in Resources */,
 				9618A7B41DDE829800A86F7D /* LaunchScreen.storyboard in Resources */,
 				967E185B1EADCFCB0041621F /* pup-alert.caf in Resources */,
 				960DC6D61EAF277F00EF9BAA /* testpark.gpx in Resources */,
@@ -453,7 +454,6 @@
 				965158151DF7BFD800623FEB /* Extra in Resources */,
 				960DC6D21EAF1B1400EF9BAA /* San_Francisco_Sights.gpx in Resources */,
 				967E185D1EADE1940041621F /* flowerdove-alert.caf in Resources */,
-				96BCA3291EA9B54F00E195A8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +594,14 @@
 				9618A7B31DDE829800A86F7D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		96C4CD3B1EC105E80004274E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				96C4CD3C1EC105E80004274E /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

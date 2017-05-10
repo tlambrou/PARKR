@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -19,14 +19,14 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="o4l-rm-Nmp">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="emb-oz-Ly8">
-                                <rect key="frame" x="0.0" y="664" width="414" height="72"/>
+                                <rect key="frame" x="0.0" y="595" width="375" height="72"/>
                                 <color key="backgroundColor" red="0.020895487006072095" green="0.74083094771703073" blue="0.66671827524116956" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="72" id="Enl-iq-fzP"/>
@@ -40,11 +40,14 @@
                                     <action selector="parkHereAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9hz-PI-FWg"/>
                                 </connections>
                             </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="tho-He-8Sh">
+                                <rect key="frame" x="0.0" y="182" width="375" height="413"/>
+                            </mapView>
                             <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="FiW-1X-eQJ" userLabel="GeoCodingBarView">
-                                <rect key="frame" x="0.0" y="581" width="414" height="83"/>
+                                <rect key="frame" x="0.0" y="512" width="375" height="83"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="UT4-us-api">
-                                        <rect key="frame" x="153.66666666666669" y="10" width="107.00000000000006" height="64"/>
+                                        <rect key="frame" x="134" y="10" width="107" height="64"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="64" id="Pvj-mm-U5i"/>
                                         </constraints>
@@ -61,17 +64,14 @@
                                     <constraint firstItem="UT4-us-api" firstAttribute="centerX" secondItem="FiW-1X-eQJ" secondAttribute="centerX" id="lNt-1D-QLp"/>
                                 </constraints>
                             </view>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="tho-He-8Sh">
-                                <rect key="frame" x="0.0" y="170.33333333333331" width="414" height="493.66666666666669"/>
-                            </mapView>
                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="uhG-OD-b62" userLabel="TopInfoView">
-                                <rect key="frame" x="0.0" y="24" width="414" height="146.33333333333334"/>
+                                <rect key="frame" x="20" y="24" width="335" height="146"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="center" preservesSuperviewLayoutMargins="YES" axis="vertical" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="OVD-Uc-1RW" userLabel="MoveByStackView">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="335" height="108"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move By:" textAlignment="center" lineBreakMode="clip" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A1O-aS-eM6">
-                                                <rect key="frame" x="166.66666666666666" y="0.0" width="80.666666666666686" height="26"/>
+                                                <rect key="frame" x="127.5" y="0.0" width="80.5" height="26"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="26" id="Kzx-bL-Gnb"/>
                                                 </constraints>
@@ -80,10 +80,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="280" verticalHuggingPriority="280" preservesSuperviewLayoutMargins="YES" text="_ _:_ _ _ _" textAlignment="center" lineBreakMode="clip" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="sJm-K5-nXH">
-                                                <rect key="frame" x="47" y="26" width="320" height="82"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="WIH-rE-FVw"/>
-                                                </constraints>
+                                                <rect key="frame" x="47" y="26" width="241" height="82"/>
                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="60"/>
                                                 <color key="textColor" red="0.2774966955" green="0.89383983609999995" blue="0.75986737010000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -94,17 +91,17 @@
                                             <constraint firstItem="sJm-K5-nXH" firstAttribute="centerX" secondItem="OVD-Uc-1RW" secondAttribute="centerX" id="MbZ-eg-bF5"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="center" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="cNR-0a-FLi" userLabel="RulesStackView">
-                                        <rect key="frame" x="0.0" y="108" width="414" height="38.333333333333343"/>
+                                    <stackView opaque="NO" contentMode="center" distribution="fillProportionally" spacing="10" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cNR-0a-FLi" userLabel="RulesStackView">
+                                        <rect key="frame" x="0.0" y="108" width="335" height="38"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="    " lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XVU-vK-Blc">
-                                                <rect key="frame" x="0.0" y="2" width="256" height="34.333333333333343"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="177" height="38"/>
                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="25"/>
                                                 <color key="textColor" red="0.7711555028" green="0.89162530679999996" blue="0.97172951679999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="    " textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" preferredMaxLayoutWidth="315" translatesAutoresizingMaskIntoConstraints="NO" id="fi5-vv-1Gm">
-                                                <rect key="frame" x="266" y="0.33333333333334281" width="148" height="38"/>
+                                                <rect key="frame" x="187" y="0.0" width="148" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="PIY-Yn-jEc"/>
                                                     <constraint firstAttribute="width" constant="148" id="lzi-jR-vpy"/>
@@ -118,14 +115,14 @@
                                 </subviews>
                             </stackView>
                             <imageView hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="target" translatesAutoresizingMaskIntoConstraints="NO" id="Ypq-tg-cEu">
-                                <rect key="frame" x="195.66666666666666" y="405.33333333333331" width="24" height="24"/>
+                                <rect key="frame" x="176" y="376.5" width="24" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="COj-gl-uQq"/>
                                     <constraint firstAttribute="width" constant="24" id="Nfz-Go-0oE"/>
                                 </constraints>
                             </imageView>
                             <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="oYU-49-5p6">
-                                <rect key="frame" x="352" y="519" width="50" height="50"/>
+                                <rect key="frame" x="313" y="450" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="50" id="5Wg-FI-N4a"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="XsN-8u-TBf"/>
@@ -133,19 +130,19 @@
                                 <state key="normal" image="automaticMode"/>
                             </button>
                             <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pk7-lv-ib8" userLabel="LoadingView">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="Launch" translatesAutoresizingMaskIntoConstraints="NO" id="OVo-Z1-WIN">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading San Francisco Data..." textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iyk-GO-NOn">
-                                        <rect key="frame" x="61.666666666666657" y="355" width="292" height="26.333333333333314"/>
+                                        <rect key="frame" x="42" y="320.5" width="292" height="26.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-BV-ZyF">
-                                        <rect key="frame" x="188.66666666666666" y="411.33333333333331" width="37" height="37"/>
+                                        <rect key="frame" x="169" y="377" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -162,23 +159,30 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="k37-Mi-Qe0" userLabel="AgreementView">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Ote-pW-8zA">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     </imageView>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ba0-AA-WuH" userLabel="AgreementScrollView">
-                                        <rect key="frame" x="19" y="147" width="376" height="441"/>
+                                    <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="ZH2-hP-P0U" userLabel="AgreementStackView">
+                                        <rect key="frame" x="0.0" y="60" width="375" height="547"/>
                                         <subviews>
-                                            <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="T3E-dB-SOT" userLabel="NestedAgreementView">
-                                                <rect key="frame" x="0.0" y="0.0" width="376" height="1000"/>
-                                                <subviews>
-                                                    <textView multipleTouchEnabled="YES" contentMode="scaleAspectFit" showsHorizontalScrollIndicator="NO" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ULr-4a-M2r" userLabel="AgreementTextView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="376" height="1000"/>
-                                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        <string key="text">PARKR TERMS OF SERVICE
-
-IMPORTANT! I understand that this application (PARKR) currently ONLY DISPLAYS RULES FOR TIMED PARKING/HOUR-LIMIT PARKING.  Although this application plans to be offering more detailed parking rules in the very near future, THE CURRENT VERSION DOES NOT DISPLAY IMPORTANT PARKING RULES THAT CAN RESULT IN COMMONLY INCURRED PARKING TICKETS AND TOWS SUCH AS STREET CLEANING, TOW-AWAY LANES, METERED PARKING, HANDICAP PARKING, RESIDENTIAL PERMIT PARKING, NO PARKING ANYTIME, AND OTHERS.  Please look for updates to this application in the coming weeks for more datasets to be implemented.
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PARKR TERMS OF SERVICE" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iB4-UN-r84">
+                                                <rect key="frame" x="40" y="0.0" width="295.5" height="40"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="jdY-kq-2ZG"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                <color key="textColor" red="0.88551928599999996" green="0.88551928599999996" blue="0.88551928599999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" layoutMarginsFollowReadableWidth="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" minimumZoomScale="0.0" editable="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ULr-4a-M2r" userLabel="AgreementTextView">
+                                                <rect key="frame" x="20" y="70" width="335" height="447"/>
+                                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="3C8-Ad-LQj"/>
+                                                </constraints>
+                                                <string key="text">IMPORTANT! I understand that this application (PARKR) currently ONLY DISPLAYS RULES FOR TIMED PARKING/HOUR-LIMIT PARKING.  Although this application plans to be offering more detailed parking rules in the very near future, THE CURRENT VERSION DOES NOT DISPLAY IMPORTANT PARKING RULES THAT CAN RESULT IN COMMONLY INCURRED PARKING TICKETS AND TOWS SUCH AS STREET CLEANING, TOW-AWAY LANES, METERED PARKING, HANDICAP PARKING, RESIDENTIAL PERMIT PARKING, NO PARKING ANYTIME, AND OTHERS.  Please look for updates to this application in the coming weeks for more datasets to be implemented.
 
 I understand that this application (PARKR) is currently being implemented and to be used in the city of San Francisco only at the present time.
 
@@ -193,83 +197,77 @@ I understand that using applications while operating a motor vehicle can be extr
 I understand that neither the developers who make this application (PARKR), Apple Inc., or the City of San Francisco are liable for any costs incurred for either the misuse of this application or the driver’s noncompliance with driving laws.
 
 I understand and agree that the use of this application (PARKR) on this device by any user constitutes an agreement to all the terms of this agreement.</string>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                        <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                                                    </textView>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                            </textView>
+                                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="OId-Vh-hEF">
+                                                <rect key="frame" x="0.0" y="547" width="375" height="0.0"/>
                                                 <constraints>
-                                                    <constraint firstItem="ULr-4a-M2r" firstAttribute="height" secondItem="T3E-dB-SOT" secondAttribute="height" id="5Im-6z-SK8"/>
-                                                    <constraint firstItem="ULr-4a-M2r" firstAttribute="centerY" secondItem="T3E-dB-SOT" secondAttribute="centerY" id="a4Z-ZW-abc"/>
-                                                    <constraint firstItem="ULr-4a-M2r" firstAttribute="width" secondItem="T3E-dB-SOT" secondAttribute="width" id="gYl-s2-j8Z"/>
-                                                    <constraint firstAttribute="height" constant="1000" id="nfQ-51-30v"/>
-                                                    <constraint firstItem="ULr-4a-M2r" firstAttribute="centerX" secondItem="T3E-dB-SOT" secondAttribute="centerX" id="w5Q-Bx-k4E"/>
+                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="40" id="uno-gP-9En"/>
                                                 </constraints>
-                                            </view>
+                                                <state key="normal" title="I AGREE TO THESE TERMS"/>
+                                            </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="T3E-dB-SOT" secondAttribute="trailing" id="Hx5-WK-Ynl"/>
-                                            <constraint firstAttribute="bottom" secondItem="T3E-dB-SOT" secondAttribute="bottom" id="R1w-ir-E4n"/>
-                                            <constraint firstItem="T3E-dB-SOT" firstAttribute="top" secondItem="Ba0-AA-WuH" secondAttribute="top" id="Vzd-rV-Ahb"/>
-                                            <constraint firstItem="T3E-dB-SOT" firstAttribute="width" secondItem="Ba0-AA-WuH" secondAttribute="width" id="vYS-eo-EvY"/>
+                                            <constraint firstItem="iB4-UN-r84" firstAttribute="leading" relation="lessThanOrEqual" secondItem="ZH2-hP-P0U" secondAttribute="leading" constant="40" id="5kB-xX-Uyt"/>
+                                            <constraint firstItem="ULr-4a-M2r" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iB4-UN-r84" secondAttribute="bottom" constant="16" id="zTK-JZ-Gav"/>
                                         </constraints>
-                                    </scrollView>
-                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="OId-Vh-hEF">
-                                        <rect key="frame" x="98.666666666666686" y="628" width="218" height="34"/>
-                                        <state key="normal" title="I AGREE TO THESE TERMS"/>
-                                    </button>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Ote-pW-8zA" firstAttribute="height" secondItem="k37-Mi-Qe0" secondAttribute="height" id="1mq-8z-Taz"/>
-                                    <constraint firstAttribute="bottom" secondItem="Ba0-AA-WuH" secondAttribute="bottom" constant="148" id="3Vz-ep-bhR"/>
-                                    <constraint firstItem="OId-Vh-hEF" firstAttribute="centerX" secondItem="Ba0-AA-WuH" secondAttribute="centerX" id="Gkr-XA-pcm"/>
-                                    <constraint firstItem="Ba0-AA-WuH" firstAttribute="top" secondItem="k37-Mi-Qe0" secondAttribute="top" constant="147" id="P3H-j2-rAq"/>
                                     <constraint firstItem="Ote-pW-8zA" firstAttribute="top" secondItem="k37-Mi-Qe0" secondAttribute="top" id="PXU-3n-jjk"/>
-                                    <constraint firstItem="T3E-dB-SOT" firstAttribute="centerX" secondItem="k37-Mi-Qe0" secondAttribute="centerX" id="UJ7-tb-G44"/>
-                                    <constraint firstItem="Ba0-AA-WuH" firstAttribute="leading" secondItem="k37-Mi-Qe0" secondAttribute="leading" constant="19" id="UiG-up-iZw"/>
-                                    <constraint firstItem="OId-Vh-hEF" firstAttribute="top" secondItem="Ba0-AA-WuH" secondAttribute="bottom" constant="40" id="ek6-Bu-9ff"/>
                                     <constraint firstItem="Ote-pW-8zA" firstAttribute="width" secondItem="k37-Mi-Qe0" secondAttribute="width" id="k7Y-Sv-HCb"/>
+                                    <constraint firstItem="ZH2-hP-P0U" firstAttribute="top" secondItem="k37-Mi-Qe0" secondAttribute="top" constant="60" id="mp9-d6-KXX"/>
                                     <constraint firstItem="Ote-pW-8zA" firstAttribute="leading" secondItem="k37-Mi-Qe0" secondAttribute="leading" id="oSl-T3-rhG"/>
-                                    <constraint firstItem="Ba0-AA-WuH" firstAttribute="centerX" secondItem="k37-Mi-Qe0" secondAttribute="centerX" id="rcp-5R-Umi"/>
-                                    <constraint firstItem="Ba0-AA-WuH" firstAttribute="centerY" secondItem="k37-Mi-Qe0" secondAttribute="centerY" id="sd2-qL-31c"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="uhG-OD-b62" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="4" id="0QT-2l-nkI"/>
+                            <constraint firstItem="tho-He-8Sh" firstAttribute="top" secondItem="cNR-0a-FLi" secondAttribute="bottom" constant="12" id="0ny-cb-Seo"/>
+                            <constraint firstItem="ULr-4a-M2r" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="19B-HB-sFg"/>
                             <constraint firstItem="o4l-rm-Nmp" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="4P0-aD-foK"/>
                             <constraint firstItem="k37-Mi-Qe0" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="5ce-dI-slb"/>
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6gf-ry-Ixk"/>
                             <constraint firstItem="o4l-rm-Nmp" firstAttribute="leading" secondItem="Pk7-lv-ib8" secondAttribute="leading" id="7kQ-bR-wiQ"/>
-                            <constraint firstItem="uhG-OD-b62" firstAttribute="leading" secondItem="FiW-1X-eQJ" secondAttribute="leading" id="9zx-Bf-CFo"/>
+                            <constraint firstItem="OId-Vh-hEF" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="9lW-ju-ZQn"/>
                             <constraint firstItem="tho-He-8Sh" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="AJA-9r-IYc"/>
                             <constraint firstItem="urZ-BV-ZyF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BA3-Do-is6"/>
-                            <constraint firstItem="uhG-OD-b62" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="BXZ-Uk-V8A"/>
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="DE0-ON-ca4"/>
-                            <constraint firstItem="tho-He-8Sh" firstAttribute="top" secondItem="uhG-OD-b62" secondAttribute="bottom" id="ErI-7X-a5T"/>
                             <constraint firstItem="emb-oz-Ly8" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="FNC-St-Oi1"/>
                             <constraint firstItem="Ypq-tg-cEu" firstAttribute="centerX" secondItem="tho-He-8Sh" secondAttribute="centerX" id="GKM-Yx-XK3"/>
                             <constraint firstItem="k37-Mi-Qe0" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JBl-i0-TLf"/>
                             <constraint firstItem="tho-He-8Sh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="K4t-HH-tGs"/>
+                            <constraint firstItem="cNR-0a-FLi" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" constant="-40" id="KSz-oG-mBa"/>
                             <constraint firstItem="FiW-1X-eQJ" firstAttribute="top" secondItem="oYU-49-5p6" secondAttribute="bottom" constant="12" id="KfC-OB-KqM"/>
                             <constraint firstItem="o4l-rm-Nmp" firstAttribute="top" secondItem="k37-Mi-Qe0" secondAttribute="top" id="Kgp-Md-8G9"/>
                             <constraint firstItem="k37-Mi-Qe0" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Kln-m3-auq"/>
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Ku1-9E-U5Z"/>
+                            <constraint firstItem="FiW-1X-eQJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="NUC-pe-zg7"/>
                             <constraint firstItem="tho-He-8Sh" firstAttribute="bottom" secondItem="emb-oz-Ly8" secondAttribute="top" id="SG0-lA-hZP"/>
+                            <constraint firstItem="iB4-UN-r84" firstAttribute="top" relation="greaterThanOrEqual" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="32" id="T18-k7-pp3"/>
+                            <constraint firstItem="uhG-OD-b62" firstAttribute="width" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Wcr-3B-Y4t"/>
                             <constraint firstItem="Ypq-tg-cEu" firstAttribute="centerY" secondItem="tho-He-8Sh" secondAttribute="centerY" id="WvD-4K-i8q"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="emb-oz-Ly8" secondAttribute="bottom" id="Wyl-ya-ro4"/>
                             <constraint firstItem="oYU-49-5p6" firstAttribute="trailing" secondItem="tho-He-8Sh" secondAttribute="trailing" constant="-12" id="Xzo-NV-fkx"/>
+                            <constraint firstItem="ZH2-hP-P0U" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="YxB-Xy-36c"/>
+                            <constraint firstItem="ULr-4a-M2r" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" constant="-40" id="ZVp-0Z-ITG"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ote-pW-8zA" secondAttribute="bottom" id="cyx-lX-naR"/>
+                            <constraint firstItem="emb-oz-Ly8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eHL-Z8-mj7"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="emb-oz-Ly8" secondAttribute="bottom" id="fXx-vl-qmU"/>
                             <constraint firstItem="emb-oz-Ly8" firstAttribute="top" secondItem="FiW-1X-eQJ" secondAttribute="bottom" id="jrP-oR-thv"/>
                             <constraint firstItem="o4l-rm-Nmp" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="mcA-uH-Dai"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ote-pW-8zA" secondAttribute="bottom" id="rsj-jA-ULX"/>
+                            <constraint firstItem="ZH2-hP-P0U" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="nHO-wY-UAx"/>
+                            <constraint firstItem="uhG-OD-b62" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="4" id="nt8-iM-jvr"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" relation="greaterThanOrEqual" secondItem="OId-Vh-hEF" secondAttribute="bottom" constant="20" id="sdI-UC-Wtn"/>
                             <constraint firstItem="FiW-1X-eQJ" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="tPj-Pg-JMZ"/>
-                            <constraint firstItem="emb-oz-Ly8" firstAttribute="leading" secondItem="FiW-1X-eQJ" secondAttribute="leading" id="ug8-GH-Ytk"/>
                             <constraint firstItem="Pk7-lv-ib8" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="ujQ-S7-Heb"/>
                             <constraint firstItem="uhG-OD-b62" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vXc-50-l6Q"/>
+                            <constraint firstItem="ZH2-hP-P0U" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="yEb-Ke-lNQ"/>
+                            <constraint firstItem="k37-Mi-Qe0" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zpR-pK-8OZ"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
@@ -291,7 +289,7 @@ I understand and agree that the use of this application (PARKR) on this device b
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="88.799999999999997" y="31.934032983508249"/>
+            <point key="canvasLocation" x="76.7578125" y="33.821376281112734"/>
         </scene>
         <!--TimerViewController-->
         <scene sceneID="pd3-AR-9Wa">
@@ -302,23 +300,23 @@ I understand and agree that the use of this application (PARKR) on this device b
                         <viewControllerLayoutGuide type="bottom" id="Kks-KU-Ck9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rQR-lY-pJQ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="7aT-rV-3iZ">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="-69" width="375" height="736"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="eiT-cx-5th">
-                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Ke0-6e-EYQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="102"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="92"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="FCa-QG-q2X">
-                                                <rect key="frame" x="130.66666666666669" y="0.0" width="153.00000000000006" height="74"/>
+                                                <rect key="frame" x="111" y="0.0" width="153" height="64"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="     Parking Time Left" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="KPa-Qe-nTD" userLabel="Parking Time Left">
-                                                <rect key="frame" x="1" y="76" width="412" height="26"/>
+                                                <rect key="frame" x="1" y="66" width="373" height="26"/>
                                                 <color key="backgroundColor" red="0.23361817002296448" green="0.37948626279830933" blue="0.45054703950881958" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="26" id="qS3-Y6-0gG"/>
@@ -333,22 +331,22 @@ I understand and agree that the use of this application (PARKR) on this device b
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bVs-bU-QLr" userLabel="timerAndMoveByStackView">
-                                        <rect key="frame" x="0.66666666666665719" y="106" width="413" height="352"/>
+                                        <rect key="frame" x="0.5" y="96" width="374" height="293"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="center" verticalHuggingPriority="207" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qU6-Gh-SX7" userLabel="countdownStackView">
-                                                <rect key="frame" x="48" y="0.0" width="317" height="74"/>
+                                                <rect key="frame" x="28.5" y="0.0" width="317.5" height="74"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="center" alignment="firstBaseline" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="YNh-Dg-WOx" userLabel="hoursStackView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="102.33333333333334" height="74"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="102.5" height="74"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U6k-YY-Dfv" userLabel="hourNumber">
-                                                                <rect key="frame" x="0.0" y="9.3333333333333428" width="70.333333333333343" height="64.666666666666657"/>
+                                                                <rect key="frame" x="0.0" y="9.5" width="70.5" height="64.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="54"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="h" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumFontSize="27" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IZr-pe-fXd" userLabel="hourLabel">
-                                                                <rect key="frame" x="72.333333333333343" y="22.666666666666657" width="30" height="48"/>
+                                                                <rect key="frame" x="72.5" y="23" width="30" height="48"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="tQo-tr-fhd"/>
                                                                 </constraints>
@@ -362,16 +360,16 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="center" alignment="firstBaseline" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="jpP-GK-zZU" userLabel="minutesStackView">
-                                                        <rect key="frame" x="107.33333333333334" y="0.0" width="102.33333333333331" height="74"/>
+                                                        <rect key="frame" x="107.5" y="0.0" width="102.5" height="74"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPb-c9-UhF" userLabel="minuteNumber">
-                                                                <rect key="frame" x="0.0" y="9.3333333333333428" width="66.333333333333343" height="64.666666666666657"/>
+                                                                <rect key="frame" x="0.0" y="9.5" width="66.5" height="64.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="54"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QYr-gb-4mv" userLabel="minuteLabel">
-                                                                <rect key="frame" x="68.333333333333343" y="22.666666666666657" width="33.999999999999972" height="48"/>
+                                                                <rect key="frame" x="68.5" y="23" width="34" height="48"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="34" id="I01-Fg-IGj"/>
                                                                 </constraints>
@@ -385,16 +383,16 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="center" alignment="firstBaseline" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="r7q-fC-E9Y" userLabel="secondsStackView">
-                                                        <rect key="frame" x="214.66666666666669" y="0.0" width="102.33333333333337" height="74"/>
+                                                        <rect key="frame" x="215" y="0.0" width="102.5" height="74"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t4d-M7-7Qn" userLabel="secondNumber">
-                                                                <rect key="frame" x="0.0" y="9.3333333333333428" width="73.333333333333371" height="64.666666666666657"/>
+                                                                <rect key="frame" x="0.0" y="9.5" width="73.5" height="64.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="54"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="s" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="h8c-W7-iJq" userLabel="secondLabel">
-                                                                <rect key="frame" x="75.333333333333371" y="22.666666666666657" width="27" height="48"/>
+                                                                <rect key="frame" x="75.5" y="23" width="27" height="48"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="27" id="OA5-Vj-2H4"/>
                                                                 </constraints>
@@ -415,22 +413,22 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="bottom" axis="vertical" distribution="fillEqually" spacing="26" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0zh-6s-37T" userLabel="moveByStackView">
-                                                <rect key="frame" x="11.333333333333343" y="74" width="390" height="278"/>
+                                                <rect key="frame" x="11.5" y="74" width="351" height="219"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Move By" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="CVX-a2-3Xm" userLabel="Move by">
-                                                        <rect key="frame" x="0.0" y="0.0" width="390" height="103"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="351" height="83.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                                         <color key="textColor" red="0.88551928599999996" green="0.88551928599999996" blue="0.88551928599999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="____ @ _ _ : _ _ _ _" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="rDc-HJ-Apg">
-                                                        <rect key="frame" x="0.0" y="84.333333333333314" width="390" height="103.33333333333337"/>
+                                                        <rect key="frame" x="0.0" y="65" width="351" height="83.5"/>
                                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="38"/>
                                                         <color key="textColor" red="0.0" green="1" blue="0.78422484140000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To Avoid a Parking Ticket or Tow" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.34999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="WeG-E4-QwK" userLabel="Move by">
-                                                        <rect key="frame" x="0.0" y="174.66666666666669" width="390" height="103.33333333333331"/>
+                                                        <rect key="frame" x="0.0" y="135.5" width="351" height="83.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                                         <color key="textColor" red="0.88551928599999996" green="0.88551928599999996" blue="0.88551928599999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -440,10 +438,10 @@ I understand and agree that the use of this application (PARKR) on this device b
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XNw-tN-0qJ" userLabel="RemindStackView">
-                                        <rect key="frame" x="0.66666666666665719" y="462" width="413" height="254"/>
+                                        <rect key="frame" x="0.5" y="393" width="374" height="254"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="     Reminders" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p2W-nU-zOV" userLabel="Reminders">
-                                                <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
                                                 <color key="backgroundColor" red="0.58960402011871338" green="0.67441087961196899" blue="0.69975525140762329" alpha="0.30565068493150682" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="FKi-Oy-26Z"/>
@@ -453,13 +451,13 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="dcU-OK-Dek" userLabel="NotificationStackView">
-                                                <rect key="frame" x="0.0" y="30" width="413" height="150"/>
+                                                <rect key="frame" x="0.0" y="30" width="374" height="150"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="osf-Ie-Fik" userLabel="tenMinuteSwitchView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="413" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                                                         <subviews>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" highlighted="YES" selected="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K3F-zh-Bzt">
-                                                                <rect key="frame" x="356" y="10" width="51" height="31"/>
+                                                                <rect key="frame" x="317" y="10" width="51" height="31"/>
                                                                 <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
                                                                     <action selector="tenMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="s23-dF-kyH"/>
@@ -481,17 +479,17 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R1r-vl-LT4" userLabel="fifteenMinuteSwitchView">
-                                                        <rect key="frame" x="0.0" y="50" width="413" height="50"/>
+                                                        <rect key="frame" x="0.0" y="50" width="374" height="50"/>
                                                         <subviews>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xFL-Nu-NUw">
-                                                                <rect key="frame" x="356" y="9" width="51" height="31"/>
+                                                                <rect key="frame" x="317" y="9" width="51" height="31"/>
                                                                 <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
                                                                     <action selector="fifteenMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="fYZ-Nf-tuX"/>
                                                                 </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AcN-Lu-YZs">
-                                                                <rect key="frame" x="8.3333333333333357" y="13.666666666666629" width="90" height="23.333333333333371"/>
+                                                                <rect key="frame" x="8.5" y="13.5" width="90" height="23.5"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="90" id="9Dy-1K-ZWT"/>
                                                                 </constraints>
@@ -510,17 +508,17 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="en1-wg-bOz" userLabel="thirtyMinuteSwitchView">
-                                                        <rect key="frame" x="0.0" y="100" width="413" height="50"/>
+                                                        <rect key="frame" x="0.0" y="100" width="374" height="50"/>
                                                         <subviews>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HCt-FO-4sb">
-                                                                <rect key="frame" x="356" y="10" width="51" height="31"/>
+                                                                <rect key="frame" x="317" y="10" width="51" height="31"/>
                                                                 <color key="onTintColor" red="0.020895487010000002" green="0.74083094770000002" blue="0.66671827520000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
                                                                     <action selector="thirtyMinuteAction:" destination="ItY-do-lno" eventType="valueChanged" id="oOX-mB-axe"/>
                                                                 </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5H8-TP-fOc">
-                                                                <rect key="frame" x="8.3333333333333357" y="15" width="90" height="20"/>
+                                                                <rect key="frame" x="8.5" y="15" width="90" height="20"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="90" id="nda-kg-00w"/>
                                                                 </constraints>
@@ -542,7 +540,7 @@ I understand and agree that the use of this application (PARKR) on this device b
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKi-9t-Lup">
-                                                <rect key="frame" x="0.0" y="180" width="413" height="74"/>
+                                                <rect key="frame" x="0.0" y="180" width="374" height="74"/>
                                                 <color key="backgroundColor" red="0.0049786823801696301" green="0.77098852396011353" blue="0.7155987024307251" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="9QD-Z8-MQn"/>

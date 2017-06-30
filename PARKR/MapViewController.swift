@@ -198,7 +198,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
       // Create a circle around the current location to see if the closest data intersects with the circle
       let radius = CLLocationDistance(24)
       let circle = MKCircle(center: (location.coordinate), radius: radius)
-      let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, currentBlock.mapRect!)
+      let intersecting = MKMapRectIntersectsRect(circle.boundingMapRect, (currentBlock?.mapRect!)!)
       
       // If the current block is within 24 meters of the user's locatio
       if intersecting {
@@ -725,7 +725,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   }
   
   // MARK: Find Nearest Block function
-  func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking {
+  func findNearestBlock(data: [TimedParking], currentLocation: CLLocation) -> TimedParking? {
     
     print("\n\nFindNearestBlock Called")
     
@@ -772,7 +772,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     print(String(describing: activeParking?.activeStreet?.limit), String(describing: closest?.limit))
     
-    return closest!
+    return closest
   }
   
   // Determine closest distance between a point and a line defined by 2 points
@@ -1092,44 +1092,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   //
   //}
   
-  
-  func outputDataToFile() {
-    
-    let fileName = "Output.swift"
-    
-    let filePath = "/Users/Tassos/Desktop/Academics/Make School/Product Academy/PD - Cities/PARKR/PARKR" + fileName
-    
-    let file = FileHandle(forWritingAtPath: filePath)
-    
-    //    print(file ?? "default for file")
-    
-    if file != nil {
-      // Set the data we want to write
-      
-      let data1 = AllTimedParkingData[0]
-      var test = [TimedParking]()
-      //      print(test)
-      test = [TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))]), TimedParking(days: "M-F", hoursBegin: DateComponents(hour: 8, minute: 0), hoursEnd: DateComponents(hour: 17, minute: 0), hourLimit: 2, id: 4193, geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773406362670492), longitude: CLLocationDegrees(-122.4179728411779)), CLLocationCoordinate2D(latitude: CLLocationDegrees(37.773124891577787), longitude: CLLocationDegrees(-122.4174969850627))])]
-      
-      let data = ("[TimedParking(days: \"\(data1.days)\", hoursBegin: DateComponents(hour: \(data1.hoursBegin.hour), minute: \(data1.hoursBegin.minute)), hoursEnd: DateComponents(hour: \(data1.hoursEnd.hour), minute: \(data1.hoursEnd.minute)), hourLimit: \(data1.hourLimit), id: \(data1.id), geometry: [CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[0].latitude)), longitude: CLLocationDegrees(\(data1.geometry[0].longitude))), CLLocationCoordinate2D(latitude: CLLocationDegrees(\(data1.geometry[1].latitude)), longitude: CLLocationDegrees(\(data1.geometry[1].longitude)))])]").data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-      
-      //      print(data!)
-      
-      // Append to the end of the file
-      file?.seekToEndOfFile()
-      
-      // Write it to the file
-      file?.write(data!)
-      
-      // Close the file
-      file?.closeFile()
-    }
-    else {
-      print("Ooops! Something went wrong!")
-    }
-    
-    
-  }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "moveTimerSegue" {

@@ -79,12 +79,7 @@ class ParkingInfo {
     let today = Date()
     
     // Create today component
-    var todayComp = calendar.dateComponents(in: calendar.timeZone, from: today)
-    
-    // Update component for next minute update time for timer
-    todayComp.minute? += 1
-    todayComp.second = 0
-    
+    let todayComp = calendar.dateComponents(in: calendar.timeZone, from: today)
     
     // Create a date formatter
     let formatter = DateFormatter()
@@ -104,25 +99,45 @@ class ParkingInfo {
       // The time this morning the hours begin
       let todayHoursBegin = calendar.date(bySettingHour: (self.activeStreet?.hoursBegin.hour)!, minute: (self.activeStreet?.hoursBegin.minute)!, second: 0, of: today)
       
+      print("Here is TodayHoursBegin: ", todayHoursBegin)
+      
       // This is the begin time plus the hour limit
       let todayHoursBeginSoft = calendar.date(byAdding: .hour, value: (self.activeStreet?.limit)!, to:todayHoursBegin!)
       
       // The time today the rule hours end
-      let todayHoursEnd = calendar.date(bySettingHour: (self.activeStreet?.hoursEnd.hour)!, minute: (self.activeStreet?.hoursEnd.minute)!, second: 0, of: today)
-//      print("Day of today! ", todayComp.day)
-//      todayComp.hour = activeStreet?.hoursEnd.hour
-//      todayComp.minute = activeStreet?.hoursEnd.minute
-//      todayComp.second = 0
-//      print("Day of today after! ", todayComp)
-//      let todayHoursEnd = calendar.date(from: todayComp)
+//      let todayHoursEnd = calendar.date(bySettingHour: (self.activeStreet?.hoursEnd.hour)!, minute: (self.activeStreet?.hoursEnd.minute)!, second: 0, of: today)
+      print("-------------------------------------------")
+      print("Day of today! ", todayComp.day as Any)
+      print("\n\nHoursEndHour: \(activeStreet?.hoursEnd.hour)")
+      print("\n\nHoursEndMinutes: \(activeStreet?.hoursEnd.minute)")
+//      
+//      var hoursEndComp = calendar.dateComponents(in: calendar.timeZone, from: today)
+//      hoursEndComp.hour = activeStreet?.hoursEnd.hour
+//      hoursEndComp.minute = activeStreet?.hoursEnd.minute
+//      hoursEndComp.second = 0
+      // hoursEndComp.day = hoursEndComp.day -= 1
+//      print(">>>>> Date :\(hoursEndComp)")
+//      let todayHoursEnd = calendar.date(from: hoursEndComp)
+      let todayHoursEnd = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: today)
+      
+      //TODO: Make a dat comp here with TZ
+      let todayHoursEndComp = calendar.dateComponents(in: calendar.timeZone, from: todayHoursEnd!)
+      
+      print(">>>>> Date hours end :\(todayHoursEnd)")
+      
+      print(">>>>>>>>>>>>> todayHoursEndComp: \(todayHoursEndComp)")
+      
+      let date = calendar.date(from: todayHoursEndComp)
+      print(">>>>>>>>>>>>>>>>>>date: \(date)")
+      
       
       print("Interval: ", (-1 * (self.activeStreet?.hourLimit)!))
       // This is the end time minus the hour limit
-      let todayHoursEndSoft = todayHoursEnd?.addingTimeInterval(-1 * (self.activeStreet?.hourLimit)!)
-//      let hourLimitComponent = DateComponents(hour: activeStreet?.limit)
-//      print("Today's Hours End: ", todayHoursEnd)
-//      let todayHoursEndSoft = (todayHoursEnd)! - hourLimitComponent
-//      print("hoursEndSoft: ", (todayHoursEndSoft) as Any)
+//      let todayHoursEndSoft = todayHoursEnd?.addingTimeInterval(-1 * (self.activeStreet?.hourLimit)!)
+      let hourLimitComponent = DateComponents(hour: activeStreet?.limit)
+      print("Today's Hours End: ", todayHoursEnd as Any)
+      let todayHoursEndSoft = (todayHoursEnd)! - hourLimitComponent
+      print("hoursEndSoft: ", (todayHoursEndSoft) as Any)
       
       // The end of today
       let midnightTonight = calendar.date(byAdding: DateComponents(day: 1), to: midnightThisMorning)
@@ -138,14 +153,14 @@ class ParkingInfo {
         setMoveByValues(date: todayHoursBeginSoft!)
         
       // If HoursBegin < Today < HoursEndSoft
-      } else if today > todayHoursBegin! && today < todayHoursEndSoft! {
+      } else if today > todayHoursBegin! && today < todayHoursEndSoft {
         print(#line)
         // Set moveby to park till today + HourLimit
         let time = today.addingTimeInterval((self.activeStreet?.hourLimit)!)
         setMoveByValues(date: time)
 
         // If HoursEndSoft < Today < HoursEnd
-      } else if today > todayHoursEndSoft! && today < todayHoursEnd! {
+      } else if today > todayHoursEndSoft && today < todayHoursEnd! {
         print(#line)
 
         // Is the current DoW the last in the rules day range?

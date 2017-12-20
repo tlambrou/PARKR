@@ -216,7 +216,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   
   // MARK: - Location Manager Function
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    
+
     locationManager.stopUpdatingLocation()
     
     // If the data is done loading...
@@ -229,6 +229,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     locationManager.startUpdatingLocation()
   }
+  
+
   
   func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
     switch mode {
@@ -263,14 +265,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
       }
-
-      
-      
-      // Get a new subset
-      
-      // Find the closest
-      
-      // Render closest
       
       print("manual mode in regiondidchange animated")
     }
@@ -316,8 +310,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let center = location.coordinate
         
         // Set the mapView's center
-        self.mapView.setCenter(center, animated: true)
         self.mapView.camera.altitude = 300
+        self.mapView.setCenter(center, animated: true)
+        
         
       }
       
@@ -331,8 +326,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let center = location.coordinate
         
         // Set the mapView's center
-        self.mapView.setCenter(center, animated: true)
         self.mapView.camera.altitude = 300
+        self.mapView.setCenter(center, animated: true)
+        
         
         
         // Grab the time view was last updated
@@ -1095,9 +1091,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "moveTimerSegue" {
-      let timerView: TimerViewController = segue.destination as! TimerViewController
-      timerView.viewControllerInstance = self
-      try timerView.parkingRule = activeParking!
+      let timerViewController: TimerViewController = segue.destination as! TimerViewController
+      timerViewController.viewControllerInstance = self
+      timerViewController.parkingRule = activeParking!
     }
     
   }

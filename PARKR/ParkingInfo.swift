@@ -94,15 +94,25 @@ class ParkingInfo {
     if isDayInDayRange(day: todayDay, range: (self.activeStreet?.DoW)!){
       print("isDayInDayRange properly called")
       // The start of today
-      let midnightThisMorning = calendar.startOfDay(for: today)
+        let midnightThisMorning = calendar.startOfDay(for: today)
+//            else {
+//            print("Here is the activeStreet with midnightThisMorning not being properly set:", self.activeStreet)
+//        }
       
       // The time this morning the hours begin
-      let todayHoursBegin = calendar.date(bySettingHour: (self.activeStreet?.hoursBegin.hour)!, minute: (self.activeStreet?.hoursBegin.minute)!, second: 0, of: today)
+        let todayHoursBegin = calendar.date(bySettingHour: (self.activeStreet?.hoursBegin.hour)!, minute: (self.activeStreet?.hoursBegin.minute)!, second: 0, of: today)
+//        else {
+//            print("Here is the activeStreet with today hours begin not being properly set:", self.activeStreet)
+//        }
       
       print("Here is TodayHoursBegin: ", todayHoursBegin)
       
       // This is the begin time plus the hour limit
-      let todayHoursBeginSoft = calendar.date(byAdding: .hour, value: (self.activeStreet?.limit)!, to:todayHoursBegin!)
+        let todayHoursBeginSoft = calendar.date(byAdding: .hour, value: (self.activeStreet?.limit)!, to:todayHoursBegin!)
+//        else {
+//            print("Here is the activeStreet with todayHoursBeginSoft not being properly set:", self.activeStreet)
+//
+//        }
       
       // The time today the rule hours end
 //      let todayHoursEnd = calendar.date(bySettingHour: (self.activeStreet?.hoursEnd.hour)!, minute: (self.activeStreet?.hoursEnd.minute)!, second: 0, of: today)

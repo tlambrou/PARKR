@@ -90,7 +90,7 @@ class TimerViewController: UIViewController, UNUserNotificationCenterDelegate {
   }
   
   
-  func updateTimer () {
+  @objc func updateTimer () {
 //    counter -= 1
     let calendar = Calendar.current
     let f = DateFormatter()

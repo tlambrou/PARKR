@@ -423,7 +423,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    func agreedToTerms() {
+    @objc func agreedToTerms() {
         // Save the user's acceptance of terms state
         UserDefaults.standard.set(true, forKey: "agreedToTerms")
         agreementView.isHidden = true
@@ -461,7 +461,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
     }
     
-    func setModeToAutomatic() {
+    @objc func setModeToAutomatic() {
         
         mode = .automatic
         
@@ -473,7 +473,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // Will be called by the selector in pan gesture
-    func didDragMap(_ sender: UIGestureRecognizer) {
+    @objc func didDragMap(_ sender: UIGestureRecognizer) {
         if sender.state == .ended {
             
             print("user did drag")
